@@ -9,11 +9,9 @@ app.use(express.json());
 const B24_WEBHOOK = process.env.B24_WEBHOOK || 'https://crm.seller24.ru/rest/5/0m202a33aiqe1cyn/';
 
 const SOURCE_MAP = {
-  'Платформа':     ['SELLER24'],
-  'Вебинар':       ['WEBINAR'],
-  'Звонобот':      ['CALL_BOT', 'ROBOT'],
-  'Реанимация':    ['REANIMATION'],
-  'Холодная база': ['COLD_BASE', 'COLD'],
+  'Платформа':     ['CALLBACK'],
+  'Звонобот':      ['31'],
+  'Реанимация':    ['44'],
   'Прочее':        null,
 };
 

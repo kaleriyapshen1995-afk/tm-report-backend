@@ -95,5 +95,16 @@ app.get('/api/users', async (req, res) => {
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
+app.get('/api/debug-leads', async (req, res) => {
+  try {
+    const result = await b24('crm.lead.list', {
+      filter: { '>=DATE_CREATE': '2026-05-01' },
+      select: ['ID', 'SOURCE_ID', 'DATE_CREATE'],
+      start: 0
+    });
+    const sources = [...new Set(result.map(l => l.SOURCE_ID))];
+    res.json({ ok: true, uniqueSources: sources, sample: result.slice(0, 5) });
+  } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ TM Report backend запущен на порту ${PORT}`));

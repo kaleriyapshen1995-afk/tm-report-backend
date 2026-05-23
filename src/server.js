@@ -65,7 +65,7 @@ app.get('/api/leads', async (req, res) => {
     const tm    = req.query.tm || null;
     const { from, to } = monthRange(year, month);
     const baseFilter = { '>=DATE_CREATE': from, '<=DATE_CREATE': to + 'T23:59:59' };
-    const wonFilter  = { '>=DATE_CLOSED': from, '<=DATE_CLOSED': to + 'T23:59:59', 'STATUS_ID': 'WON' };
+    const wonFilter  = { '>=DATE_CLOSED': from, '<=DATE_CLOSED': to + 'T23:59:59', 'STATUS_ID': 'CONVERTED' };
     if (tm && tm !== 'all') { baseFilter['ASSIGNED_BY_ID'] = tm; wonFilter['ASSIGNED_BY_ID'] = tm; }
     const [newLeads, wonLeads] = await Promise.all([fetchAllLeads(baseFilter), fetchAllLeads(wonFilter)]);
     const result = {};

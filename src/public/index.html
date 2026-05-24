@@ -7,57 +7,57 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#ffffff;--bg2:#f5f5f3;--bg3:#ededea;--text:#1a1a18;--text2:#6b6b68;--text3:#9b9b97;--border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.2);--blue:#185FA5;--green:#3B6D11;--green-bg:#EAF3DE;--amber:#854F0B;--amber-bg:#FAEEDA;--red:#993C1D;--red-bg:#FCEBEB;--radius:8px;--radius-lg:12px;}
-@media(prefers-color-scheme:dark){:root{--bg:#1a1a18;--bg2:#242422;--bg3:#2e2e2b;--text:#f0ede8;--text2:#9b9b97;--text3:#6b6b68;--border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);--blue:#378ADD;--green:#639922;--green-bg:#173404;--amber:#EF9F27;--amber-bg:#412402;--red:#E24B4A;--red-bg:#501313;}}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:var(--text);background:var(--bg3);min-height:100vh}
-.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
-.header h1{font-size:15px;font-weight:500}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:#1a1a18;background:#f0ede8;min-height:100vh}
+.header{background:#fff;border-bottom:1px solid rgba(0,0,0,0.1);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.header h1{font-size:15px;font-weight:600;color:#1a1a18;display:flex;align-items:center;gap:8px}
 .controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-select{font-size:12px;padding:4px 8px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);height:30px}
-.btn{font-size:12px;padding:4px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;height:30px;display:inline-flex;align-items:center;gap:5px}
-.btn:hover{background:var(--bg2)}
-.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn.primary:hover{opacity:0.9}
+select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc;background:#fff;color:#1a1a18;height:30px;cursor:pointer}
+.btn{font-size:12px;padding:4px 10px;border-radius:7px;border:1px solid #d0d0cc;background:#fff;color:#1a1a18;cursor:pointer;height:30px;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:#f5f5f3}
+.btn.primary{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn.primary:hover{background:#0C447C}
 .main{max-width:1400px;margin:0 auto;padding:16px}
 .month-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
-.mbtn{padding:3px 10px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border);cursor:pointer;background:var(--bg);color:var(--text2)}
-.mbtn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.status{font-size:11px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0}
-.dot.ok{background:#1D9E75}.dot.err{background:var(--red)}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:16px}
-.kpi{background:var(--bg);border-radius:var(--radius);padding:12px 14px;border:0.5px solid var(--border)}
-.kpi-label{font-size:11px;color:var(--text2);margin-bottom:4px}
-.kpi-val{font-size:22px;font-weight:500}
-.kpi-sub{font-size:11px;color:var(--text3);margin-top:3px}
-.pb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.mbtn{padding:4px 12px;font-size:12px;border-radius:7px;border:1px solid #d0d0cc;cursor:pointer;background:#fff;color:#6b6b68;font-weight:500}
+.mbtn.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.status{font-size:11px;color:#6b6b68;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:#BA7517;flex-shrink:0}
+.dot.ok{background:#1D9E75}.dot.err{background:#993C1D}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.kpi-label{font-size:11px;color:#6b6b68;margin-bottom:4px;font-weight:500}
+.kpi-val{font-size:24px;font-weight:600}
+.kpi-sub{font-size:11px;color:#9b9b97;margin-top:3px}
+.pb{height:4px;background:#ededea;border-radius:2px;margin-top:8px;overflow:hidden}
 .pb-fill{height:100%;border-radius:2px}
-.section{margin-bottom:10px;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg)}
-.sec-head{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);cursor:pointer;font-size:12px;font-weight:500;user-select:none}
-.sec-head:hover{background:var(--bg3)}
-.badge{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap}
-.badge.ok{background:var(--green-bg);color:var(--green)}
-.badge.warn{background:var(--amber-bg);color:var(--amber)}
-.badge.bad{background:var(--red-bg);color:var(--red)}
-.badge.neutral{background:var(--bg3);color:var(--text3);border:0.5px solid var(--border)}
-.plan-bar{display:flex;gap:20px;padding:6px 12px;background:var(--bg2);border-bottom:0.5px solid var(--border);font-size:11px;align-items:center;flex-wrap:wrap}
-.plan-bar label{color:var(--text2)}
-.plan-bar input{width:65px;border:none;border-bottom:0.5px solid var(--blue);background:transparent;color:var(--blue);font-size:11px;text-align:right;padding:1px 2px;outline:none}
-.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.sec-head{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fafaf8;cursor:pointer;font-size:12px;font-weight:600;user-select:none;border-bottom:1px solid rgba(0,0,0,0.06)}
+.sec-head:hover{background:#f5f5f3}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap;font-weight:500}
+.badge.ok{background:#EAF3DE;color:#3B6D11}
+.badge.warn{background:#FAEEDA;color:#854F0B}
+.badge.bad{background:#FCEBEB;color:#993C1D}
+.badge.neutral{background:#f0ede8;color:#9b9b97;border:1px solid #e0ddd8}
+.plan-bar{display:flex;gap:20px;padding:7px 14px;background:#fafaf8;border-bottom:1px solid rgba(0,0,0,0.06);font-size:11px;align-items:center;flex-wrap:wrap}
+.plan-bar label{color:#6b6b68;font-weight:500}
+.plan-bar input{width:70px;border:none;border-bottom:1.5px solid #185FA5;background:transparent;color:#185FA5;font-size:12px;text-align:right;padding:1px 2px;outline:none;font-weight:600}
+.save-ind{font-size:10px;color:#1D9E75;margin-left:4px;opacity:0;transition:opacity .3s}
+.save-ind.show{opacity:1}
+.tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
-th{background:var(--bg2);padding:4px 7px;text-align:right;font-weight:500;border:0.5px solid var(--border);white-space:nowrap;color:var(--text2);font-size:10px}
-th.s{text-align:left;min-width:165px;position:sticky;left:0;z-index:2;background:var(--bg2)}
-td{padding:4px 7px;border:0.5px solid var(--border);text-align:right;white-space:nowrap}
-td.s{text-align:left;color:var(--text2);position:sticky;left:0;z-index:1;background:var(--bg)}
-td.pl{color:var(--blue)}td.ft{font-weight:500}
-td.pos{color:var(--green);font-weight:500}td.neg{color:var(--red);font-weight:500}td.dim{color:var(--text3)}
-tr.sep td{border-top:1.5px solid var(--border2)}
-tr:hover td{background:var(--bg2)}tr:hover td.s{background:var(--bg2)}
+th{background:#fafaf8;padding:5px 8px;text-align:right;font-weight:600;border:1px solid rgba(0,0,0,0.07);white-space:nowrap;color:#6b6b68;font-size:10px}
+th.s{text-align:left;min-width:170px;position:sticky;left:0;z-index:2;background:#fafaf8}
+td{padding:4px 8px;border:1px solid rgba(0,0,0,0.06);text-align:right;white-space:nowrap;background:#fff}
+td.s{text-align:left;color:#6b6b68;position:sticky;left:0;z-index:1;background:#fff}
+td.pl{color:#185FA5}td.ft{font-weight:600;color:#1a1a18}
+td.pos{color:#3B6D11;font-weight:600}td.neg{color:#993C1D;font-weight:600}td.dim{color:#9b9b97}
+tr.sep td{border-top:1.5px solid rgba(0,0,0,0.1)}
+tr:hover td{background:#fafaf8}tr:hover td.s{background:#fafaf8}
 </style>
 </head>
 <body>
 <div class="header">
-  <h1><i class="ti ti-chart-bar" style="margin-right:6px"></i>Декомпозиция ТМ</h1>
+  <h1><i class="ti ti-chart-bar"></i>Декомпозиция ТМ</h1>
   <div class="controls">
     <select id="tm" onchange="loadData()"><option value="all">Все ТМ</option></select>
     <select id="yr" onchange="loadData()"><option value="2026">2026</option><option value="2025">2025</option></select>
@@ -77,81 +77,69 @@ tr:hover td{background:var(--bg2)}tr:hover td.s{background:var(--bg2)}
   <div id="secs"></div>
 </div>
 <script>
-const API='https://tm-report-backend-production.up.railway.app';
+const API='';
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const SRCS=['Платформа','Реанимация','Звонобот','Прочее'];
-let curM=new Date().getMonth(),raw=null;
-
+let curM=new Date().getMonth(),raw=null,serverPlans={};
 function getY(){return parseInt(document.getElementById('yr').value);}
 function getG(){return document.getElementById('gran').value;}
 function getTM(){return document.getElementById('tm').value;}
-function pKey(s,m,y){return 'tm_'+s+'_'+y+'_'+m;}
-function getP(s){const k=pKey(s,curM,getY());const v=localStorage.getItem(k);return v?JSON.parse(v):{new:0,succ:0};}
-function saveP(s,f,v){const k=pKey(s,curM,getY());const p=getP(s);p[f]=parseInt(v)||0;localStorage.setItem(k,JSON.stringify(p));}
+function pKey(s,m,y){return s+'_'+y+'_'+m;}
+function getP(s){const k=pKey(s,curM,getY());return serverPlans[k]||{new:0,succ:0};}
+async function saveP(src,field,val){
+  const k=pKey(src,curM,getY());
+  if(!serverPlans[k])serverPlans[k]={new:0,succ:0};
+  serverPlans[k][field]=parseInt(val)||0;
+  try{
+    await fetch(`${API}/api/plans`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,...serverPlans[k]})});
+    const ind=document.getElementById('si-'+src);
+    if(ind){ind.className='save-ind show';setTimeout(()=>ind.className='save-ind',1500);}
+  }catch(e){}
+  render();
+}
 function setStatus(t,txt){document.getElementById('dot').className='dot '+(t==='ok'?'ok':t==='err'?'err':'');document.getElementById('stxt').textContent=txt;}
 function renderMbar(){document.getElementById('mbar').innerHTML=MONTHS.map((m,i)=>`<button class="mbtn${i===curM?' active':''}" onclick="switchM(${i})">${m.slice(0,3)}</button>`).join('');}
 function switchM(m){curM=m;loadData();}
-
 async function loadUsers(){
-  try{
-    const r=await fetch(`${API}/api/users`);
-    const d=await r.json();
-    if(!d.ok)return;
-    const sel=document.getElementById('tm');
-    d.users.forEach(u=>{
-      const o=document.createElement('option');
-      o.value=u.id;
-      o.textContent=u.name;
-      sel.appendChild(o);
-    });
-  }catch(e){}
+  try{const r=await fetch(`${API}/api/users`);const d=await r.json();if(!d.ok)return;const sel=document.getElementById('tm');d.users.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;sel.appendChild(o);});}catch(e){}
 }
-
+async function loadPlansFromServer(){
+  try{const r=await fetch(`${API}/api/plans`);const d=await r.json();if(d.ok)serverPlans=d.plans||{};}catch(e){}
+}
 async function loadData(){
-  setStatus('','Загружаем из Б24...');
-  renderMbar();
+  setStatus('','Загружаем из Б24...');renderMbar();
+  await loadPlansFromServer();
   try{
-    const tm=getTM();
-    const r=await fetch(`${API}/api/leads?year=${getY()}&month=${curM}&tm=${tm}`);
-    const d=await r.json();
-    if(!d.ok)throw new Error(d.error);
-    raw=d;
-    setStatus('ok',`Обновлено ${new Date().toLocaleTimeString('ru')} · новых: ${d.totalNew} · успешных: ${d.totalWon}`);
-    render();
+    const r=await fetch(`${API}/api/leads?year=${getY()}&month=${curM}&tm=${getTM()}`);
+    const d=await r.json();if(!d.ok)throw new Error(d.error);
+    raw=d;setStatus('ok',`Обновлено ${new Date().toLocaleTimeString('ru')} · новых: ${d.totalNew} · успешных: ${d.totalWon}`);render();
   }catch(e){setStatus('err','Ошибка: '+e.message);}
 }
-
 function fact(src){return raw&&raw.data&&raw.data[src]?raw.data[src]:{};}
 function allDays(){const y=getY(),d=new Date(y,curM,1),days=[];while(d.getMonth()===curM){days.push(new Date(d));d.setDate(d.getDate()+1);}return days;}
 function isWD(d){return d.getDay()>0&&d.getDay()<6;}
-
 function periods(){
   const g=getG(),days=allDays();
   if(g==='month')return[{label:MONTHS[curM],days}];
   if(g==='week'){const ws={};days.forEach(d=>{const w=Math.ceil(d.getDate()/7);if(!ws[w])ws[w]=[];ws[w].push(d);});return Object.values(ws).map((wd,i)=>({label:'Нед '+(i+1),days:wd}));}
   return days.map(d=>({label:d.getDate()+'.'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1),days:[d]}));
 }
-
 function buildRows(src){
   const fd=fact(src),days=allDays(),today=new Date();today.setHours(23,59,59);
-  const totalWD=days.filter(isWD).length,p=getP(src);
-  let cumNF=0,cumSF=0;
+  const totalWD=days.filter(isWD).length,p=getP(src);let cumNF=0,cumSF=0;
   return periods().map(pr=>{
     const last=pr.days[pr.days.length-1],past=last<=today;
     const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
     const planN=totalWD?Math.round(p.new/totalWD*cumWD):0,planS=totalWD?Math.round(p.succ/totalWD*cumWD):0;
-    let nf=0,sf=0;
-    if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
+    let nf=0,sf=0;if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
     cumNF+=nf;cumSF+=sf;
     return{label:pr.label,past,planN,planS,cumNF:past?cumNF:null,cumSF:past?cumSF:null,devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,conv:past&&cumNF>0?cumSF/cumNF:null};
   });
 }
-
 function fmt(n){if(n===null||n===undefined)return'—';return Math.round(n).toLocaleString('ru');}
 function fPct(n){if(n===null||n===undefined)return'—';return(n*100).toFixed(1)+'%';}
 function fDev(n){if(n===null)return'—';return(n>=0?'+':'')+Math.round(n);}
 function dCls(n){return n===null?'dim':n>=0?'pos':'neg';}
-
 function renderKPIs(){
   let pN=0,pS=0,fN=0,fS=0;
   SRCS.forEach(s=>{const p=getP(s);pN+=p.new;pS+=p.succ;Object.values(fact(s)).forEach(d=>{fN+=d.new||0;fS+=d.won||0;});});
@@ -162,7 +150,6 @@ function renderKPIs(){
     <div class="kpi"><div class="kpi-label">Успешных (факт)</div><div class="kpi-val">${fmt(fS)}</div><div class="kpi-sub">план ${fmt(pS)}</div></div>
     <div class="kpi"><div class="kpi-label">Конверсия</div><div class="kpi-val">${fPct(conv)}</div><div class="kpi-sub">${MONTHS[curM]} ${getY()}</div></div>`;
 }
-
 function renderSecs(){
   document.getElementById('secs').innerHTML=SRCS.map(src=>{
     const rows=buildRows(src),p=getP(src),lastF=rows.filter(r=>r.past).pop();
@@ -172,15 +159,16 @@ function renderSecs(){
     const cols=rows.map(r=>`<th>${r.label}</th>`).join('');
     return `<div class="section">
       <div class="sec-head" onclick="tog('${src}')">
-        <span>${src}</span>
-        <span style="font-size:10px;color:var(--text3)">план новых: ${fmt(p.new)} · успешных: ${fmt(p.succ)}</span>
+        <i class="ti ti-layout-list" style="color:#9b9b97"></i><span>${src}</span>
+        <span style="font-size:10px;color:#9b9b97;font-weight:400">план новых: ${fmt(p.new)} · успешных: ${fmt(p.succ)}</span>
         <span class="badge ${bCls}">${bTxt}</span>
         <i class="ti ti-chevron-down" id="ic-${src}"></i>
       </div>
       <div id="sb-${src}">
         <div class="plan-bar">
-          <label>План новых:</label><input type="number" min="0" value="${p.new}" onchange="updP('${src}','new',this.value)">
-          <label>План успешных:</label><input type="number" min="0" value="${p.succ}" onchange="updP('${src}','succ',this.value)">
+          <label>План новых:</label><input type="number" min="0" value="${p.new}" onchange="saveP('${src}','new',this.value)">
+          <label>План успешных:</label><input type="number" min="0" value="${p.succ}" onchange="saveP('${src}','succ',this.value)">
+          <span class="save-ind" id="si-${src}">✓ Сохранено</span>
         </div>
         <div class="tbl-wrap"><table>
           <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
@@ -198,11 +186,8 @@ function renderSecs(){
     </div>`;
   }).join('');
 }
-
 function tog(src){const el=document.getElementById('sb-'+src),ic=document.getElementById('ic-'+src);if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}else{el.style.display='none';ic.className='ti ti-chevron-right';}}
-function updP(src,f,v){saveP(src,f,v);render();}
 function render(){renderKPIs();renderSecs();}
-
 function exportCSV(){
   const rows=[['Источник','Период','ПЛАН новые','ФАКТ новые','ПЛАН успешные','ФАКТ успешные','Конверсия','Откл новые','Откл успешные']];
   SRCS.forEach(s=>buildRows(s).forEach(r=>rows.push([s,r.label,r.planN,r.past?r.cumNF:'',r.planS,r.past?r.cumSF:'',r.past?fPct(r.conv):'',r.past?r.devN:'',r.past?r.devS:''])));
@@ -210,9 +195,7 @@ function exportCSV(){
   a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(';')).join('\n'));
   a.download=`decomp_${MONTHS[curM]}_${getY()}.csv`;a.click();
 }
-
-loadUsers();
-loadData();
+loadUsers();loadData();
 </script>
 </body>
 </html>

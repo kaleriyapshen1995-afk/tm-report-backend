@@ -1,11 +1,12 @@
-const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
 const B24_WEBHOOK = process.env.B24_WEBHOOK || 'https://crm.seller24.ru/rest/5/0m202a33aiqe1cyn/';
 
@@ -107,4 +108,3 @@ app.get('/api/debug-leads', async (req, res) => {
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ TM Report backend запущен на порту ${PORT}`));
-const path = require('path');

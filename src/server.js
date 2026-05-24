@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -106,3 +107,4 @@ app.get('/api/debug-leads', async (req, res) => {
 });
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ TM Report backend запущен на порту ${PORT}`));
+const path = require('path');

@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const B24_WEBHOOK = process.env.B24_WEBHOOK || 'https://crm.seller24.ru/rest/5/0m202a33aiqe1cyn/';
 

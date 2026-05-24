@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Декомпозиция ТМ</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f3;--bg3:#ededea;
+  --text:#1a1a18;--text2:#6b6b68;--text3:#9b9b97;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.2);
+  --blue:#185FA5;--blue-bg:#E6F1FB;
+  --green:#3B6D11;--green-bg:#EAF3DE;
+  --amber:#854F0B;--amber-bg:#FAEEDA;
+  --red:#993C1D;--red-bg:#FCEBEB;
+  --radius:8px;--radius-lg:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1a1a18;--bg2:#242422;--bg3:#2e2e2b;
+  --text:#f0ede8;--text2:#9b9b97;--text3:#6b6b68;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --blue:#378ADD;--blue-bg:#042C53;
+  --green:#639922;--green-bg:#173404;
+  --amber:#EF9F27;--amber-bg:#412402;
+  --red:#E24B4A;--red-bg:#501313;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:var(--text);background:var(--bg3);min-height:100vh}
+.header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100}
+.header h1{font-size:15px;font-weight:500}
+.controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+select{font-size:12px;padding:4px 8px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);color:var(--text);height:30px}
+.btn{font-size:12px;padding:4px 10px;border-radius:var(--radius);border:0.5px solid var(--border2);background:transparent;color:var(--text);cursor:pointer;height:30px;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{background:var(--bg2)}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.primary:hover{opacity:0.9}
+.main{max-width:1400px;margin:0 auto;padding:16px}
+.month-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.mbtn{padding:3px 10px;font-size:12px;border-radius:var(--radius);border:0.5px solid var(--border);cursor:pointer;background:var(--bg);color:var(--text2)}
+.mbtn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.status{font-size:11px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.dot.ok{background:#1D9E75}.dot.err{background:var(--red)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:16px}
+.kpi{background:var(--bg);border-radius:var(--radius);padding:12px 14px;border:0.5px solid var(--border)}
+.kpi-label{font-size:11px;color:var(--text2);margin-bottom:4px}
+.kpi-val{font-size:22px;font-weight:500}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.pb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.pb-fill{height:100%;border-radius:2px}
+.section{margin-bottom:10px;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg)}
+.sec-head{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg2);cursor:pointer;font-size:12px;font-weight:500;user-select:none}
+.sec-head:hover{background:var(--bg3)}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap}
+.badge.ok{background:var(--green-bg);color:var(--green)}
+.badge.warn{background:var(--amber-bg);color:var(--amber)}
+.badge.bad{background:var(--red-bg);color:var(--red)}
+.badge.neutral{background:var(--bg3);color:var(--text3);border:0.5px solid var(--border)}
+.plan-bar{display:flex;gap:20px;padding:6px 12px;background:var(--bg2);border-bottom:0.5px solid var(--border);font-size:11px;align-items:center;flex-wrap:wrap}
+.plan-bar label{color:var(--text2)}
+.plan-bar input{width:65px;border:none;border-bottom:0.5px solid var(--blue);background:transparent;color:var(--blue);font-size:11px;text-align:right;padding:1px 2px;outline:none}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{background:var(--bg2);padding:4px 7px;text-align:right;font-weight:500;border:0.5px solid var(--border);white-space:nowrap;color:var(--text2);font-size:10px}
+th.s{text-align:left;min-width:165px;position:sticky;left:0;z-index:2;background:var(--bg2)}
+td{padding:4px 7px;border:0.5px solid var(--border);text-align:right;white-space:nowrap}
+td.s{text-align:left;color:var(--text2);position:sticky;left:0;z-index:1;background:var(--bg)}
+td.pl{color:var(--blue)}
+td.ft{font-weight:500}
+td.pos{color:var(--green);font-weight:500}
+td.neg{color:var(--red);font-weight:500}
+td.dim{color:var(--text3)}
+tr.sep td{border-top:1.5px solid var(--border2)}
+tr:hover td{background:var(--bg2)}
+tr:hover td.s{background:var(--bg2)}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1><i class="ti ti-chart-bar" style="margin-right:6px"></i>Декомпозиция ТМ</h1>
+  <div class="controls">
+    <select id="yr" onchange="loadData()"><option value="2026">2026</option><option value="2025">2025</option></select>
+    <select id="gran" onchange="render()">
+      <option value="day">По дням</option>
+      <option value="week">По неделям</option>
+      <option value="month">Итого за месяц</option>
+    </select>
+    <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i> CSV</button>
+    <button class="btn primary" onclick="loadData()"><i class="ti ti-refresh"></i> Обновить</button>
+  </div>
+</div>
+<div class="main">
+  <div class="month-bar" id="mbar"></div>
+  <div class="status"><div class="dot" id="dot"></div><span id="stxt">Загружаем данные...</span></div>
+  <div class="kpi-grid" id="kpis"></div>
+  <div id="secs"></div>
+</div>
+<script>
+const API='https://tm-report-backend-production.up.railway.app';
+const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const SRCS=['Платформа','Реанимация','Звонобот','Прочее'];
+let curM=new Date().getMonth(),raw=null;
+function getY(){return parseInt(document.getElementById('yr').value);}
+function getG(){return document.getElementById('gran').value;}
+function pKey(s,m,y){return 'tm_'+s+'_'+y+'_'+m;}
+function getP(s){const k=pKey(s,curM,getY());const v=localStorage.getItem(k);return v?JSON.parse(v):{new:0,succ:0};}
+function saveP(s,f,v){const k=pKey(s,curM,getY());const p=getP(s);p[f]=parseInt(v)||0;localStorage.setItem(k,JSON.stringify(p));}
+function setStatus(t,txt){document.getElementById('dot').className='dot '+(t==='ok'?'ok':t==='err'?'err':'');document.getElementById('stxt').textContent=txt;}
+function renderMbar(){document.getElementById('mbar').innerHTML=MONTHS.map((m,i)=>`<button class="mbtn${i===curM?' active':''}" onclick="switchM(${i})">${m.slice(0,3)}</button>`).join('');}
+function switchM(m){curM=m;loadData();}
+async function loadData(){
+  setStatus('','Загружаем из Б24...');renderMbar();
+  try{
+    const r=await fetch(`${API}/api/leads?year=${getY()}&month=${curM}`);
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error);
+    raw=d;
+    setStatus('ok',`Обновлено ${new Date().toLocaleTimeString('ru')} · новых: ${d.totalNew} · успешных: ${d.totalWon}`);
+    render();
+  }catch(e){setStatus('err','Ошибка: '+e.message);}
+}
+function fact(src){return raw&&raw.data&&raw.data[src]?raw.data[src]:{};}
+function allDays(){const y=getY(),d=new Date(y,curM,1),days=[];while(d.getMonth()===curM){days.push(new Date(d));d.setDate(d.getDate()+1);}return days;}
+function isWD(d){return d.getDay()>0&&d.getDay()<6;}
+function periods(){
+  const g=getG(),days=allDays();
+  if(g==='month')return[{label:MONTHS[curM],days}];
+  if(g==='week'){const ws={};days.forEach(d=>{const w=Math.ceil(d.getDate()/7);if(!ws[w])ws[w]=[];ws[w].push(d);});return Object.values(ws).map((wd,i)=>({label:'Нед '+(i+1),days:wd}));}
+  return days.map(d=>({label:d.getDate()+'.'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1),days:[d]}));
+}
+function buildRows(src){
+  const fd=fact(src),days=allDays(),today=new Date();today.setHours(23,59,59);
+  const totalWD=days.filter(isWD).length,p=getP(src);
+  let cumNF=0,cumSF=0;
+  return periods().map(pr=>{
+    const last=pr.days[pr.days.length-1],past=last<=today;
+    const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
+    const planN=totalWD?Math.round(p.new/totalWD*cumWD):0,planS=totalWD?Math.round(p.succ/totalWD*cumWD):0;
+    let nf=0,sf=0;
+    if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
+    cumNF+=nf;cumSF+=sf;
+    return{label:pr.label,past,planN,planS,cumNF:past?cumNF:null,cumSF:past?cumSF:null,devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,conv:past&&cumNF>0?cumSF/cumNF:null};
+  });
+}
+function fmt(n){if(n===null||n===undefined)return'—';return Math.round(n).toLocaleString('ru');}
+function fPct(n){if(n===null||n===undefined)return'—';return(n*100).toFixed(1)+'%';}
+function fDev(n){if(n===null)return'—';return(n>=0?'+':'')+Math.round(n);}
+function dCls(n){return n===null?'dim':n>=0?'pos':'neg';}
+function renderKPIs(){
+  let pN=0,pS=0,fN=0,fS=0;
+  SRCS.forEach(s=>{const p=getP(s);pN+=p.new;pS+=p.succ;Object.values(fact(s)).forEach(d=>{fN+=d.new||0;fS+=d.won||0;});});
+  const pct=pN>0?fN/pN:0,col=pct>=0.9?'#1D9E75':pct>=0.7?'#BA7517':'#993C1D',conv=fN>0?fS/fN:0;
+  document.getElementById('kpis').innerHTML=`
+    <div class="kpi"><div class="kpi-label">Выполнение плана (новые)</div><div class="kpi-val" style="color:${col}">${Math.round(pct*100)}%</div><div class="pb"><div class="pb-fill" style="width:${Math.min(pct*100,100).toFixed(0)}%;background:${col}"></div></div><div class="kpi-sub">факт ${fmt(fN)} / план ${fmt(pN)}</div></div>
+    <div class="kpi"><div class="kpi-label">Новых лидов (факт)</div><div class="kpi-val">${fmt(fN)}</div><div class="kpi-sub">план ${fmt(pN)}</div></div>
+    <div class="kpi"><div class="kpi-label">Успешных (факт)</div><div class="kpi-val">${fmt(fS)}</div><div class="kpi-sub">план ${fmt(pS)}</div></div>
+    <div class="kpi"><div class="kpi-label">Конверсия</div><div class="kpi-val">${fPct(conv)}</div><div class="kpi-sub">${MONTHS[curM]} ${getY()}</div></div>`;
+}
+function renderSecs(){
+  document.getElementById('secs').innerHTML=SRCS.map(src=>{
+    const rows=buildRows(src),p=getP(src),lastF=rows.filter(r=>r.past).pop();
+    const pctD=p.new>0&&lastF?lastF.cumNF/p.new:null;
+    const bCls=pctD===null?'neutral':pctD>=0.9?'ok':pctD>=0.7?'warn':'bad';
+    const bTxt=pctD===null?'нет данных':Math.round(pctD*100)+'% от плана';
+    const cols=rows.map(r=>`<th>${r.label}</th>`).join('');
+    return `<div class="section">
+      <div class="sec-head" onclick="tog('${src}')">
+        <span>${src}</span>
+        <span style="font-size:10px;color:var(--text3)">план новых: ${fmt(p.new)} · успешных: ${fmt(p.succ)}</span>
+        <span class="badge ${bCls}">${bTxt}</span>
+        <i class="ti ti-chevron-down" id="ic-${src}"></i>
+      </div>
+      <div id="sb-${src}">
+        <div class="plan-bar">
+          <label>План новых:</label><input type="number" min="0" value="${p.new}" onchange="updP('${src}','new',this.value)">
+          <label>План успешных:</label><input type="number" min="0" value="${p.succ}" onchange="updP('${src}','succ',this.value)">
+        </div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
+          <tbody>
+            <tr><td class="s">Новый лид ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
+            <tr><td class="s">Новый лид ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
+            <tr class="sep"><td class="s">Успешный ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
+            <tr><td class="s">Успешный ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
+            <tr class="sep"><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
+            <tr class="sep"><td class="s">Откл. новые нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
+            <tr><td class="s">Откл. успешные нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function tog(src){const el=document.getElementById('sb-'+src),ic=document.getElementById('ic-'+src);if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}else{el.style.display='none';ic.className='ti ti-chevron-right';}}
+function updP(src,f,v){saveP(src,f,v);render();}
+function render(){renderKPIs();renderSecs();}
+function exportCSV(){
+  const rows=[['Источник','Период','ПЛАН новые','ФАКТ новые','ПЛАН успешные','ФАКТ успешные','Конверсия','Откл новые','Откл успешные']];
+  SRCS.forEach(s=>buildRows(s).forEach(r=>rows.push([s,r.label,r.planN,r.past?r.cumNF:'',r.planS,r.past?r.cumSF:'',r.past?fPct(r.conv):'',r.past?r.devN:'',r.past?r.devS:''])));
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(';')).join('\n'));
+  a.download=`decomp_${MONTHS[curM]}_${getY()}.csv`;a.click();
+}
+loadData();
+</script>
+</body>
+</html>

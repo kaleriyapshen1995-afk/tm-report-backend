@@ -120,7 +120,7 @@ app.get('/api/leads', async (req, res) => {
 
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await b24('user.get', { filter: { ACTIVE: true } });
+    const users = await b24('user.get', { filter: { ACTIVE: true, UF_DEPARTMENT: [148] } });
     res.json({ ok: true, users: users.map(u => ({ id: u.ID, name: u.NAME + ' ' + u.LAST_NAME })) });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });

@@ -17,9 +17,10 @@ select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc
 .btn:hover{background:#f5f5f3}
 .btn.primary{background:#185FA5;color:#fff;border-color:#185FA5}
 .btn.primary:hover{background:#0C447C}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
 .main{max-width:1400px;margin:0 auto;padding:16px}
 .tabs{display:flex;gap:0;border-bottom:2px solid #e8e5e0;margin-bottom:16px}
-.tab{padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;color:#6b6b68;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab{padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;color:#6b6b68;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:6px}
 .tab.active{color:#185FA5;border-bottom-color:#185FA5}
 .tab-content{display:none}.tab-content.active{display:block}
 .month-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
@@ -28,10 +29,11 @@ select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc
 .status{font-size:11px;color:#6b6b68;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .dot{width:7px;height:7px;border-radius:50%;background:#BA7517;flex-shrink:0}
 .dot.ok{background:#1D9E75}.dot.err{background:#993C1D}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px}
 .kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
 .kpi-label{font-size:11px;color:#6b6b68;margin-bottom:4px;font-weight:500}
-.kpi-val{font-size:24px;font-weight:600}
+.kpi-val{font-size:22px;font-weight:600;display:flex;align-items:baseline;gap:8px}
+.kpi-val-pct{font-size:14px;font-weight:500;color:#9b9b97}
 .kpi-sub{font-size:11px;color:#9b9b97;margin-top:3px}
 .pb{height:4px;background:#ededea;border-radius:2px;margin-top:8px;overflow:hidden}
 .pb-fill{height:100%;border-radius:2px}
@@ -46,32 +48,34 @@ select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
 th{background:#fafaf8;padding:5px 8px;text-align:right;font-weight:600;border:1px solid rgba(0,0,0,0.07);white-space:nowrap;color:#6b6b68;font-size:10px}
-th.s{text-align:left;min-width:170px;position:sticky;left:0;z-index:2;background:#fafaf8}
+th.s{text-align:left;min-width:200px;position:sticky;left:0;z-index:2;background:#fafaf8}
 td{padding:4px 8px;border:1px solid rgba(0,0,0,0.06);text-align:right;white-space:nowrap;background:#fff}
 td.s{text-align:left;color:#6b6b68;position:sticky;left:0;z-index:1;background:#fff}
 td.pl{color:#185FA5}td.ft{font-weight:600;color:#1a1a18}
 td.pos{color:#3B6D11;font-weight:600}td.neg{color:#993C1D;font-weight:600}td.dim{color:#9b9b97}
 tr.sep td{border-top:1.5px solid rgba(0,0,0,0.1)}
+tr.grp td{background:#f5f5f3;font-weight:600;font-size:10px;color:#6b6b68;text-transform:uppercase;letter-spacing:0.3px}
+tr.grp td.s{background:#f5f5f3}
 tr:hover td{background:#fafaf8}tr:hover td.s{background:#fafaf8}
-/* Планы по менеджерам */
+tr.grp:hover td{background:#f5f5f3}tr.grp:hover td.s{background:#f5f5f3}
 .plan-section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
 .plan-sec-head{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fafaf8;font-size:12px;font-weight:600;border-bottom:1px solid rgba(0,0,0,0.06)}
-.plan-grid{padding:12px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.plan-grid{padding:12px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
 .plan-row{display:flex;align-items:center;gap:10px;padding:6px 10px;background:#fafaf8;border-radius:7px;font-size:12px}
 .plan-name{flex:1;color:#1a1a18;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .plan-input-wrap{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .plan-input-wrap label{font-size:10px;color:#9b9b97}
-.plan-input-wrap input{width:60px;border:none;border-bottom:1.5px solid #185FA5;background:transparent;color:#185FA5;font-size:12px;text-align:right;padding:1px 2px;outline:none;font-weight:600}
-.save-ind{font-size:10px;color:#1D9E75;opacity:0;transition:opacity .3s;margin-left:4px}
-.save-ind.show{opacity:1}
-.plan-total{padding:8px 14px;background:#f0ede8;border-top:1px solid rgba(0,0,0,0.06);font-size:11px;color:#6b6b68;display:flex;gap:16px}
+.plan-input-wrap input{width:65px;border:none;border-bottom:1.5px solid #185FA5;background:transparent;color:#185FA5;font-size:12px;text-align:right;padding:1px 2px;outline:none;font-weight:600}
+.plan-total{padding:8px 14px;background:#f0ede8;border-top:1px solid rgba(0,0,0,0.06);font-size:11px;color:#6b6b68;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
 .plan-total strong{color:#1a1a18}
-/* График */
 .chart-card{background:#fff;border-radius:10px;padding:16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:14px}
 .chart-card h3{font-size:13px;font-weight:600;margin-bottom:12px;color:#1a1a18;display:flex;align-items:center;gap:6px}
 .chart-wrap{position:relative;height:280px}
-.chart-filters{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.chart-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .chart-filters label{font-size:12px;color:#6b6b68;font-weight:500}
+.metric-toggle{display:flex;gap:6px}
+.metric-btn{padding:4px 12px;font-size:12px;border-radius:7px;border:1px solid #d0d0cc;cursor:pointer;background:#fff;color:#6b6b68}
+.metric-btn.active{background:#185FA5;color:#fff;border-color:#185FA5}
 </style>
 </head>
 <body>
@@ -101,17 +105,16 @@ tr:hover td{background:#fafaf8}tr:hover td.s{background:#fafaf8}
     <div class="tab" onclick="switchTab('plans',this)"><i class="ti ti-users"></i> Планы по менеджерам</div>
   </div>
 
-  <div id="tab-table" class="tab-content active">
-    <div id="secs"></div>
-  </div>
+  <div id="tab-table" class="tab-content active"><div id="secs"></div></div>
 
   <div id="tab-charts" class="tab-content">
     <div class="chart-filters">
       <label>Показатель:</label>
-      <select id="chart-metric" onchange="renderCharts()">
-        <option value="new">Новые лиды</option>
-        <option value="won">Успешные лиды</option>
-      </select>
+      <div class="metric-toggle">
+        <button class="metric-btn active" id="mb-both" onclick="setMetric('both',this)">Оба</button>
+        <button class="metric-btn" id="mb-new" onclick="setMetric('new',this)">Новые</button>
+        <button class="metric-btn" id="mb-won" onclick="setMetric('won',this)">Успешные</button>
+      </div>
       <label style="margin-left:8px">Тип:</label>
       <select id="chart-type" onchange="renderCharts()">
         <option value="cumulative">Нарастающим итогом</option>
@@ -121,56 +124,54 @@ tr:hover td{background:#fafaf8}tr:hover td.s{background:#fafaf8}
     <div id="charts-wrap"></div>
   </div>
 
-  <div id="tab-plans" class="tab-content">
-    <div id="plans-wrap"></div>
-  </div>
+  <div id="tab-plans" class="tab-content"><div id="plans-wrap"></div></div>
 </div>
 
 <script>
 const API='';
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const SRCS=['Платформа','Реанимация','Звонобот','Прочее'];
-const SRC_COLORS={'Платформа':'#185FA5','Реанимация':'#E24B4A','Звонобот':'#1D9E75','Прочее':'#BA7517'};
-let curM=new Date().getMonth(),raw=null,serverPlans={},allUsers=[],charts={};
+const SRCS=['Платформа','Звонобот','Магазин','Реанимация+Прочее'];
+const SRC_COLORS={'Платформа':'#185FA5','Звонобот':'#1D9E75','Магазин':'#7B4FBF','Реанимация+Прочее':'#E24B4A'};
+let curM=new Date().getMonth(),raw=null,serverPlans={},allUsers=[],charts={},chartMetric='both';
 
 function getY(){return parseInt(document.getElementById('yr').value);}
 function getG(){return document.getElementById('gran').value;}
 function getTM(){return document.getElementById('tm').value;}
-
-// Ключ плана по менеджеру: src_year_month_tmId
 function pKey(src,m,y,tmId){return src+'_'+y+'_'+m+'_'+(tmId||'all');}
-
-// Получить план конкретного менеджера по источнику
-function getPlanForUser(src,tmId){
-  const k=pKey(src,curM,getY(),tmId);
-  return serverPlans[k]||{new:0,succ:0};
-}
-
-// Суммарный план по источнику = сумма всех менеджеров
+function getPlanForUser(src,tmId){const k=pKey(src,curM,getY(),tmId);return serverPlans[k]||{new:0,succ:0};}
 function getTotalPlan(src){
-  if(allUsers.length===0) return serverPlans[pKey(src,curM,getY(),'all')]||{new:0,succ:0};
+  if(allUsers.length===0)return serverPlans[pKey(src,curM,getY(),'all')]||{new:0,succ:0};
   let n=0,s=0;
   allUsers.forEach(u=>{const p=getPlanForUser(src,u.id);n+=p.new;s+=p.succ;});
   return{new:n,succ:s};
 }
 
-async function savePlanForUser(src,tmId,field,val){
+function updatePlanLocal(src,tmId,field,val){
   const k=pKey(src,curM,getY(),tmId);
   if(!serverPlans[k])serverPlans[k]={new:0,succ:0};
   serverPlans[k][field]=parseInt(val)||0;
-  try{
-    await fetch(`${API}/api/plans`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,...serverPlans[k]})});
-    const ind=document.getElementById('si-'+tmId+'-'+src);
-    if(ind){ind.className='save-ind show';setTimeout(()=>ind.className='save-ind',1500);}
-  }catch(e){}
+}
+
+async function saveSrcPlans(src){
+  const btn=document.getElementById('savebtn-'+src);
+  const ind=document.getElementById('si-'+src);
+  if(btn)btn.disabled=true;
+  let ok=true;
+  for(const u of allUsers){
+    const k=pKey(src,curM,getY(),u.id);
+    const p=serverPlans[k]||{new:0,succ:0};
+    try{await fetch(`${API}/api/plans`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,...p})});}
+    catch(e){ok=false;}
+  }
+  if(btn)btn.disabled=false;
+  if(ind){ind.textContent=ok?'✓ Сохранено':'Ошибка';ind.style.color=ok?'#1D9E75':'#993C1D';ind.style.opacity='1';setTimeout(()=>{ind.style.opacity='0';},2000);}
   render();
-  if(document.getElementById('tab-charts').classList.contains('active')) renderCharts();
+  if(document.getElementById('tab-charts').classList.contains('active'))renderCharts();
 }
 
 async function loadPlansFromServer(){
   try{const r=await fetch(`${API}/api/plans`);const d=await r.json();if(d.ok)serverPlans=d.plans||{};}catch(e){}
 }
-
 function setStatus(t,txt){document.getElementById('dot').className='dot '+(t==='ok'?'ok':t==='err'?'err':'');document.getElementById('stxt').textContent=txt;}
 function renderMbar(){document.getElementById('mbar').innerHTML=MONTHS.map((m,i)=>`<button class="mbtn${i===curM?' active':''}" onclick="switchM(${i})">${m.slice(0,3)}</button>`).join('');}
 function switchM(m){curM=m;loadData();}
@@ -215,9 +216,15 @@ function buildRows(src){
     const last=pr.days[pr.days.length-1],past=last<=today;
     const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
     const planN=totalWD?Math.round(p.new/totalWD*cumWD):0,planS=totalWD?Math.round(p.succ/totalWD*cumWD):0;
-    let nf=0,sf=0;if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
+    let nf=0,sf=0;
+    if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
     cumNF+=nf;cumSF+=sf;
-    return{label:pr.label,past,planN,planS,cumNF:past?cumNF:null,cumSF:past?cumSF:null,devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,conv:past&&cumNF>0?cumSF/cumNF:null};
+    // факт в день = за этот период (не нарастающий)
+    return{label:pr.label,past,planN,planS,
+      cumNF:past?cumNF:null,cumSF:past?cumSF:null,
+      dayNF:past?nf:null,daySF:past?sf:null,
+      devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,
+      conv:past&&cumNF>0?cumSF/cumNF:null};
   });
 }
 
@@ -229,12 +236,32 @@ function dCls(n){return n===null?'dim':n>=0?'pos':'neg';}
 function renderKPIs(){
   let pN=0,pS=0,fN=0,fS=0;
   SRCS.forEach(s=>{const p=getTotalPlan(s);pN+=p.new;pS+=p.succ;Object.values(fact(s)).forEach(d=>{fN+=d.new||0;fS+=d.won||0;});});
-  const pct=pN>0?fN/pN:0,col=pct>=0.9?'#1D9E75':pct>=0.7?'#BA7517':'#993C1D',conv=fN>0?fS/fN:0;
+  const pctN=pN>0?fN/pN:0,pctS=pS>0?fS/pS:0;
+  const colN=pctN>=0.9?'#1D9E75':pctN>=0.7?'#BA7517':'#993C1D';
+  const colS=pctS>=0.9?'#1D9E75':pctS>=0.7?'#BA7517':'#993C1D';
+  const conv=fN>0?fS/fN:0;
   document.getElementById('kpis').innerHTML=`
-    <div class="kpi"><div class="kpi-label">Выполнение плана (новые)</div><div class="kpi-val" style="color:${col}">${Math.round(pct*100)}%</div><div class="pb"><div class="pb-fill" style="width:${Math.min(pct*100,100).toFixed(0)}%;background:${col}"></div></div><div class="kpi-sub">факт ${fmt(fN)} / план ${fmt(pN)}</div></div>
-    <div class="kpi"><div class="kpi-label">Новых лидов (факт)</div><div class="kpi-val">${fmt(fN)}</div><div class="kpi-sub">план ${fmt(pN)}</div></div>
-    <div class="kpi"><div class="kpi-label">Успешных (факт)</div><div class="kpi-val">${fmt(fS)}</div><div class="kpi-sub">план ${fmt(pS)}</div></div>
-    <div class="kpi"><div class="kpi-label">Конверсия</div><div class="kpi-val">${fPct(conv)}</div><div class="kpi-sub">${MONTHS[curM]} ${getY()}</div></div>`;
+    <div class="kpi">
+      <div class="kpi-label">Выполнение плана (новые)</div>
+      <div class="kpi-val" style="color:${colN}">${Math.round(pctN*100)}%</div>
+      <div class="pb"><div class="pb-fill" style="width:${Math.min(pctN*100,100).toFixed(0)}%;background:${colN}"></div></div>
+      <div class="kpi-sub">факт ${fmt(fN)} / план ${fmt(pN)}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Новых лидов (факт)</div>
+      <div class="kpi-val">${fmt(fN)}<span class="kpi-val-pct" style="color:${colN}">${Math.round(pctN*100)}%</span></div>
+      <div class="kpi-sub">план ${fmt(pN)}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Успешных (факт)</div>
+      <div class="kpi-val">${fmt(fS)}<span class="kpi-val-pct" style="color:${colS}">${Math.round(pctS*100)}%</span></div>
+      <div class="kpi-sub">план ${fmt(pS)}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Конверсия</div>
+      <div class="kpi-val">${fPct(conv)}</div>
+      <div class="kpi-sub">${MONTHS[curM]} ${getY()}</div>
+    </div>`;
 }
 
 function renderTable(){
@@ -244,6 +271,7 @@ function renderTable(){
     const bCls=pctD===null?'neutral':pctD>=0.9?'ok':pctD>=0.7?'warn':'bad';
     const bTxt=pctD===null?'нет данных':Math.round(pctD*100)+'% от плана';
     const cols=rows.map(r=>`<th>${r.label}</th>`).join('');
+    const showDay=getG()==='day';
     return `<div class="section">
       <div class="sec-head" onclick="tog('${src}')">
         <i class="ti ti-layout-list" style="color:#9b9b97"></i><span>${src}</span>
@@ -255,13 +283,18 @@ function renderTable(){
         <div class="tbl-wrap"><table>
           <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
           <tbody>
-            <tr><td class="s">Новый лид ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
-            <tr><td class="s">Новый лид ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
-            <tr class="sep"><td class="s">Успешный ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
-            <tr><td class="s">Успешный ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
-            <tr class="sep"><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
-            <tr class="sep"><td class="s">Откл. новые нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
-            <tr><td class="s">Откл. успешные нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
+            <tr class="grp"><td class="s" colspan="${rows.length+1}">Новые лиды</td></tr>
+            <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
+            <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
+            ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
+            <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
+            <tr class="grp sep"><td class="s" colspan="${rows.length+1}">Успешные лиды</td></tr>
+            <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
+            <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
+            ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
+            <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
+            <tr class="grp sep"><td class="s" colspan="${rows.length+1}">Конверсия</td></tr>
+            <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
           </tbody>
         </table></div>
       </div>
@@ -270,85 +303,88 @@ function renderTable(){
 }
 
 function renderPlansTab(){
-  const y=getY();
   document.getElementById('plans-wrap').innerHTML=SRCS.map(src=>{
     const total=getTotalPlan(src);
     const rows=allUsers.map(u=>{
       const p=getPlanForUser(src,u.id);
       return `<div class="plan-row">
         <span class="plan-name" title="${u.name}">${u.name}</span>
-        <div class="plan-input-wrap"><label>Новых</label><input type="number" min="0" value="${p.new}" onchange="savePlanForUser('${src}','${u.id}','new',this.value)"></div>
-        <div class="plan-input-wrap"><label>Успешных</label><input type="number" min="0" value="${p.succ}" onchange="savePlanForUser('${src}','${u.id}','succ',this.value)"></div>
-        <span class="save-ind" id="si-${u.id}-${src}">✓</span>
+        <div class="plan-input-wrap"><label>Новых</label><input type="number" min="0" value="${p.new}" oninput="updatePlanLocal('${src}','${u.id}','new',this.value)"></div>
+        <div class="plan-input-wrap"><label>Успешных</label><input type="number" min="0" value="${p.succ}" oninput="updatePlanLocal('${src}','${u.id}','succ',this.value)"></div>
       </div>`;
     }).join('');
     return `<div class="plan-section">
       <div class="plan-sec-head"><i class="ti ti-layout-list" style="color:#9b9b97"></i>${src}</div>
-      <div class="plan-grid">${rows||'<div style="padding:12px;color:#9b9b97;font-size:12px">Загрузите список менеджеров</div>'}</div>
-      <div class="plan-total">Итого по источнику: <strong>новых ${fmt(total.new)}</strong> · <strong>успешных ${fmt(total.succ)}</strong></div>
+      <div class="plan-grid">${rows||'<div style="padding:12px;color:#9b9b97;font-size:12px">Нет менеджеров</div>'}</div>
+      <div class="plan-total">
+        <span>Итого: <strong>новых ${fmt(total.new)}</strong> · <strong>успешных ${fmt(total.succ)}</strong></span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="si-${src}" style="font-size:11px;opacity:0;transition:opacity .3s"></span>
+          <button id="savebtn-${src}" class="btn primary" style="height:28px" onclick="saveSrcPlans('${src}')"><i class="ti ti-device-floppy"></i> Сохранить</button>
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
 
+function setMetric(m,el){
+  chartMetric=m;
+  document.querySelectorAll('.metric-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderCharts();
+}
+
 function renderCharts(){
-  const metric=document.getElementById('chart-metric').value;
   const cumul=document.getElementById('chart-type').value==='cumulative';
   const days=allDays(),today=new Date();today.setHours(23,59,59);
-  const prs=periods();
-  const labels=prs.map(p=>p.label);
+  const prs=periods(),labels=prs.map(p=>p.label);
+  Object.values(charts).forEach(c=>c.destroy());charts={};
 
-  // Уничтожаем старые графики
-  Object.values(charts).forEach(c=>c.destroy());
-  charts={};
+  const showNew=chartMetric==='both'||chartMetric==='new';
+  const showWon=chartMetric==='both'||chartMetric==='won';
 
   const wrap=document.getElementById('charts-wrap');
   wrap.innerHTML=SRCS.map(src=>`
     <div class="chart-card">
-      <h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src} — ${metric==='new'?'Новые лиды':'Успешные лиды'}</h3>
+      <h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src}</h3>
       <div class="chart-wrap"><canvas id="chart-${src}"></canvas></div>
     </div>`).join('');
 
   SRCS.forEach(src=>{
-    const fd=fact(src);
-    const totalWD=days.filter(isWD).length;
-    const p=getTotalPlan(src);
-    const planVal=metric==='new'?p.new:p.succ;
+    const fd=fact(src),totalWD=days.filter(isWD).length,p=getTotalPlan(src);
+    const datasets=[];
+    const color=SRC_COLORS[src];
 
-    let cumFact=0,cumPlan=0;
-    const factData=[],planData=[];
-
-    prs.forEach(pr=>{
-      const last=pr.days[pr.days.length-1],past=last<=today;
-      const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
-      const planPeriod=totalWD?Math.round(planVal/totalWD*cumWD):0;
-      let periodFact=0;
-      if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])periodFact+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
-      cumFact+=periodFact;cumPlan=planPeriod;
-
-      if(cumul){
-        factData.push(past?cumFact:null);
-        planData.push(planPeriod);
-      } else {
-        factData.push(past?periodFact:null);
-        planData.push(totalWD?Math.round(planVal/totalWD*(pr.days.filter(isWD).length)):0);
-      }
+    ['new','won'].forEach(metric=>{
+      if(metric==='new'&&!showNew)return;
+      if(metric==='won'&&!showWon)return;
+      const planVal=metric==='new'?p.new:p.succ;
+      const label=metric==='new'?'Новые':'Успешные';
+      const col=metric==='new'?color:'#9b9b97';
+      let cumF=0;
+      const factData=[],planData=[];
+      prs.forEach(pr=>{
+        const last=pr.days[pr.days.length-1],past=last<=today;
+        const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
+        const planPeriod=totalWD?Math.round(planVal/totalWD*cumWD):0;
+        let pf=0;
+        if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
+        cumF+=pf;
+        if(cumul){factData.push(past?cumF:null);planData.push(planPeriod);}
+        else{factData.push(past?pf:null);planData.push(totalWD?Math.round(planVal/totalWD*(pr.days.filter(isWD).length)):0);}
+      });
+      datasets.push({label:`${label} (факт)`,data:factData,borderColor:col,backgroundColor:col+'22',borderWidth:2.5,pointRadius:3,pointBackgroundColor:col,tension:0.3,fill:metric==='new',spanGaps:false});
+      datasets.push({label:`${label} (план)`,data:planData,borderColor:col,borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.3,fill:false});
     });
 
-    const color=SRC_COLORS[src];
     const ctx=document.getElementById('chart-'+src).getContext('2d');
     charts[src]=new Chart(ctx,{
-      type:'line',
-      data:{
-        labels,
-        datasets:[
-          {label:'Факт',data:factData,borderColor:color,backgroundColor:color+'22',borderWidth:2.5,pointRadius:3,pointBackgroundColor:color,tension:0.3,fill:true,spanGaps:false},
-          {label:'План',data:planData,borderColor:'#9b9b97',borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.3,fill:false}
-        ]
-      },
+      type:'line',data:{labels,datasets},
       options:{
         responsive:true,maintainAspectRatio:false,
         interaction:{mode:'index',intersect:false},
-        plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?Math.round(ctx.parsed.y).toLocaleString('ru'):'—'}`}}},
+        plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},
+          tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?Math.round(ctx.parsed.y).toLocaleString('ru'):'—'}`}}},
         scales:{
           x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:20}},
           y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},beginAtZero:true}
@@ -363,12 +399,12 @@ function switchTab(name,el){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='charts') renderCharts();
-  if(name==='plans') renderPlansTab();
+  if(name==='charts')renderCharts();
+  if(name==='plans')renderPlansTab();
 }
 
 function tog(src){const el=document.getElementById('sb-'+src),ic=document.getElementById('ic-'+src);if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}else{el.style.display='none';ic.className='ti ti-chevron-right';}}
-function render(){renderKPIs();renderTable();renderPlansTab();}
+function render(){renderKPIs();renderTable();if(document.getElementById('tab-plans').classList.contains('active'))renderPlansTab();}
 
 function exportCSV(){
   const rows=[['Источник','Период','ПЛАН новые','ФАКТ новые','ПЛАН успешные','ФАКТ успешные','Конверсия','Откл новые','Откл успешные']];

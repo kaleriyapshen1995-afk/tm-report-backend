@@ -12,22 +12,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 const B24_WEBHOOK = process.env.B24_WEBHOOK || 'https://crm.seller24.ru/rest/5/hj8na6uahgsf4zlp/';
 
 const SOURCE_MAP = {
-  'Платформа':  ['CALLBACK'],
-  'Звонобот':   ['31'],
-  'Реанимация': ['44'],
-  'Прочее':     null,
+  'Платформа':          ['CALLBACK'],
+  'Звонобот':           ['31'],
+  'Магазин':            ['STORE', '28'],
+  'Реанимация+Прочее':  null, // всё остальное
 };
+
+// Статусы которые НЕ считаем новыми лидами
+const EXCLUDE_STATUSES = ['9', '10', '15'];
+
+// Пользователь которого исключаем из планов
+const EXCLUDE_USER = '13';
+
+// Отдел ТМ
+const TM_DEPARTMENT = 148;
 
 // ─── Хранилище планов ────────────────────────────────────────────────────────
 const PLANS_FILE = path.join(__dirname, 'plans.json');
-
 function loadPlans() {
-  try {
-    if (fs.existsSync(PLANS_FILE)) return JSON.parse(fs.readFileSync(PLANS_FILE, 'utf8'));
-  } catch(e) {}
+  try { if (fs.existsSync(PLANS_FILE)) return JSON.parse(fs.readFileSync(PLANS_FILE, 'utf8')); } catch(e) {}
   return {};
 }
-
 function savePlansToFile(data) {
   try { fs.writeFileSync(PLANS_FILE, JSON.stringify(data, null, 2)); } catch(e) {}
 }
@@ -40,7 +45,7 @@ async function b24(method, params = {}) {
   return resp.data.result;
 }
 
-async function fetchAllLeads(filter, select = ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID', 'DATE_CLOSED']) {
+async function fetchAllLeads(filter, select) {
   const allLeads = [];
   let start = 0;
   while (true) {
@@ -54,26 +59,30 @@ async function fetchAllLeads(filter, select = ['ID', 'SOURCE_ID', 'DATE_CREATE',
 }
 
 function fmtDate(date) { return date.toISOString().split('T')[0]; }
-
 function monthRange(year, month) {
   return { from: fmtDate(new Date(year, month, 1)), to: fmtDate(new Date(year, month + 1, 0)) };
 }
 
-// ─── API роуты ───────────────────────────────────────────────────────────────
+function getBlock(sourceId) {
+  for (const [block, ids] of Object.entries(SOURCE_MAP)) {
+    if (ids === null) continue;
+    if (ids.includes(sourceId)) return block;
+  }
+  return 'Реанимация+Прочее';
+}
 
+// ─── API роуты ───────────────────────────────────────────────────────────────
 app.get('/api/ping', async (req, res) => {
   try {
     const profile = await b24('profile');
-    res.json({ ok: true, user: profile.NAME + ' ' + profile.LAST_NAME, portal: profile.PORTAL });
+    res.json({ ok: true, user: profile.NAME + ' ' + profile.LAST_NAME });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
-// Получить планы
 app.get('/api/plans', (req, res) => {
   res.json({ ok: true, plans: loadPlans() });
 });
 
-// Сохранить план
 app.post('/api/plans', (req, res) => {
   try {
     const { key, new: newVal, succ } = req.body;
@@ -90,38 +99,70 @@ app.get('/api/leads', async (req, res) => {
     const year  = parseInt(req.query.year  || new Date().getFullYear());
     const month = parseInt(req.query.month ?? new Date().getMonth());
     const tm    = req.query.tm || null;
-
     const { from, to } = monthRange(year, month);
 
-    const baseFilter = { '>=DATE_CREATE': from, '<=DATE_CREATE': to + 'T23:59:59' };
-    const wonFilter  = { '>=DATE_CLOSED': from, '<=DATE_CLOSED': to + 'T23:59:59', 'STATUS_ID': 'CONVERTED' };
-    if (tm && tm !== 'all') { baseFilter['ASSIGNED_BY_ID'] = tm; wonFilter['ASSIGNED_BY_ID'] = tm; }
+    // Фильтр новых лидов — исключаем нежелательные статусы
+    const baseFilter = {
+      '>=DATE_CREATE': from,
+      '<=DATE_CREATE': to + 'T23:59:59',
+    };
+    // Исключаем статусы 9, 10, 15
+    EXCLUDE_STATUSES.forEach((s, i) => { baseFilter[`!STATUS_ID`] = EXCLUDE_STATUSES; });
+    baseFilter['!STATUS_ID'] = EXCLUDE_STATUSES;
 
-    const [newLeads, wonLeads] = await Promise.all([fetchAllLeads(baseFilter), fetchAllLeads(wonFilter)]);
+    // Фильтр успешных
+    const wonFilter = {
+      '>=DATE_CLOSED': from,
+      '<=DATE_CLOSED': to + 'T23:59:59',
+      'STATUS_ID': 'CONVERTED',
+    };
+
+    if (tm && tm !== 'all') {
+      baseFilter['ASSIGNED_BY_ID'] = tm;
+      wonFilter['ASSIGNED_BY_ID'] = tm;
+    }
+
+    const select = ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID', 'DATE_CLOSED', 'ASSIGNED_BY_ID'];
+
+    const [newLeads, wonLeads] = await Promise.all([
+      fetchAllLeads(baseFilter, select),
+      fetchAllLeads(wonFilter, select),
+    ]);
 
     const result = {};
-    function getBlock(sourceId) {
-      for (const [block, ids] of Object.entries(SOURCE_MAP)) {
-        if (ids === null) continue;
-        if (ids.includes(sourceId)) return block;
-      }
-      return 'Прочее';
-    }
     function ensureDay(block, dateStr) {
       if (!result[block]) result[block] = {};
       if (!result[block][dateStr]) result[block][dateStr] = { new: 0, won: 0 };
     }
-    newLeads.forEach(l => { const b=getBlock(l.SOURCE_ID), d=(l.DATE_CREATE||'').slice(0,10); ensureDay(b,d); result[b][d].new++; });
-    wonLeads.forEach(l => { const b=getBlock(l.SOURCE_ID), d=(l.DATE_CLOSED||'').slice(0,10); ensureDay(b,d); result[b][d].won++; });
+
+    newLeads.forEach(l => {
+      const b = getBlock(l.SOURCE_ID);
+      const d = (l.DATE_CREATE || '').slice(0, 10);
+      ensureDay(b, d);
+      result[b][d].new++;
+    });
+
+    wonLeads.forEach(l => {
+      const b = getBlock(l.SOURCE_ID);
+      const d = (l.DATE_CLOSED || '').slice(0, 10);
+      ensureDay(b, d);
+      result[b][d].won++;
+    });
 
     res.json({ ok: true, year, month, from, to, totalNew: newLeads.length, totalWon: wonLeads.length, data: result });
-  } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+  } catch (e) {
+    console.error(e.message);
+    res.status(500).json({ ok: false, error: e.message });
+  }
 });
 
 app.get('/api/users', async (req, res) => {
   try {
-    const users = await b24('user.get', { filter: { ACTIVE: true, UF_DEPARTMENT: [148] } });
-    res.json({ ok: true, users: users.map(u => ({ id: u.ID, name: u.NAME + ' ' + u.LAST_NAME })) });
+    const users = await b24('user.get', { filter: { ACTIVE: true, UF_DEPARTMENT: [TM_DEPARTMENT] } });
+    const filtered = users
+      .filter(u => u.ID !== EXCLUDE_USER && u.ID.toString() !== EXCLUDE_USER)
+      .map(u => ({ id: u.ID, name: u.NAME + ' ' + u.LAST_NAME }));
+    res.json({ ok: true, users: filtered });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
@@ -135,9 +176,14 @@ app.get('/api/sources', async (req, res) => {
 
 app.get('/api/debug-leads', async (req, res) => {
   try {
-    const result = await b24('crm.lead.list', { filter: { '>=DATE_CREATE': '2026-05-01' }, select: ['ID', 'SOURCE_ID', 'DATE_CREATE'], start: 0 });
+    const result = await b24('crm.lead.list', {
+      filter: { '>=DATE_CREATE': '2026-05-01' },
+      select: ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID'],
+      start: 0
+    });
     const sources = [...new Set(result.map(l => l.SOURCE_ID))];
-    res.json({ ok: true, uniqueSources: sources, sample: result.slice(0, 5) });
+    const statuses = [...new Set(result.map(l => l.STATUS_ID))];
+    res.json({ ok: true, uniqueSources: sources, uniqueStatuses: statuses, sample: result.slice(0, 5) });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 

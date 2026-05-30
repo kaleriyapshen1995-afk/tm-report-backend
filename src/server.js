@@ -123,10 +123,11 @@ app.get('/api/leads', async (req, res) => {
       '!STATUS_ID': EXCLUDE_STATUSES,
     };
 
-    // Фильтр успешных
+    // Фильтр успешных — Б24 не всегда корректно фильтрует по DATE_CLOSED,
+    // поэтому фильтруем по DATE_MODIFY и дополнительно проверяем дату на нашей стороне
     const wonFilter = {
-      '>=DATE_CLOSED': from,
-      '<=DATE_CLOSED': to + 'T23:59:59',
+      '>=DATE_MODIFY': from,
+      '<=DATE_MODIFY': to + 'T23:59:59',
       'STATUS_ID': 'CONVERTED',
     };
 
@@ -136,12 +137,20 @@ app.get('/api/leads', async (req, res) => {
       wonFilter['ASSIGNED_BY_ID'] = tmIds;
     }
 
-    const select = ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID', 'DATE_CLOSED', 'ASSIGNED_BY_ID'];
+    const select = ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID', 'DATE_CLOSED', 'DATE_MODIFY', 'ASSIGNED_BY_ID'];
 
-    const [newLeads, wonLeads] = await Promise.all([
+    const [newLeads, wonLeadsRaw] = await Promise.all([
       fetchAllLeads(baseFilter, select),
       fetchAllLeads(wonFilter, select),
     ]);
+
+    // Дополнительно фильтруем успешные по DATE_CLOSED на нашей стороне
+    const fromDate = new Date(from);
+    const toDate = new Date(to + 'T23:59:59');
+    const wonLeads = wonLeadsRaw.filter(l => {
+      const closed = l.DATE_CLOSED ? new Date(l.DATE_CLOSED) : null;
+      return closed && closed >= fromDate && closed <= toDate;
+    });
 
     const result = {};
     function ensureDay(block, dateStr) {

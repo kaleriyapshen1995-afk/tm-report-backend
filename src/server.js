@@ -102,6 +102,20 @@ app.get('/api/leads', async (req, res) => {
     const tm    = req.query.tm || null;
     const { from, to } = monthRange(year, month);
 
+    // Получаем список ТМ отдела для фильтрации
+    let tmIds = null;
+    if (tm && tm !== 'all') {
+      tmIds = [tm];
+    } else {
+      // Грузим всех активных ТМ отдела (исключая EXCLUDE_USER)
+      try {
+        const users = await b24('user.get', { filter: { ACTIVE: true, UF_DEPARTMENT: [TM_DEPARTMENT] } });
+        tmIds = users
+          .filter(u => u.ID.toString() !== EXCLUDE_USER)
+          .map(u => u.ID.toString());
+      } catch(e) { tmIds = null; }
+    }
+
     // Фильтр новых лидов — исключаем Фейк, Дубль, Тест
     const baseFilter = {
       '>=DATE_CREATE': from,
@@ -116,9 +130,10 @@ app.get('/api/leads', async (req, res) => {
       'STATUS_ID': 'CONVERTED',
     };
 
-    if (tm && tm !== 'all') {
-      baseFilter['ASSIGNED_BY_ID'] = tm;
-      wonFilter['ASSIGNED_BY_ID'] = tm;
+    // Фильтруем по конкретным ТМ
+    if (tmIds && tmIds.length > 0) {
+      baseFilter['ASSIGNED_BY_ID'] = tmIds;
+      wonFilter['ASSIGNED_BY_ID'] = tmIds;
     }
 
     const select = ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID', 'DATE_CLOSED', 'ASSIGNED_BY_ID'];

@@ -12,14 +12,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 const B24_WEBHOOK = process.env.B24_WEBHOOK || 'https://crm.seller24.ru/rest/5/hj8na6uahgsf4zlp/';
 
 const SOURCE_MAP = {
-  'Платформа':          ['CALLBACK'],
-  'Звонобот':           ['31'],
-  'Магазин':            ['STORE', '28'],
-  'Реанимация+Прочее':  null, // всё остальное
+  'Платформа':         ['NEW'],
+  'Звонобот':          ['31'],
+  'Сайт':              ['STORE'],
+  'Холод':             ['28'],
+  'Реанимация+Прочее': null,
 };
 
-// Статусы которые НЕ считаем новыми лидами
-const EXCLUDE_STATUSES = ['9', '10', '15'];
+// НЕ считаем: Фейк=1, Дубль=9, Тест=10
+const EXCLUDE_STATUSES = ['1', '9', '10'];
 
 // Пользователь которого исключаем из планов
 const EXCLUDE_USER = '13';
@@ -101,14 +102,12 @@ app.get('/api/leads', async (req, res) => {
     const tm    = req.query.tm || null;
     const { from, to } = monthRange(year, month);
 
-    // Фильтр новых лидов — исключаем нежелательные статусы
+    // Фильтр новых лидов — исключаем Фейк, Дубль, Тест
     const baseFilter = {
       '>=DATE_CREATE': from,
       '<=DATE_CREATE': to + 'T23:59:59',
+      '!STATUS_ID': EXCLUDE_STATUSES,
     };
-    // Исключаем статусы 9, 10, 15
-    EXCLUDE_STATUSES.forEach((s, i) => { baseFilter[`!STATUS_ID`] = EXCLUDE_STATUSES; });
-    baseFilter['!STATUS_ID'] = EXCLUDE_STATUSES;
 
     // Фильтр успешных
     const wonFilter = {

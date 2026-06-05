@@ -36,7 +36,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .pb-fill{height:100%;border-radius:2px}
 
 /* Filter bar */
-.filter-bar{background:#fff;border:1px solid rgba(0,0,0,0.09);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.filter-bar{background:#fff;border:1px solid rgba(0,0,0,0.09);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:0;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.tab-row{display:flex;align-items:stretch;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.tab-row .filter-bar{flex:1;min-width:0;margin-bottom:0}
+.tabs-right{display:flex;align-items:flex-end;flex-shrink:0}
 .fi{display:flex;align-items:center;gap:8px}
 .fi label{font-size:11px;font-weight:600;color:#6b6b68;white-space:nowrap}
 .fi select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc;background:#f5f5f3;color:#1a1a18;height:30px;cursor:pointer}
@@ -143,7 +146,8 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
   <div class="status"><div class="dot" id="dot"></div><span id="stxt">Загружаем данные...</span></div>
   <div class="kpi-grid" id="kpis"></div>
 
-  <!-- Filter bar -->
+  <!-- Filter + Tabs row -->
+  <div class="tab-row">
   <div class="filter-bar" id="filter-bar">
     <div class="fi"><label>Менеджер</label><select id="tm" onchange="loadData()"><option value="all">Все ТМ</option></select></div>
     <div class="fsep"></div>
@@ -190,12 +194,19 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
     </div>
   </div>
 
-  <div class="tabs">
+  </div><!-- end filter-bar -->
+  <div class="tabs-right">
+  <div class="tabs" style="border-bottom:none;margin-bottom:0">
     <div class="tab active" onclick="switchTab('table',this)"><i class="ti ti-table"></i> Таблица</div>
     <div class="tab" onclick="switchTab('charts',this)"><i class="ti ti-chart-line"></i> Графики</div>
-    <div class="tab" onclick="switchTab('plans',this)"><i class="ti ti-users"></i> Планы по менеджерам</div>
+    <div class="tab" onclick="switchTab('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
+    <div class="tab" onclick="switchTab('plans',this)"><i class="ti ti-settings"></i> Планы</div>
   </div>
+  </div>
+  </div><!-- end tab-row -->
+  <div style="border-bottom:2px solid #e8e5e0;margin-bottom:14px"></div>
   <div id="tab-table" class="tab-content active"><div id="secs"></div></div>
+  <div id="tab-managers" class="tab-content"><div id="mgr-wrap"></div></div>
   <div id="tab-charts" class="tab-content">
     <div class="chart-filters">
       <div class="metric-toggle">
@@ -635,7 +646,94 @@ function renderCharts(){
 }
 
 function tog(src){const el=document.getElementById('sb-'+src),ic=document.getElementById('ic-'+src);if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}else{el.style.display='none';ic.className='ti ti-chevron-right';}}
-function switchTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+name).classList.add('active');if(name==='charts')renderCharts();if(name==='plans')renderPlansTab();}
+function renderManagers(){
+  const prs=periods(), today=new Date(); today.setHours(23,59,59);
+  const days=getRangeDays(), totalWD=days.filter(isWD).length;
+
+  // Считаем факт по каждому менеджеру
+  // Для этого нам нужны данные по ТМ отдельно — пока берём из общего raw
+  // и разбиваем план по менеджерам
+  const html_rows = allUsers.map(u => {
+    // План этого менеджера по всем источникам
+    let planN=0, planS=0;
+    SRCS.forEach(src => { const p=getPlanForUser(src,u.id); planN+=p.new; planS+=p.succ; });
+
+    // Факт — пока показываем план (реальный факт по менеджеру требует отдельного API запроса)
+    const srcCells = SRCS.map(src => {
+      const p = getPlanForUser(src, u.id);
+      const totalSrcPlan = getTotalPlan(src);
+      const sharePct = totalSrcPlan.new > 0 ? p.new / totalSrcPlan.new : 0;
+      // Примерный факт = доля плана * общий факт источника
+      let srcFactN=0, srcFactS=0;
+      const fd = fact(src);
+      days.forEach(d => {
+        const k=d.toISOString().slice(0,10);
+        if(fd[k] && d<=today){ srcFactN+=fd[k].new||0; srcFactS+=fd[k].won||0; }
+      });
+      // Факт по менеджеру недоступен без отдельного запроса — показываем план
+      return `<td class="pl" title="план">${fmt(p.new)}</td><td class="pl" title="план">${fmt(p.succ)}</td>`;
+    }).join('');
+
+    const pctN = planN>0 ? '—' : '—';
+    return `<tr><td class="s">${u.name}</td>${srcCells}<td class="ft">${fmt(planN)}</td><td class="ft">${fmt(planS)}</td></tr>`;
+  }).join('');
+
+  // Итого строка
+  const totalCells = SRCS.map(src => {
+    const p=getTotalPlan(src);
+    let fN=0,fS=0;
+    const fd=fact(src);
+    days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]&&d<=today){fN+=fd[k].new||0;fS+=fd[k].won||0;}});
+    return `<td class="ft">${fmt(fN)}</td><td class="ft">${fmt(fS)}</td>`;
+  }).join('');
+
+  let totalPN=0,totalPS=0;
+  SRCS.forEach(src=>{const p=getTotalPlan(src);totalPN+=p.new;totalPS+=p.succ;});
+
+  const srcHeaders = SRCS.map(src=>`<th colspan="2" style="background:${SRC_COLORS[src]}22;color:${SRC_COLORS[src]}">${src}</th>`).join('');
+  const srcSubHeaders = SRCS.map(()=>`<th class="sub" style="font-size:9px">План нов</th><th class="sub" style="font-size:9px">План усп</th>`).join('');
+
+  // Факт по источникам для итого
+  const factRow = SRCS.map(src=>{
+    let fN=0,fS=0;
+    const fd=fact(src);
+    days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]&&d<=today){fN+=fd[k].new||0;fS+=fd[k].won||0;}});
+    return `<td style="color:#1D9E75;font-weight:600">${fmt(fN)}</td><td style="color:#1D9E75;font-weight:600">${fmt(fS)}</td>`;
+  }).join('');
+  let allFactN=0,allFactS=0;
+  SRCS.forEach(src=>{const fd=fact(src);days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]&&d<=today){allFactN+=fd[k].new||0;allFactS+=fd[k].won||0;}});});
+
+  const note = `<div style="font-size:11px;color:#9b9b97;padding:8px 14px;background:#fafaf8;border-top:1px solid rgba(0,0,0,0.06)">
+    ℹ️ В колонках источников показан <b>план</b> по менеджеру. Строка «Факт итого» — реальные данные из Б24 по всем ТМ.
+    Для точного факта по каждому менеджеру нужен отдельный API-запрос на каждого ТМ.
+  </div>`;
+
+  document.getElementById('mgr-wrap').innerHTML = `
+    <div class="section">
+      <div class="sec-head" style="cursor:default">
+        <i class="ti ti-users" style="color:#9b9b97"></i>
+        <span>Сравнение по менеджерам — ${MONTHS[curM]} ${getY()}</span>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead>
+          <tr><th class="s" rowspan="2">Менеджер</th>${srcHeaders}<th colspan="2">Итого план</th></tr>
+          <tr>${srcSubHeaders}<th class="sub" style="font-size:9px">Новых</th><th class="sub" style="font-size:9px">Успешных</th></tr>
+        </thead>
+        <tbody>
+          ${html_rows}
+          <tr style="background:#fafaf8;font-weight:700;border-top:2px solid rgba(0,0,0,0.12)">
+            <td class="s">ПЛАН итого</td>${SRCS.map(src=>{const p=getTotalPlan(src);return `<td class="pl">${fmt(p.new)}</td><td class="pl">${fmt(p.succ)}</td>`;}).join('')}<td class="pl">${fmt(totalPN)}</td><td class="pl">${fmt(totalPS)}</td>
+          </tr>
+          <tr style="background:#EAF3DE;font-weight:700">
+            <td class="s" style="color:#3B6D11">ФАКТ итого</td>${factRow}<td style="color:#3B6D11;font-weight:700">${fmt(allFactN)}</td><td style="color:#3B6D11;font-weight:700">${fmt(allFactS)}</td>
+          </tr>
+        </tbody>
+      </table></div>
+      ${note}
+    </div>`;
+}
+
+function switchTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+name).classList.add('active');if(name==='charts')renderCharts();if(name==='plans')renderPlansTab();if(name==='managers')renderManagers();}
 function render(){renderKPIs();renderTable();if(document.getElementById('tab-plans').classList.contains('active'))renderPlansTab();}
 function exportCSV(){
   const rows=[['Источник','Период','ПЛАН новые','ФАКТ новые','ПЛАН успешные','ФАКТ успешные','Конверсия','Откл новые','Откл успешные']];

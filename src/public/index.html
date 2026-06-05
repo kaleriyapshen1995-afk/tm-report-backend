@@ -9,113 +9,200 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:#1a1a18;background:#f0ede8;min-height:100vh}
-.header{background:#fff;border-bottom:1px solid rgba(0,0,0,0.1);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
-.header h1{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
-.controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc;background:#fff;color:#1a1a18;height:30px;cursor:pointer}
-.btn{font-size:12px;padding:4px 10px;border-radius:7px;border:1px solid #d0d0cc;background:#fff;color:#1a1a18;cursor:pointer;height:30px;display:inline-flex;align-items:center;gap:5px}
+.header{background:#fff;border-bottom:1px solid rgba(0,0,0,0.1);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.header h1{font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+.hbtns{display:flex;gap:6px}
+.btn{font-size:12px;padding:4px 12px;border-radius:7px;border:1px solid #d0d0cc;background:#fff;color:#1a1a18;cursor:pointer;height:30px;display:inline-flex;align-items:center;gap:5px}
 .btn:hover{background:#f5f5f3}
 .btn.primary{background:#185FA5;color:#fff;border-color:#185FA5}
 .btn.primary:hover{background:#0C447C}
-.btn:disabled{opacity:0.6;cursor:not-allowed}
-.main{max-width:1400px;margin:0 auto;padding:16px}
-.tabs{display:flex;gap:0;border-bottom:2px solid #e8e5e0;margin-bottom:16px}
-.tab{padding:8px 18px;font-size:13px;font-weight:500;cursor:pointer;color:#6b6b68;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:6px}
-.tab.active{color:#185FA5;border-bottom-color:#185FA5}
-.tab-content{display:none}.tab-content.active{display:block}
-.month-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
-.mbtn{padding:4px 12px;font-size:12px;border-radius:7px;border:1px solid #d0d0cc;cursor:pointer;background:#fff;color:#6b6b68;font-weight:500}
-.mbtn.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.main{max-width:1500px;margin:0 auto;padding:14px}
 .status{font-size:11px;color:#6b6b68;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .dot{width:7px;height:7px;border-radius:50%;background:#BA7517;flex-shrink:0}
 .dot.ok{background:#1D9E75}.dot.err{background:#993C1D}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
 .kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
 .kpi-label{font-size:11px;color:#6b6b68;margin-bottom:4px;font-weight:500}
-.kpi-val{font-size:22px;font-weight:600;display:flex;align-items:baseline;gap:8px}
-.kpi-val-pct{font-size:14px;font-weight:500;color:#9b9b97}
-.kpi-sub{font-size:11px;color:#9b9b97;margin-top:3px}
+.kpi-val{font-size:22px;font-weight:600}
+.kpi-meta{font-size:11px;color:#6b6b68;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600}
+.pill.ok{background:#EAF3DE;color:#3B6D11}
+.pill.warn{background:#FAEEDA;color:#854F0B}
+.pill.bad{background:#FCEBEB;color:#993C1D}
 .pb{height:4px;background:#ededea;border-radius:2px;margin-top:8px;overflow:hidden}
 .pb-fill{height:100%;border-radius:2px}
+
+/* Filter bar */
+.filter-bar{background:#fff;border:1px solid rgba(0,0,0,0.09);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.fi{display:flex;align-items:center;gap:8px}
+.fi label{font-size:11px;font-weight:600;color:#6b6b68;white-space:nowrap}
+.fi select{font-size:12px;padding:4px 8px;border-radius:7px;border:1px solid #d0d0cc;background:#f5f5f3;color:#1a1a18;height:30px;cursor:pointer}
+.fsep{width:1px;height:22px;background:rgba(0,0,0,0.1);flex-shrink:0}
+.gran-toggle{display:flex;border-radius:7px;overflow:hidden;border:1px solid #d0d0cc}
+.gran-btn{padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;background:#f5f5f3;color:#6b6b68;border:none;border-right:1px solid #d0d0cc}
+.gran-btn:last-child{border-right:none}
+.gran-btn.active{background:#185FA5;color:#fff}
+.gran-btn:hover:not(.active){background:#ededea}
+
+/* Date range picker */
+.date-range{display:flex;align-items:center;gap:8px}
+.date-range label{font-size:11px;font-weight:600;color:#6b6b68}
+.date-input-wrap{display:flex;align-items:center;gap:4px;background:#f5f5f3;border:1px solid #d0d0cc;border-radius:7px;padding:0 8px;height:30px;cursor:pointer}
+.date-input-wrap i{color:#9b9b97;font-size:14px}
+.date-input-wrap span{font-size:12px;color:#1a1a18;white-space:nowrap}
+.date-input-wrap input[type=date]{position:absolute;opacity:0;width:1px;height:1px}
+
+/* Calendar popup */
+.cal-popup{position:absolute;background:#fff;border:1px solid rgba(0,0,0,0.12);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:16px;z-index:200;min-width:560px;display:none}
+.cal-popup.show{display:flex;gap:20px}
+.cal-month{flex:1}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-nav span{font-size:12px;font-weight:600}
+.cal-nav button{border:none;background:none;cursor:pointer;color:#6b6b68;font-size:16px;padding:2px 6px;border-radius:5px}
+.cal-nav button:hover{background:#f0ede8}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dh{font-size:10px;color:#9b9b97;text-align:center;padding:2px 0;font-weight:600}
+.cal-d{font-size:11px;text-align:center;padding:5px 2px;border-radius:5px;cursor:pointer;border:none;background:none;width:100%}
+.cal-d:hover:not(.other):not(.disabled){background:#f0ede8}
+.cal-d.other{color:#d0d0cc;cursor:default}
+.cal-d.disabled{color:#d0d0cc;cursor:default}
+.cal-d.selected{background:#185FA5;color:#fff}
+.cal-d.in-range{background:#E6F1FB;color:#185FA5}
+.cal-d.range-start{background:#185FA5;color:#fff;border-radius:5px 0 0 5px}
+.cal-d.range-end{background:#185FA5;color:#fff;border-radius:0 5px 5px 0}
+.cal-d.today{font-weight:700}
+.cal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.08);gap:8px}
+.cal-presets{display:flex;gap:6px;flex-wrap:wrap}
+.cal-preset{font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid #d0d0cc;cursor:pointer;background:#f5f5f3;color:#6b6b68}
+.cal-preset:hover{background:#185FA5;color:#fff;border-color:#185FA5}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:2px solid #e8e5e0;margin-bottom:14px}
+.tab{padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;color:#6b6b68;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:5px}
+.tab.active{color:#185FA5;border-bottom-color:#185FA5}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Table */
 .section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-.sec-head{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fafaf8;cursor:pointer;font-size:12px;font-weight:600;user-select:none;border-bottom:1px solid rgba(0,0,0,0.06)}
+.sec-head{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fafaf8;cursor:pointer;font-size:12px;font-weight:600;user-select:none;border-bottom:1px solid rgba(0,0,0,0.06)}
 .sec-head:hover{background:#f5f5f3}
 .badge{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap;font-weight:500}
-.badge.ok{background:#EAF3DE;color:#3B6D11}
-.badge.warn{background:#FAEEDA;color:#854F0B}
-.badge.bad{background:#FCEBEB;color:#993C1D}
-.badge.neutral{background:#f0ede8;color:#9b9b97;border:1px solid #e0ddd8}
+.badge.ok{background:#EAF3DE;color:#3B6D11}.badge.warn{background:#FAEEDA;color:#854F0B}.badge.bad{background:#FCEBEB;color:#993C1D}.badge.neutral{background:#f0ede8;color:#9b9b97;border:1px solid #e0ddd8}
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
-th{background:#fafaf8;padding:5px 8px;text-align:right;font-weight:600;border:1px solid rgba(0,0,0,0.07);white-space:nowrap;color:#6b6b68;font-size:10px}
-th.s{text-align:left;min-width:200px;position:sticky;left:0;z-index:2;background:#fafaf8}
-td{padding:4px 8px;border:1px solid rgba(0,0,0,0.06);text-align:right;white-space:nowrap;background:#fff}
+th{background:#fafaf8;padding:4px 7px;text-align:right;font-weight:600;border:1px solid rgba(0,0,0,0.07);white-space:nowrap;color:#6b6b68;font-size:10px}
+th.s{text-align:left;min-width:185px;position:sticky;left:0;z-index:2;background:#fafaf8}
+td{padding:4px 7px;border:1px solid rgba(0,0,0,0.06);text-align:right;white-space:nowrap;background:#fff}
 td.s{text-align:left;color:#6b6b68;position:sticky;left:0;z-index:1;background:#fff}
 td.pl{color:#185FA5}td.ft{font-weight:600;color:#1a1a18}
 td.pos{color:#3B6D11;font-weight:600}td.neg{color:#993C1D;font-weight:600}td.dim{color:#9b9b97}
 tr.sep td{border-top:1.5px solid rgba(0,0,0,0.1)}
-tr.grp td{background:#f5f5f3;font-weight:600;font-size:10px;color:#6b6b68;text-transform:uppercase;letter-spacing:0.3px}
-tr.grp td.s{background:#f5f5f3}
-tr:hover td{background:#fafaf8}tr:hover td.s{background:#fafaf8}
-tr.grp:hover td{background:#f5f5f3}tr.grp:hover td.s{background:#f5f5f3}
+tr.grp td{background:#f0ede8;font-weight:700;font-size:10px;color:#6b6b68;text-transform:uppercase;letter-spacing:0.4px}
+tr.grp td.s{background:#f0ede8}
+tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#fafaf8}
+
+/* Plans */
 .plan-section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-.plan-sec-head{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fafaf8;font-size:12px;font-weight:600;border-bottom:1px solid rgba(0,0,0,0.06)}
-.plan-grid{padding:12px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
-.plan-row{display:flex;align-items:center;gap:10px;padding:6px 10px;background:#fafaf8;border-radius:7px;font-size:12px}
-.plan-name{flex:1;color:#1a1a18;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.plan-input-wrap{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.plan-input-wrap label{font-size:10px;color:#9b9b97}
-.plan-input-wrap input{width:65px;border:none;border-bottom:1.5px solid #185FA5;background:transparent;color:#185FA5;font-size:12px;text-align:right;padding:1px 2px;outline:none;font-weight:600}
-.plan-total{padding:8px 14px;background:#f0ede8;border-top:1px solid rgba(0,0,0,0.06);font-size:11px;color:#6b6b68;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.plan-total strong{color:#1a1a18}
+.plan-sec-head{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fafaf8;font-size:12px;font-weight:600;border-bottom:1px solid rgba(0,0,0,0.06)}
+.plan-tbl-wrap{overflow-x:auto}
+.plan-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.plan-tbl th{background:#fafaf8;padding:4px 6px;text-align:center;font-weight:600;border:1px solid rgba(0,0,0,0.07);white-space:nowrap;color:#6b6b68;font-size:10px}
+.plan-tbl th.s{text-align:left;min-width:130px;position:sticky;left:0;z-index:2;background:#fafaf8}
+.plan-tbl th.sub{font-size:9px;color:#9b9b97;font-weight:500}
+.plan-tbl td{padding:3px 4px;border:1px solid rgba(0,0,0,0.06);text-align:center;background:#fff;white-space:nowrap}
+.plan-tbl td.s{text-align:left;position:sticky;left:0;z-index:1;background:#fff;font-weight:500;padding:3px 8px}
+.plan-tbl input{width:42px;border:none;border-bottom:1.5px solid #185FA5;background:transparent;color:#185FA5;font-size:11px;text-align:right;padding:1px 2px;outline:none;font-weight:600}
+.plan-tbl tr.total-row td{background:#fafaf8;font-weight:700;border-top:2px solid rgba(0,0,0,0.12)}
+.plan-tbl tr.total-row td.s{background:#fafaf8}
+.plan-footer{padding:8px 14px;background:#f0ede8;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.save-ind{font-size:10px;opacity:0;transition:opacity .3s}
+
+/* Charts */
 .chart-card{background:#fff;border-radius:10px;padding:16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:14px}
-.chart-card h3{font-size:13px;font-weight:600;margin-bottom:12px;color:#1a1a18;display:flex;align-items:center;gap:6px}
-.chart-wrap{position:relative;height:280px}
+.chart-card h3{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.chart-wrap{position:relative;height:260px}
 .chart-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
-.chart-filters label{font-size:12px;color:#6b6b68;font-weight:500}
-.metric-toggle{display:flex;gap:6px}
-.metric-btn{padding:4px 12px;font-size:12px;border-radius:7px;border:1px solid #d0d0cc;cursor:pointer;background:#fff;color:#6b6b68}
+.metric-toggle{display:flex;gap:4px}
+.metric-btn{padding:4px 10px;font-size:12px;border-radius:7px;border:1px solid #d0d0cc;cursor:pointer;background:#fff;color:#6b6b68}
 .metric-btn.active{background:#185FA5;color:#fff;border-color:#185FA5}
 </style>
 </head>
 <body>
 <div class="header">
   <h1><i class="ti ti-chart-bar"></i>Декомпозиция ТМ</h1>
-  <div class="controls">
-    <select id="tm" onchange="loadData()"><option value="all">Все ТМ</option></select>
-    <select id="yr" onchange="loadData()"><option value="2026">2026</option><option value="2025">2025</option></select>
-    <select id="gran" onchange="render()">
-      <option value="day">По дням</option>
-      <option value="week">По неделям</option>
-      <option value="month">Итого за месяц</option>
-    </select>
+  <div class="hbtns">
     <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i> CSV</button>
     <button class="btn primary" onclick="loadData()"><i class="ti ti-refresh"></i> Обновить</button>
   </div>
 </div>
 
 <div class="main">
-  <div class="month-bar" id="mbar"></div>
   <div class="status"><div class="dot" id="dot"></div><span id="stxt">Загружаем данные...</span></div>
   <div class="kpi-grid" id="kpis"></div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar" id="filter-bar">
+    <div class="fi"><label>Менеджер</label><select id="tm" onchange="loadData()"><option value="all">Все ТМ</option></select></div>
+    <div class="fsep"></div>
+    <div class="fi"><label>Год</label><select id="yr" onchange="onYearChange()" style="min-width:75px"><option value="2026">2026</option><option value="2025">2025</option></select></div>
+    <div class="fsep"></div>
+    <div class="fi" id="fi-month"><label>Месяц</label><select id="mon" style="min-width:110px"></select></div>
+    <div class="fsep" id="fsep-month"></div>
+    <div class="fi">
+      <label>Грануляр</label>
+      <div class="gran-toggle">
+        <button class="gran-btn active" onclick="setGran('day',this)">День</button>
+        <button class="gran-btn" onclick="setGran('week',this)">Неделя</button>
+        <button class="gran-btn" onclick="setGran('month',this)">Месяц</button>
+      </div>
+    </div>
+    <!-- Date range (показывается только при грануляре "День") -->
+    <div class="fsep" id="fsep-range" style="display:none"></div>
+    <div class="fi" id="fi-range" style="display:none;position:relative">
+      <label>Диапазон дат</label>
+      <div class="date-input-wrap" onclick="toggleCal()">
+        <i class="ti ti-calendar"></i>
+        <span id="range-label">выберите период</span>
+        <i class="ti ti-chevron-down" style="margin-left:4px;font-size:12px"></i>
+      </div>
+      <!-- Calendar popup -->
+      <div class="cal-popup" id="cal-popup">
+        <div class="cal-month" id="cal-left"></div>
+        <div class="cal-month" id="cal-right"></div>
+        <div style="display:flex;flex-direction:column;justify-content:space-between">
+          <div class="cal-presets">
+            <div style="font-size:10px;font-weight:600;color:#6b6b68;margin-bottom:6px;width:100%">Быстрый выбор</div>
+            <button class="cal-preset" onclick="applyPreset(7)">7 дней</button>
+            <button class="cal-preset" onclick="applyPreset(14)">14 дней</button>
+            <button class="cal-preset" onclick="applyPreset(30)">30 дней</button>
+            <button class="cal-preset" onclick="applyPresetMonth(0)">Этот месяц</button>
+            <button class="cal-preset" onclick="applyPresetMonth(-1)">Пред. месяц</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+            <button class="btn primary" style="width:100%" onclick="applyRange()"><i class="ti ti-check"></i> Применить</button>
+            <button class="btn" style="width:100%" onclick="closeCal()">Отмена</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="tabs">
     <div class="tab active" onclick="switchTab('table',this)"><i class="ti ti-table"></i> Таблица</div>
     <div class="tab" onclick="switchTab('charts',this)"><i class="ti ti-chart-line"></i> Графики</div>
     <div class="tab" onclick="switchTab('plans',this)"><i class="ti ti-users"></i> Планы по менеджерам</div>
   </div>
-
   <div id="tab-table" class="tab-content active"><div id="secs"></div></div>
-
   <div id="tab-charts" class="tab-content">
     <div class="chart-filters">
-      <label>Показатель:</label>
       <div class="metric-toggle">
-        <button class="metric-btn active" id="mb-both" onclick="setMetric('both',this)">Оба</button>
-        <button class="metric-btn" id="mb-new" onclick="setMetric('new',this)">Новые</button>
-        <button class="metric-btn" id="mb-won" onclick="setMetric('won',this)">Успешные</button>
+        <button class="metric-btn active" onclick="setMetric('both',this)">Оба</button>
+        <button class="metric-btn" onclick="setMetric('new',this)">Новые</button>
+        <button class="metric-btn" onclick="setMetric('won',this)">Успешные</button>
       </div>
-      <label style="margin-left:8px">Тип:</label>
       <select id="chart-type" onchange="renderCharts()">
         <option value="cumulative">Нарастающим итогом</option>
         <option value="daily">По периодам</option>
@@ -123,70 +210,228 @@ tr.grp:hover td{background:#f5f5f3}tr.grp:hover td.s{background:#f5f5f3}
     </div>
     <div id="charts-wrap"></div>
   </div>
-
   <div id="tab-plans" class="tab-content"><div id="plans-wrap"></div></div>
 </div>
 
 <script>
 const API='';
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DAY_NAMES=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const SRCS=['Платформа','Звонобот','Сайт','Холод','Реанимация+Прочее'];
 const SRC_COLORS={'Платформа':'#185FA5','Звонобот':'#1D9E75','Сайт':'#7B4FBF','Холод':'#F5A623','Реанимация+Прочее':'#E24B4A'};
-let curM=new Date().getMonth(),raw=null,serverPlans={},allUsers=[],charts={},chartMetric='both';
 
-function getY(){return parseInt(document.getElementById('yr').value);}
-function getG(){return document.getElementById('gran').value;}
-function getTM(){return document.getElementById('tm').value;}
-function pKey(src,m,y,tmId){return src+'_'+y+'_'+m+'_'+(tmId||'all');}
-function getPlanForUser(src,tmId){const k=pKey(src,curM,getY(),tmId);return serverPlans[k]||{new:0,succ:0};}
-function getTotalPlan(src){
-  if(allUsers.length===0)return serverPlans[pKey(src,curM,getY(),'all')]||{new:0,succ:0};
-  let n=0,s=0;
-  allUsers.forEach(u=>{const p=getPlanForUser(src,u.id);n+=p.new;s+=p.succ;});
-  return{new:n,succ:s};
+let curM=new Date().getMonth(), curGran='day', raw=null, serverPlans={}, allUsers=[], charts={}, chartMetric='both';
+let rangeStart=null, rangeEnd=null, picking=null; // 'start' or 'end'
+let calLeftYear=new Date().getFullYear(), calLeftMonth=new Date().getMonth();
+let pendingStart=null, pendingEnd=null;
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+function initMonthSelect(){
+  const sel=document.getElementById('mon');
+  sel.innerHTML=MONTHS.map((m,i)=>`<option value="${i}"${i===curM?' selected':''}>${m}</option>`).join('');
+  sel.onchange=()=>{
+    curM=parseInt(sel.value);
+    // Сбрасываем диапазон на весь месяц
+    const y=getY();
+    rangeStart=new Date(y,curM,1);
+    rangeEnd=new Date(y,curM+1,0);
+    updateRangeLabel();
+    loadData();
+  };
 }
 
-function updatePlanLocal(src,tmId,field,val){
-  const k=pKey(src,curM,getY(),tmId);
+function onYearChange(){
+  const y=getY();
+  rangeStart=new Date(y,curM,1);
+  rangeEnd=new Date(y,curM+1,0);
+  updateRangeLabel();
+  loadData();
+}
+
+function setGran(g,el){
+  curGran=g;
+  document.querySelectorAll('.gran-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const showRange=g==='day';
+  document.getElementById('fi-range').style.display=showRange?'':'none';
+  document.getElementById('fsep-range').style.display=showRange?'':'none';
+  render();
+}
+
+function getY(){return parseInt(document.getElementById('yr').value);}
+function getG(){return curGran;}
+function getTM(){return document.getElementById('tm').value;}
+
+// ── Calendar ──────────────────────────────────────────────────────────────────
+function toggleCal(){
+  const p=document.getElementById('cal-popup');
+  if(p.classList.contains('show')){closeCal();return;}
+  pendingStart=rangeStart?new Date(rangeStart):null;
+  pendingEnd=rangeEnd?new Date(rangeEnd):null;
+  picking='start';
+  // Показываем месяц начала диапазона
+  if(rangeStart){calLeftYear=rangeStart.getFullYear();calLeftMonth=rangeStart.getMonth();}
+  else{calLeftYear=getY();calLeftMonth=curM;}
+  renderCals();
+  p.classList.add('show');
+  setTimeout(()=>document.addEventListener('click',outsideClick),10);
+}
+function closeCal(){
+  document.getElementById('cal-popup').classList.remove('show');
+  document.removeEventListener('click',outsideClick);
+  picking=null;
+}
+function outsideClick(e){
+  if(!document.getElementById('fi-range').contains(e.target))closeCal();
+}
+
+function renderCals(){
+  renderOneCal('cal-left',calLeftYear,calLeftMonth);
+  let rm=calLeftMonth+1,ry=calLeftYear;
+  if(rm>11){rm=0;ry++;}
+  renderOneCal('cal-right',ry,rm);
+}
+
+function renderOneCal(id,year,month){
+  const el=document.getElementById(id);
+  const first=new Date(year,month,1);
+  const last=new Date(year,month+1,0);
+  const startDow=(first.getDay()+6)%7; // пн=0
+  const today=new Date();today.setHours(0,0,0,0);
+
+  let html=`<div class="cal-nav">`;
+  if(id==='cal-left'){
+    html+=`<button onclick="calNav(-1)">&#8249;</button>`;
+  }else{html+=`<span></span>`;}
+  html+=`<span>${MONTHS[month]} ${year}</span>`;
+  if(id==='cal-right'){
+    html+=`<button onclick="calNav(1)">&#8250;</button>`;
+  }else{html+=`<span></span>`;}
+  html+=`</div><div class="cal-grid">`;
+  DAY_NAMES.forEach(d=>html+=`<div class="cal-dh">${d}</div>`);
+
+  // Пустые ячейки до первого дня
+  for(let i=0;i<startDow;i++)html+=`<button class="cal-d other"></button>`;
+
+  for(let d=1;d<=last.getDate();d++){
+    const date=new Date(year,month,d);
+    date.setHours(0,0,0,0);
+    let cls='cal-d';
+    if(date.getTime()===today.getTime())cls+=' today';
+    const isStart=pendingStart&&date.getTime()===pendingStart.getTime();
+    const isEnd=pendingEnd&&date.getTime()===pendingEnd.getTime();
+    const inRange=pendingStart&&pendingEnd&&date>pendingStart&&date<pendingEnd;
+    if(isStart&&isEnd)cls+=' selected';
+    else if(isStart)cls+=' range-start';
+    else if(isEnd)cls+=' range-end';
+    else if(inRange)cls+=' in-range';
+    html+=`<button class="${cls}" onclick="calClick(${year},${month},${d})">${d}</button>`;
+  }
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+function calNav(dir){
+  calLeftMonth+=dir;
+  if(calLeftMonth>11){calLeftMonth=0;calLeftYear++;}
+  if(calLeftMonth<0){calLeftMonth=11;calLeftYear--;}
+  renderCals();
+}
+
+function calClick(y,m,d){
+  const date=new Date(y,m,d);date.setHours(0,0,0,0);
+  if(!pendingStart||picking==='start'||(pendingStart&&pendingEnd)){
+    pendingStart=date;pendingEnd=null;picking='end';
+  } else {
+    if(date<pendingStart){pendingEnd=pendingStart;pendingStart=date;}
+    else pendingEnd=date;
+    picking='start';
+  }
+  renderCals();
+}
+
+function applyPreset(days){
+  const end=new Date();end.setHours(0,0,0,0);
+  const start=new Date(end);start.setDate(start.getDate()-days+1);
+  pendingStart=start;pendingEnd=end;picking='start';
+  renderCals();
+}
+
+function applyPresetMonth(offset){
+  const now=new Date();
+  const y=now.getFullYear(),m=now.getMonth()+offset;
+  const d=new Date(y,m,1);
+  pendingStart=new Date(d.getFullYear(),d.getMonth(),1);
+  pendingEnd=new Date(d.getFullYear(),d.getMonth()+1,0);
+  picking='start';
+  calLeftYear=pendingStart.getFullYear();calLeftMonth=pendingStart.getMonth();
+  renderCals();
+}
+
+function applyRange(){
+  if(!pendingStart)return;
+  rangeStart=pendingStart;
+  rangeEnd=pendingEnd||pendingStart;
+  // Подстраиваем curM под диапазон
+  curM=rangeStart.getMonth();
+  document.getElementById('mon').value=curM;
+  updateRangeLabel();
+  closeCal();
+  loadData();
+}
+
+function updateRangeLabel(){
+  if(!rangeStart){document.getElementById('range-label').textContent='выберите период';return;}
+  const fmt=d=>d.getDate().toString().padStart(2,'0')+'.'+(d.getMonth()+1).toString().padStart(2,'0')+'.'+d.getFullYear();
+  const end=rangeEnd||rangeStart;
+  document.getElementById('range-label').textContent=fmt(rangeStart)+' – '+fmt(end);
+}
+
+// ── Plans ─────────────────────────────────────────────────────────────────────
+function pKey(src,m,y,tmId){return src+'_'+y+'_'+m+'_'+(tmId||'all');}
+function getPlanForUser(src,tmId,m,y){m=m===undefined?curM:m;y=y===undefined?getY():y;return serverPlans[pKey(src,m,y,tmId)]||{new:0,succ:0};}
+function getTotalPlan(src,m,y){
+  m=m===undefined?curM:m;y=y===undefined?getY():y;
+  if(allUsers.length===0)return serverPlans[pKey(src,m,y,'all')]||{new:0,succ:0};
+  let n=0,s=0;allUsers.forEach(u=>{const p=getPlanForUser(src,u.id,m,y);n+=p.new;s+=p.succ;});
+  return{new:n,succ:s};
+}
+function updatePlanLocal(src,tmId,field,val,m,y){
+  m=m===undefined?curM:m;y=y===undefined?getY():y;
+  const k=pKey(src,m,y,tmId);
   if(!serverPlans[k])serverPlans[k]={new:0,succ:0};
   serverPlans[k][field]=parseInt(val)||0;
 }
-
 async function saveSrcPlans(src){
-  const btn=document.getElementById('savebtn-'+src);
-  const ind=document.getElementById('si-'+src);
+  const y=getY();
+  const btn=document.getElementById(`savebtn-${src}`),ind=document.getElementById(`si-${src}`);
   if(btn)btn.disabled=true;
   let ok=true;
   for(const u of allUsers){
-    const k=pKey(src,curM,getY(),u.id);
-    const p=serverPlans[k]||{new:0,succ:0};
-    try{await fetch(`${API}/api/plans`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,...p})});}
-    catch(e){ok=false;}
+    for(let mi=0;mi<12;mi++){
+      const k=pKey(src,mi,y,u.id);
+      if(!serverPlans[k])continue;
+      try{await fetch(`${API}/api/plans`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,...serverPlans[k]})});}
+      catch(e){ok=false;}
+    }
   }
   if(btn)btn.disabled=false;
-  if(ind){ind.textContent=ok?'✓ Сохранено':'Ошибка';ind.style.color=ok?'#1D9E75':'#993C1D';ind.style.opacity='1';setTimeout(()=>{ind.style.opacity='0';},2000);}
+  if(ind){ind.textContent=ok?'✓ Сохранено':'Ошибка';ind.style.color=ok?'#1D9E75':'#993C1D';ind.style.opacity='1';setTimeout(()=>ind.style.opacity='0',2000);}
   render();
-  if(document.getElementById('tab-charts').classList.contains('active'))renderCharts();
 }
+async function loadPlansFromServer(){try{const r=await fetch(`${API}/api/plans`);const d=await r.json();if(d.ok)serverPlans=d.plans||{};}catch(e){}}
 
-async function loadPlansFromServer(){
-  try{const r=await fetch(`${API}/api/plans`);const d=await r.json();if(d.ok)serverPlans=d.plans||{};}catch(e){}
-}
 function setStatus(t,txt){document.getElementById('dot').className='dot '+(t==='ok'?'ok':t==='err'?'err':'');document.getElementById('stxt').textContent=txt;}
-function renderMbar(){document.getElementById('mbar').innerHTML=MONTHS.map((m,i)=>`<button class="mbtn${i===curM?' active':''}" onclick="switchM(${i})">${m.slice(0,3)}</button>`).join('');}
-function switchM(m){curM=m;loadData();}
 
 async function loadUsers(){
-  try{
-    const r=await fetch(`${API}/api/users`);const d=await r.json();if(!d.ok)return;
-    allUsers=d.users;
-    const sel=document.getElementById('tm');
-    d.users.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;sel.appendChild(o);});
-  }catch(e){}
+  try{const r=await fetch(`${API}/api/users`);const d=await r.json();if(!d.ok)return;allUsers=d.users;const sel=document.getElementById('tm');d.users.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;sel.appendChild(o);});}catch(e){}
 }
 
 async function loadData(){
-  setStatus('','Загружаем из Б24...');renderMbar();
+  curM=parseInt(document.getElementById('mon').value);
+  // Если нет диапазона — берём весь месяц
+  if(!rangeStart){rangeStart=new Date(getY(),curM,1);rangeEnd=new Date(getY(),curM+1,0);updateRangeLabel();}
+  setStatus('','Загружаем из Б24...');
   await loadPlansFromServer();
   try{
     const r=await fetch(`${API}/api/leads?year=${getY()}&month=${curM}&tm=${getTM()}`);
@@ -197,34 +442,43 @@ async function loadData(){
   }catch(e){setStatus('err','Ошибка: '+e.message);}
 }
 
+// ── Data ──────────────────────────────────────────────────────────────────────
 function fact(src){return raw&&raw.data&&raw.data[src]?raw.data[src]:{};}
-function allDays(){const y=getY(),d=new Date(y,curM,1),days=[];while(d.getMonth()===curM){days.push(new Date(d));d.setDate(d.getDate()+1);}return days;}
+
+function getRangeDays(){
+  if(curGran==='day'&&rangeStart&&rangeEnd){
+    const days=[],d=new Date(rangeStart);d.setHours(0,0,0,0);
+    const end=new Date(rangeEnd);end.setHours(0,0,0,0);
+    while(d<=end){days.push(new Date(d));d.setDate(d.getDate()+1);}
+    return days;
+  }
+  // Для week/month — весь месяц
+  const y=getY(),d=new Date(y,curM,1),days=[];
+  while(d.getMonth()===curM){days.push(new Date(d));d.setDate(d.getDate()+1);}
+  return days;
+}
+
 function isWD(d){return d.getDay()>0&&d.getDay()<6;}
 
 function periods(){
-  const g=getG(),days=allDays();
+  const g=getG(),days=getRangeDays();
   if(g==='month')return[{label:MONTHS[curM],days}];
-  if(g==='week'){const ws={};days.forEach(d=>{const w=Math.ceil(d.getDate()/7);if(!ws[w])ws[w]=[];ws[w].push(d);});return Object.values(ws).map((wd,i)=>({label:'Нед '+(i+1),days:wd}));}
+  if(g==='week'){const ws={};days.forEach(d=>{const w=Math.ceil((d.getDate())/7);if(!ws[w])ws[w]=[];ws[w].push(d);});return Object.values(ws).map((wd,i)=>({label:'Нед '+(i+1),days:wd}));}
   return days.map(d=>({label:d.getDate()+'.'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1),days:[d]}));
 }
 
 function buildRows(src){
-  const fd=fact(src),days=allDays(),today=new Date();today.setHours(23,59,59);
-  const totalWD=days.filter(isWD).length,p=getTotalPlan(src);
+  const fd=fact(src),rangeDays=getRangeDays(),today=new Date();today.setHours(23,59,59);
+  const totalWD=rangeDays.filter(isWD).length,p=getTotalPlan(src);
   let cumNF=0,cumSF=0;
   return periods().map(pr=>{
     const last=pr.days[pr.days.length-1],past=last<=today;
-    const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
+    const cumWD=rangeDays.filter(d=>d<=last&&isWD(d)).length;
     const planN=totalWD?Math.round(p.new/totalWD*cumWD):0,planS=totalWD?Math.round(p.succ/totalWD*cumWD):0;
     let nf=0,sf=0;
     if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
     cumNF+=nf;cumSF+=sf;
-    // факт в день = за этот период (не нарастающий)
-    return{label:pr.label,past,planN,planS,
-      cumNF:past?cumNF:null,cumSF:past?cumSF:null,
-      dayNF:past?nf:null,daySF:past?sf:null,
-      devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,
-      conv:past&&cumNF>0?cumSF/cumNF:null};
+    return{label:pr.label,past,planN,planS,cumNF:past?cumNF:null,cumSF:past?cumSF:null,dayNF:past?nf:null,daySF:past?sf:null,devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,conv:past&&cumNF>0?cumSF/cumNF:null};
   });
 }
 
@@ -232,94 +486,117 @@ function fmt(n){if(n===null||n===undefined)return'—';return Math.round(n).toLo
 function fPct(n){if(n===null||n===undefined)return'—';return(n*100).toFixed(1)+'%';}
 function fDev(n){if(n===null)return'—';return(n>=0?'+':'')+Math.round(n);}
 function dCls(n){return n===null?'dim':n>=0?'pos':'neg';}
+function pillCls(pct){return pct>=0.9?'ok':pct>=0.7?'warn':'bad';}
 
 function renderKPIs(){
+  const days=getRangeDays(),today=new Date();today.setHours(23,59,59);
+  const totalWD=days.filter(isWD).length,passedWD=days.filter(d=>d<=today&&isWD(d)).length;
   let pN=0,pS=0,fN=0,fS=0;
   SRCS.forEach(s=>{const p=getTotalPlan(s);pN+=p.new;pS+=p.succ;Object.values(fact(s)).forEach(d=>{fN+=d.new||0;fS+=d.won||0;});});
   const pctN=pN>0?fN/pN:0,pctS=pS>0?fS/pS:0;
   const colN=pctN>=0.9?'#1D9E75':pctN>=0.7?'#BA7517':'#993C1D';
   const colS=pctS>=0.9?'#1D9E75':pctS>=0.7?'#BA7517':'#993C1D';
   const conv=fN>0?fS/fN:0;
+  const planToday=totalWD>0?Math.round(pS/totalWD*passedWD):0;
+  const trendPct=planToday>0?fS/planToday:0;
+  const trendCol=trendPct>=0.9?'#1D9E75':trendPct>=0.7?'#BA7517':'#993C1D';
   document.getElementById('kpis').innerHTML=`
-    <div class="kpi">
-      <div class="kpi-label">Выполнение плана (новые)</div>
-      <div class="kpi-val" style="color:${colN}">${Math.round(pctN*100)}%</div>
-      <div class="pb"><div class="pb-fill" style="width:${Math.min(pctN*100,100).toFixed(0)}%;background:${colN}"></div></div>
-      <div class="kpi-sub">факт ${fmt(fN)} / план ${fmt(pN)}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Новых лидов (факт)</div>
-      <div class="kpi-val">${fmt(fN)}<span class="kpi-val-pct" style="color:${colN}">${Math.round(pctN*100)}%</span></div>
-      <div class="kpi-sub">план ${fmt(pN)}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Успешных (факт)</div>
-      <div class="kpi-val">${fmt(fS)}<span class="kpi-val-pct" style="color:${colS}">${Math.round(pctS*100)}%</span></div>
-      <div class="kpi-sub">план ${fmt(pS)}</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Конверсия</div>
-      <div class="kpi-val">${fPct(conv)}</div>
-      <div class="kpi-sub">${MONTHS[curM]} ${getY()}</div>
-    </div>`;
+    <div class="kpi"><div class="kpi-label">Новых лидов</div><div class="kpi-val">${fmt(fN)}</div><div class="kpi-meta"><span>план <b>${fmt(pN)}</b></span><span class="pill ${pillCls(pctN)}">${Math.round(pctN*100)}%</span></div><div class="pb"><div class="pb-fill" style="width:${Math.min(pctN*100,100).toFixed(0)}%;background:${colN}"></div></div></div>
+    <div class="kpi"><div class="kpi-label">Успешных лидов</div><div class="kpi-val">${fmt(fS)}</div><div class="kpi-meta"><span>план <b>${fmt(pS)}</b></span><span class="pill ${pillCls(pctS)}">${Math.round(pctS*100)}%</span></div><div class="pb"><div class="pb-fill" style="width:${Math.min(pctS*100,100).toFixed(0)}%;background:${colS}"></div></div></div>
+    <div class="kpi"><div class="kpi-label">Конверсия</div><div class="kpi-val">${fPct(conv)}</div><div class="kpi-meta"><span>${MONTHS[curM]} ${getY()}</span></div></div>
+    <div class="kpi"><div class="kpi-label">Тренд выполнения плана</div><div class="kpi-val" style="color:${trendCol}">${Math.round(trendPct*100)}%</div><div class="kpi-meta"><span>факт <b>${fmt(fS)}</b> / план на сегодня <b>${fmt(planToday)}</b></span></div><div class="pb"><div class="pb-fill" style="width:${Math.min(trendPct*100,100).toFixed(0)}%;background:${trendCol}"></div></div></div>`;
 }
 
 function renderTable(){
-  document.getElementById('secs').innerHTML=SRCS.map(src=>{
-    const rows=buildRows(src),p=getTotalPlan(src),lastF=rows.filter(r=>r.past).pop();
+  const showDay=getG()==='day',prs=periods(),cols=prs.map(r=>`<th>${r.label}</th>`).join('');
+  const allRows={};SRCS.forEach(src=>{allRows[src]=buildRows(src);});
+  function totalRow(field){return prs.map((_,i)=>{let v=0,has=false;SRCS.forEach(src=>{const x=allRows[src][i][field];if(x!==null&&x!==undefined){v+=x;has=true;}});return has?v:null;});}
+  let html='';
+  SRCS.forEach(src=>{
+    const rows=allRows[src],p=getTotalPlan(src),lastF=rows.filter(r=>r.past).pop();
     const pctD=p.new>0&&lastF?lastF.cumNF/p.new:null;
     const bCls=pctD===null?'neutral':pctD>=0.9?'ok':pctD>=0.7?'warn':'bad';
     const bTxt=pctD===null?'нет данных':Math.round(pctD*100)+'% от плана';
-    const cols=rows.map(r=>`<th>${r.label}</th>`).join('');
-    const showDay=getG()==='day';
-    return `<div class="section">
+    html+=`<div class="section">
       <div class="sec-head" onclick="tog('${src}')">
-        <i class="ti ti-layout-list" style="color:#9b9b97"></i><span>${src}</span>
-        <span style="font-size:10px;color:#9b9b97;font-weight:400">план новых: ${fmt(p.new)} · успешных: ${fmt(p.succ)}</span>
+        <span style="width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};display:inline-block;flex-shrink:0"></span>
+        <span>${src}</span>
+        <span style="font-size:10px;color:#9b9b97;font-weight:400">план: ${fmt(p.new)} нов · ${fmt(p.succ)} усп</span>
         <span class="badge ${bCls}">${bTxt}</span>
         <i class="ti ti-chevron-down" id="ic-${src}"></i>
       </div>
-      <div id="sb-${src}">
-        <div class="tbl-wrap"><table>
-          <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
-          <tbody>
-            <tr class="grp"><td class="s" colspan="${rows.length+1}">Новые лиды</td></tr>
-            <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
-            <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
-            ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
-            <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
-            <tr class="grp sep"><td class="s" colspan="${rows.length+1}">Успешные лиды</td></tr>
-            <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
-            <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
-            ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
-            <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
-            <tr class="grp sep"><td class="s" colspan="${rows.length+1}">Конверсия</td></tr>
-            <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
-          </tbody>
-        </table></div>
-      </div>
+      <div id="sb-${src}"><div class="tbl-wrap"><table>
+        <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
+        <tbody>
+          <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды</td></tr>
+          <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
+          <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
+          ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
+          <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
+          <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды</td></tr>
+          <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
+          <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
+          ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
+          <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
+          <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
+          <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
+        </tbody>
+      </table></div></div>
     </div>`;
-  }).join('');
+  });
+  // ИТОГО
+  const tCumNF=totalRow('cumNF'),tCumSF=totalRow('cumSF'),tPlanN=totalRow('planN'),tPlanS=totalRow('planS');
+  const tDevN=prs.map((_,i)=>tCumNF[i]!==null&&tPlanN[i]!==null?tCumNF[i]-tPlanN[i]:null);
+  const tDevS=prs.map((_,i)=>tCumSF[i]!==null&&tPlanS[i]!==null?tCumSF[i]-tPlanS[i]:null);
+  const tConv=prs.map((_,i)=>tCumNF[i]>0?tCumSF[i]/tCumNF[i]:null);
+  const tDayNF=showDay?totalRow('dayNF'):[],tDaySF=showDay?totalRow('daySF'):[];
+  html+=`<div class="section">
+    <div class="sec-head" onclick="tog('__total__')" style="background:#E6F1FB">
+      <span style="font-size:14px;font-weight:700;color:#185FA5">∑</span>
+      <span style="color:#185FA5">ИТОГО по всем источникам</span>
+      <i class="ti ti-chevron-down" id="ic-__total__" style="margin-left:auto"></i>
+    </div>
+    <div id="sb-__total__"><div class="tbl-wrap"><table>
+      <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
+      <tbody>
+        <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды</td></tr>
+        <tr><td class="s">ПЛАН нараст.</td>${tPlanN.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
+        <tr><td class="s">ФАКТ нараст.</td>${tCumNF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
+        ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDayNF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
+        <tr class="sep"><td class="s">Откл. нараст.</td>${tDevN.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
+        <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды</td></tr>
+        <tr><td class="s">ПЛАН нараст.</td>${tPlanS.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
+        <tr><td class="s">ФАКТ нараст.</td>${tCumSF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
+        ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDaySF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
+        <tr class="sep"><td class="s">Откл. нараст.</td>${tDevS.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
+        <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
+        <tr><td class="s">Конверсия ФАКТ</td>${tConv.map(v=>`<td class="dim">${fPct(v)}</td>`).join('')}</tr>
+      </tbody>
+    </table></div></div>
+  </div>`;
+  document.getElementById('secs').innerHTML=html;
 }
 
 function renderPlansTab(){
+  const y=getY();
   document.getElementById('plans-wrap').innerHTML=SRCS.map(src=>{
-    const total=getTotalPlan(src);
-    const rows=allUsers.map(u=>{
-      const p=getPlanForUser(src,u.id);
-      return `<div class="plan-row">
-        <span class="plan-name" title="${u.name}">${u.name}</span>
-        <div class="plan-input-wrap"><label>Новых</label><input type="number" min="0" value="${p.new}" oninput="updatePlanLocal('${src}','${u.id}','new',this.value)"></div>
-        <div class="plan-input-wrap"><label>Успешных</label><input type="number" min="0" value="${p.succ}" oninput="updatePlanLocal('${src}','${u.id}','succ',this.value)"></div>
-      </div>`;
+    const monthHeaderPairs=MONTHS.map(m=>`<th colspan="2">${m.slice(0,3)}</th>`).join('');
+    const monthSubHeaders=MONTHS.map(()=>`<th class="sub">Нов</th><th class="sub">Усп</th>`).join('');
+    const userRows=allUsers.map(u=>{
+      const cells=MONTHS.map((m,mi)=>{const p=getPlanForUser(src,u.id,mi,y);return `<td><input type="number" min="0" value="${p.new}" oninput="updatePlanLocal('${src}','${u.id}','new',this.value,${mi},${y})"></td><td><input type="number" min="0" value="${p.succ}" oninput="updatePlanLocal('${src}','${u.id}','succ',this.value,${mi},${y})"></td>`;}).join('');
+      return `<tr><td class="s">${u.name}</td>${cells}</tr>`;
     }).join('');
+    const totalCells=MONTHS.map((_,mi)=>{const p=getTotalPlan(src,mi,y);return `<td style="font-weight:700;color:#185FA5">${fmt(p.new)}</td><td style="font-weight:700;color:#1D9E75">${fmt(p.succ)}</td>`;}).join('');
     return `<div class="plan-section">
-      <div class="plan-sec-head"><i class="ti ti-layout-list" style="color:#9b9b97"></i>${src}</div>
-      <div class="plan-grid">${rows||'<div style="padding:12px;color:#9b9b97;font-size:12px">Нет менеджеров</div>'}</div>
-      <div class="plan-total">
-        <span>Итого: <strong>новых ${fmt(total.new)}</strong> · <strong>успешных ${fmt(total.succ)}</strong></span>
-        <div style="display:flex;align-items:center;gap:10px">
-          <span id="si-${src}" style="font-size:11px;opacity:0;transition:opacity .3s"></span>
+      <div class="plan-sec-head"><span style="width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};display:inline-block"></span>${src}</div>
+      <div class="plan-tbl-wrap"><table class="plan-tbl">
+        <thead><tr><th class="s" rowspan="2">Менеджер</th>${monthHeaderPairs}</tr><tr>${monthSubHeaders}</tr></thead>
+        <tbody>${userRows}<tr class="total-row"><td class="s">Итого</td>${totalCells}</tr></tbody>
+      </table></div>
+      <div class="plan-footer">
+        <span>Текущий месяц (${MONTHS[curM]}): <strong>новых ${fmt(getTotalPlan(src).new)}</strong> · <strong>успешных ${fmt(getTotalPlan(src).succ)}</strong></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="si-${src}" class="save-ind"></span>
           <button id="savebtn-${src}" class="btn primary" style="height:28px" onclick="saveSrcPlans('${src}')"><i class="ti ti-device-floppy"></i> Сохранить</button>
         </div>
       </div>
@@ -327,93 +604,54 @@ function renderPlansTab(){
   }).join('');
 }
 
-function setMetric(m,el){
-  chartMetric=m;
-  document.querySelectorAll('.metric-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderCharts();
-}
-
+function setMetric(m,el){chartMetric=m;document.querySelectorAll('.metric-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderCharts();}
 function renderCharts(){
   const cumul=document.getElementById('chart-type').value==='cumulative';
-  const days=allDays(),today=new Date();today.setHours(23,59,59);
+  const days=getRangeDays(),today=new Date();today.setHours(23,59,59);
   const prs=periods(),labels=prs.map(p=>p.label);
   Object.values(charts).forEach(c=>c.destroy());charts={};
-
-  const showNew=chartMetric==='both'||chartMetric==='new';
-  const showWon=chartMetric==='both'||chartMetric==='won';
-
-  const wrap=document.getElementById('charts-wrap');
-  wrap.innerHTML=SRCS.map(src=>`
-    <div class="chart-card">
-      <h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src}</h3>
-      <div class="chart-wrap"><canvas id="chart-${src}"></canvas></div>
-    </div>`).join('');
-
+  const showNew=chartMetric==='both'||chartMetric==='new',showWon=chartMetric==='both'||chartMetric==='won';
+  document.getElementById('charts-wrap').innerHTML=SRCS.map(src=>`<div class="chart-card"><h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src}</h3><div class="chart-wrap"><canvas id="chart-${src}"></canvas></div></div>`).join('');
   SRCS.forEach(src=>{
-    const fd=fact(src),totalWD=days.filter(isWD).length,p=getTotalPlan(src);
-    const datasets=[];
-    const color=SRC_COLORS[src];
-
+    const fd=fact(src),totalWD=days.filter(isWD).length,p=getTotalPlan(src),color=SRC_COLORS[src],datasets=[];
     ['new','won'].forEach(metric=>{
-      if(metric==='new'&&!showNew)return;
-      if(metric==='won'&&!showWon)return;
-      const planVal=metric==='new'?p.new:p.succ;
-      const label=metric==='new'?'Новые':'Успешные';
-      const col=metric==='new'?color:'#9b9b97';
-      let cumF=0;
-      const factData=[],planData=[];
+      if(metric==='new'&&!showNew)return;if(metric==='won'&&!showWon)return;
+      const planVal=metric==='new'?p.new:p.succ,label=metric==='new'?'Новые':'Успешные',col=metric==='new'?color:'#9b9b97';
+      let cumF=0;const factData=[],planData=[];
       prs.forEach(pr=>{
         const last=pr.days[pr.days.length-1],past=last<=today;
-        const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
-        const planPeriod=totalWD?Math.round(planVal/totalWD*cumWD):0;
-        let pf=0;
-        if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
+        const cumWD=days.filter(d=>d<=last&&isWD(d)).length,planP=totalWD?Math.round(planVal/totalWD*cumWD):0;
+        let pf=0;if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
         cumF+=pf;
-        if(cumul){factData.push(past?cumF:null);planData.push(planPeriod);}
+        if(cumul){factData.push(past?cumF:null);planData.push(planP);}
         else{factData.push(past?pf:null);planData.push(totalWD?Math.round(planVal/totalWD*(pr.days.filter(isWD).length)):0);}
       });
       datasets.push({label:`${label} (факт)`,data:factData,borderColor:col,backgroundColor:col+'22',borderWidth:2.5,pointRadius:3,pointBackgroundColor:col,tension:0.3,fill:metric==='new',spanGaps:false});
       datasets.push({label:`${label} (план)`,data:planData,borderColor:col,borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.3,fill:false});
     });
-
     const ctx=document.getElementById('chart-'+src).getContext('2d');
-    charts[src]=new Chart(ctx,{
-      type:'line',data:{labels,datasets},
-      options:{
-        responsive:true,maintainAspectRatio:false,
-        interaction:{mode:'index',intersect:false},
-        plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},
-          tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?Math.round(ctx.parsed.y).toLocaleString('ru'):'—'}`}}},
-        scales:{
-          x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:20}},
-          y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},beginAtZero:true}
-        }
-      }
-    });
+    charts[src]=new Chart(ctx,{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?Math.round(ctx.parsed.y).toLocaleString('ru'):'—'}`}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:20}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},beginAtZero:true}}}});
   });
 }
 
-function switchTab(name,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-  if(name==='charts')renderCharts();
-  if(name==='plans')renderPlansTab();
-}
-
 function tog(src){const el=document.getElementById('sb-'+src),ic=document.getElementById('ic-'+src);if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}else{el.style.display='none';ic.className='ti ti-chevron-right';}}
+function switchTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+name).classList.add('active');if(name==='charts')renderCharts();if(name==='plans')renderPlansTab();}
 function render(){renderKPIs();renderTable();if(document.getElementById('tab-plans').classList.contains('active'))renderPlansTab();}
-
 function exportCSV(){
   const rows=[['Источник','Период','ПЛАН новые','ФАКТ новые','ПЛАН успешные','ФАКТ успешные','Конверсия','Откл новые','Откл успешные']];
   SRCS.forEach(s=>buildRows(s).forEach(r=>rows.push([s,r.label,r.planN,r.past?r.cumNF:'',r.planS,r.past?r.cumSF:'',r.past?fPct(r.conv):'',r.past?r.devN:'',r.past?r.devS:''])));
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(';')).join('\n'));
-  a.download=`decomp_${MONTHS[curM]}_${getY()}.csv`;a.click();
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(';')).join('\n'));a.download=`decomp_${MONTHS[curM]}_${getY()}.csv`;a.click();
 }
 
+// Init
+initMonthSelect();
+// Default range = current month
+rangeStart=new Date(getY(),curM,1);
+rangeEnd=new Date(getY(),curM+1,0);
+updateRangeLabel();
+// Show date range since default gran = day
+document.getElementById('fi-range').style.display='';
+document.getElementById('fsep-range').style.display='';
 loadUsers().then(()=>loadData());
 </script>
 </body>

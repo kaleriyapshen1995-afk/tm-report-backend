@@ -145,11 +145,14 @@ app.get('/api/leads', async (req, res) => {
     ]);
 
     // Дополнительно фильтруем успешные по DATE_CLOSED на нашей стороне
+    // Если DATE_CLOSED не заполнен — используем DATE_MODIFY как fallback
     const fromDate = new Date(from);
     const toDate = new Date(to + 'T23:59:59');
     const wonLeads = wonLeadsRaw.filter(l => {
-      const closed = l.DATE_CLOSED ? new Date(l.DATE_CLOSED) : null;
-      return closed && closed >= fromDate && closed <= toDate;
+      const checkDate = l.DATE_CLOSED
+        ? new Date(l.DATE_CLOSED)
+        : new Date(l.DATE_MODIFY);
+      return checkDate >= fromDate && checkDate <= toDate;
     });
 
     const result = {};
@@ -167,7 +170,7 @@ app.get('/api/leads', async (req, res) => {
 
     wonLeads.forEach(l => {
       const b = getBlock(l.SOURCE_ID);
-      const d = (l.DATE_CLOSED || '').slice(0, 10);
+      const d = (l.DATE_CLOSED || l.DATE_MODIFY || '').slice(0, 10);
       ensureDay(b, d);
       result[b][d].won++;
     });
@@ -197,16 +200,52 @@ app.get('/api/sources', async (req, res) => {
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 
+// ─── Диагностика: источники с TM-фильтром и без ───────────────────────────────
 app.get('/api/debug-leads', async (req, res) => {
   try {
-    const result = await b24('crm.lead.list', {
-      filter: { '>=DATE_CREATE': '2026-05-01' },
-      select: ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID'],
-      start: 0
+    const now = new Date();
+    const year = parseInt(req.query.year || now.getFullYear());
+    const month = parseInt(req.query.month ?? now.getMonth());
+    const { from, to } = monthRange(year, month);
+
+    const select = ['ID', 'SOURCE_ID', 'STATUS_ID', 'ASSIGNED_BY_ID'];
+    const filter = {
+      '>=DATE_CREATE': from,
+      '<=DATE_CREATE': to + 'T23:59:59',
+    };
+
+    // Без TM-фильтра — все лиды за месяц
+    const allLeads = await fetchAllLeads(filter, select);
+
+    // Получаем TM-список
+    let tmIds = [];
+    try {
+      const users = await b24('user.get', { filter: { ACTIVE: true, UF_DEPARTMENT: [TM_DEPARTMENT] } });
+      tmIds = users.filter(u => u.ID.toString() !== EXCLUDE_USER).map(u => u.ID.toString());
+    } catch(e) {}
+
+    // С TM-фильтром
+    const tmLeads = allLeads.filter(l => tmIds.includes(String(l.ASSIGNED_BY_ID)));
+
+    // Подсчёт по источникам
+    function countSources(leads) {
+      const counts = {};
+      leads.forEach(l => {
+        const src = l.SOURCE_ID || '(пусто)';
+        counts[src] = (counts[src] || 0) + 1;
+      });
+      return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([src, cnt]) => ({ src, cnt, block: getBlock(src === '(пусто)' ? null : src) }));
+    }
+
+    res.json({
+      ok: true,
+      period: `${from} – ${to}`,
+      tmIds,
+      totalAll: allLeads.length,
+      totalTM: tmLeads.length,
+      sourcesAll: countSources(allLeads),
+      sourcesTM: countSources(tmLeads),
     });
-    const sources = [...new Set(result.map(l => l.SOURCE_ID))];
-    const statuses = [...new Set(result.map(l => l.STATUS_ID))];
-    res.json({ ok: true, uniqueSources: sources, uniqueStatuses: statuses, sample: result.slice(0, 5) });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 

@@ -192,18 +192,6 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
   <div class="filter-row" style="margin-bottom:10px;margin-top:10px">
     <div class="filter-bar">
 
-      <!-- Год -->
-      <div class="fi">
-        <label>Год</label>
-        <select id="year-sel" onchange="onYearChange(this.value)">
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026" selected>2026</option>
-        </select>
-      </div>
-
-      <div class="fsep"></div>
-
       <!-- Менеджеры — multiselect -->
       <div class="fi">
         <label>Менеджер</label>
@@ -212,7 +200,7 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
             <span id="ms-tm-label">Все ТМ</span>
             <i class="ti ti-chevron-down"></i>
           </div>
-          <div class="ms-dropdown" id="ms-tm-dropdown"></div>
+          <div class="ms-dropdown" id="ms-tm-dropdown" onclick="event.stopPropagation()"></div>
         </div>
       </div>
 
@@ -224,20 +212,26 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
             <span id="ms-src-label">Все источники</span>
             <i class="ti ti-chevron-down"></i>
           </div>
-          <div class="ms-dropdown" id="ms-src-dropdown"></div>
+          <div class="ms-dropdown" id="ms-src-dropdown" onclick="event.stopPropagation()"></div>
         </div>
       </div>
 
       <div class="fsep"></div>
 
-      <!-- Грануляр -->
+      <!-- Грануляр + навигатор года -->
       <div class="fi">
         <label>Грануляр</label>
         <select class="gran-select" id="gran-select" onchange="setGranSelect(this)">
           <option value="day" selected>День</option>
           <option value="week">Неделя</option>
           <option value="month">Месяц</option>
+          <option value="year">Год</option>
         </select>
+      </div>
+      <div class="fi" id="fi-year-nav" style="display:none;align-items:center;gap:4px">
+        <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeYear(-1)">&#8249;</button>
+        <span id="year-display" style="font-size:12px;font-weight:600;min-width:38px;text-align:center;color:#1a1a18"></span>
+        <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeYear(1)">&#8250;</button>
       </div>
 
       <!-- Диапазон дат -->
@@ -249,7 +243,7 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
           <span id="range-label">выберите период</span>
           <i class="ti ti-chevron-down" style="margin-left:4px;font-size:12px"></i>
         </div>
-        <div class="cal-popup" id="cal-popup">
+        <div class="cal-popup" id="cal-popup" onclick="event.stopPropagation()">
           <div class="cal-month" id="cal-left"></div>
           <div class="cal-month" id="cal-right"></div>
           <div style="display:flex;flex-direction:column;justify-content:space-between">
@@ -290,70 +284,85 @@ const DAY_NAMES = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const SRCS = ['Платформа','Звонобот','Сайт','Холод','Реанимация+Прочее'];
 const SRC_COLORS = {'Платформа':'#185FA5','Звонобот':'#1D9E75','Сайт':'#7B4FBF','Холод':'#F5A623','Реанимация+Прочее':'#E24B4A'};
 
-let curM = new Date().getMonth(), curGran = 'day', raw = null, serverPlans = {}, allUsers = [], charts = {}, chartMetric = 'both', chartType = 'cumulative';
+let curM = new Date().getMonth(), curYear = new Date().getFullYear(), curGran = 'day';
+let raw = null, serverPlans = {}, allUsers = [], charts = {}, chartMetric = 'both', chartType = 'cumulative';
 let rangeStart = null, rangeEnd = null, picking = null;
 let calLeftYear = new Date().getFullYear(), calLeftMonth = new Date().getMonth();
 let pendingStart = null, pendingEnd = null;
 let activeSection = 'managers', activeView = 'table';
-let selectedManagers = new Set();   // empty = все
-let selectedSources = new Set();    // empty = все
+// Multi-select state: allMode=true means "all selected"
+let mgrAllMode = true, selectedManagers = new Set();
+let srcAllMode = true, selectedSources = new Set();
 
-// ── Год ──────────────────────────────────────────────────────────────────────
-function getY() {
-  return parseInt(document.getElementById('year-sel').value) || new Date().getFullYear();
-}
-function onYearChange(y) {
-  rangeStart = new Date(parseInt(y), curM, 1);
-  rangeEnd = new Date(parseInt(y), curM + 1, 0);
-  updateRangeLabel();
+function getY() { return curYear; }
+
+function changeYear(dir) {
+  curYear += dir;
+  document.getElementById('year-display').textContent = curYear;
+  if (curGran === 'year') {
+    rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
+  } else {
+    rangeStart = new Date(curYear, curM, 1); rangeEnd = new Date(curYear, curM + 1, 0);
+    if (curGran === 'day') updateRangeLabel();
+  }
   loadData();
 }
 
 // ── Multi-select ──────────────────────────────────────────────────────────────
-function buildMSDropdown(id, items, selectedSet, allLabel, onToggle) {
+function buildMSDropdown(id) {
   const dd = document.getElementById('ms-' + id + '-dropdown');
-  let html = `<div class="ms-item all-item" onclick="msToggleAll('${id}')"><input type="checkbox" id="ms-${id}-all" ${selectedSet.size===0?'checked':''}> ${allLabel}</div><div class="ms-sep"></div>`;
+  const items = id === 'tm' ? allUsers : SRCS;
+  const set = id === 'tm' ? selectedManagers : selectedSources;
+  const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
+  const allLabel = id === 'tm' ? 'Все ТМ' : 'Все источники';
+  let html = `<div class="ms-item all-item" onclick="msToggleAll('${id}')"><input type="checkbox" ${allMode?'checked':''} onclick="event.stopPropagation()"> ${allLabel}</div><div class="ms-sep"></div>`;
   items.forEach(item => {
     const val = typeof item === 'object' ? item.id : item;
     const lbl = typeof item === 'object' ? item.name : item;
+    const checked = allMode || set.has(String(val));
     const dot = SRC_COLORS[lbl] ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SRC_COLORS[lbl]};flex-shrink:0"></span>` : '';
-    html += `<div class="ms-item" onclick="msToggleItem('${id}','${val}')"><input type="checkbox" id="ms-${id}-${val}" ${selectedSet.has(String(val))||selectedSet.size===0?'checked':''}> ${dot}${lbl}</div>`;
+    html += `<div class="ms-item" onclick="msToggleItem('${id}','${val}')"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation()"> ${dot}${lbl}</div>`;
   });
   dd.innerHTML = html;
 }
 
 function msToggleAll(id) {
-  const set = id === 'tm' ? selectedManagers : selectedSources;
-  set.clear();
-  updateMSLabel(id);
-  buildMSDropdown(id, id === 'tm' ? allUsers : SRCS, set, id === 'tm' ? 'Все ТМ' : 'Все источники', null);
-  renderContent();
+  // Flip allMode; when going to false — clear individual set (uncheck all)
+  if (id === 'tm') { mgrAllMode = !mgrAllMode; if (!mgrAllMode) selectedManagers.clear(); }
+  else             { srcAllMode = !srcAllMode;  if (!srcAllMode)  selectedSources.clear(); }
+  updateMSLabel(id); buildMSDropdown(id); renderContent();
 }
 
 function msToggleItem(id, val) {
-  const set = id === 'tm' ? selectedManagers : selectedSources;
-  const items = id === 'tm' ? allUsers : SRCS;
-  const allLabel = id === 'tm' ? 'Все ТМ' : 'Все источники';
-  // If was "all selected" (set empty), pre-select all then remove this one
-  if (set.size === 0) items.forEach(it => set.add(String(typeof it === 'object' ? it.id : it)));
-  if (set.has(String(val))) set.delete(String(val));
-  else set.add(String(val));
-  // If all selected, reset to empty (= all)
-  if (set.size === items.length) set.clear();
-  updateMSLabel(id);
-  buildMSDropdown(id, items, set, allLabel, null);
-  renderContent();
+  const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
+  const set     = id === 'tm' ? selectedManagers : selectedSources;
+  const items   = id === 'tm' ? allUsers : SRCS;
+  if (allMode) {
+    // First individual click while "all" is on → switch to individual, deselect clicked item
+    if (id === 'tm') mgrAllMode = false; else srcAllMode = false;
+    items.forEach(it => { const v = String(typeof it === 'object' ? it.id : it); if (v !== String(val)) set.add(v); });
+  } else {
+    if (set.has(String(val))) set.delete(String(val)); else set.add(String(val));
+    // All individually checked → restore allMode
+    if (set.size === items.length) {
+      if (id === 'tm') { mgrAllMode = true; selectedManagers.clear(); }
+      else             { srcAllMode = true; selectedSources.clear(); }
+    }
+  }
+  // dropdown stays open — no close here
+  updateMSLabel(id); buildMSDropdown(id); renderContent();
 }
 
 function updateMSLabel(id) {
-  const set = id === 'tm' ? selectedManagers : selectedSources;
-  const items = id === 'tm' ? allUsers : SRCS;
+  const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
+  const set     = id === 'tm' ? selectedManagers : selectedSources;
+  const items   = id === 'tm' ? allUsers : SRCS;
   const allLabel = id === 'tm' ? 'Все ТМ' : 'Все источники';
   const lbl = document.getElementById('ms-' + id + '-label');
-  if (set.size === 0) lbl.textContent = allLabel;
-  else if (set.size === 1) {
-    const val = [...set][0];
-    const item = items.find(it => String(typeof it === 'object' ? it.id : it) === val);
+  if (allMode || set.size === 0) { lbl.textContent = allLabel; return; }
+  if (set.size === 1) {
+    const v = [...set][0];
+    const item = items.find(it => String(typeof it === 'object' ? it.id : it) === v);
     lbl.textContent = typeof item === 'object' ? item.name : item;
   } else lbl.textContent = `Выбрано: ${set.size}`;
 }
@@ -361,23 +370,21 @@ function updateMSLabel(id) {
 function toggleMS(id) {
   const dd = document.getElementById('ms-' + id + '-dropdown');
   const isShown = dd.classList.contains('show');
-  // close all
   document.querySelectorAll('.ms-dropdown').forEach(d => d.classList.remove('show'));
   if (!isShown) dd.classList.add('show');
 }
 
 // ── Getters for active filters ────────────────────────────────────────────────
 function getActiveSources() {
-  return selectedSources.size === 0 ? SRCS : SRCS.filter(s => selectedSources.has(s));
+  return (srcAllMode || selectedSources.size === 0) ? SRCS : SRCS.filter(s => selectedSources.has(s));
 }
 function getActiveManagers() {
-  if (selectedManagers.size === 0) return allUsers;
+  if (mgrAllMode || selectedManagers.size === 0) return allUsers;
   return allUsers.filter(u => selectedManagers.has(String(u.id)));
 }
-// Fact data filtered by active managers (aggregated from dataByUser)
 function factFiltered(src) {
   const mgrs = getActiveManagers();
-  if (mgrs.length === allUsers.length && selectedManagers.size === 0) return fact(src);
+  if (mgrAllMode) return fact(src);
   const merged = {};
   mgrs.forEach(u => {
     const ud = factUser(u.id, src);
@@ -392,7 +399,7 @@ function factFiltered(src) {
 function getTotalPlanFiltered(src, m, y) {
   m = m === undefined ? curM : m; y = y === undefined ? getY() : y;
   const mgrs = getActiveManagers();
-  if (mgrs.length === allUsers.length && selectedManagers.size === 0) return getTotalPlan(src, m, y);
+  if (mgrAllMode) return getTotalPlan(src, m, y);
   let n = 0, s = 0;
   mgrs.forEach(u => { const p = getPlanForUser(src, u.id, m, y); n += p.new; s += p.succ; });
   return { new: n, succ: s };
@@ -439,12 +446,19 @@ function setGran(g) {
   const sel = document.getElementById('gran-select');
   if (sel) sel.value = g;
   const showRange = g === 'day';
+  const showYearNav = g !== 'day';
   document.getElementById('fi-range').style.display = showRange ? '' : 'none';
   document.getElementById('fsep-range').style.display = showRange ? '' : 'none';
-  renderContent();
+  document.getElementById('fi-year-nav').style.display = showYearNav ? '' : 'none';
+  document.getElementById('year-display').textContent = curYear;
+  if (g === 'year') {
+    rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
+  } else if (g !== 'day') {
+    rangeStart = new Date(curYear, curM, 1); rangeEnd = new Date(curYear, curM + 1, 0);
+  }
+  if (g !== 'day') loadData(); else renderContent();
 }
 function getG() { return curGran; }
-function getTM() { return selectedManagers.size === 1 ? [...selectedManagers][0] : 'all'; }
 
 // ── Calendar ──────────────────────────────────────────────────────────────────
 function toggleCal() {
@@ -592,7 +606,7 @@ function factUser(uid, src) { return (raw?.dataByUser?.[String(uid)]?.[src]) || 
 function isWD(d) { return d.getDay() > 0 && d.getDay() < 6; }
 
 function getRangeDays() {
-  if (curGran === 'day' && rangeStart && rangeEnd) {
+  if (rangeStart && rangeEnd) {
     const days = [], d = new Date(rangeStart); d.setHours(0, 0, 0, 0);
     const end = new Date(rangeEnd); end.setHours(0, 0, 0, 0);
     while (d <= end) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
@@ -604,7 +618,15 @@ function getRangeDays() {
 }
 
 function periods() {
-  const g = getG(), days = getRangeDays();
+  const g = getG();
+  if (g === 'year') {
+    return MONTHS.map((lbl, mi) => {
+      const days = [], d = new Date(curYear, mi, 1);
+      while (d.getMonth() === mi) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
+      return { label: lbl.slice(0, 3), days, monthIdx: mi };
+    });
+  }
+  const days = getRangeDays();
   if (g === 'month') return [{ label: MONTHS[curM], days }];
   if (g === 'week') {
     const ws = {};
@@ -616,7 +638,21 @@ function periods() {
 
 function buildRows(src, customFact, customPlan) {
   const fd = customFact || factFiltered(src);
-  const rangeDays = getRangeDays(), today = new Date(); today.setHours(23, 59, 59);
+  const today = new Date(); today.setHours(23, 59, 59);
+
+  if (curGran === 'year') {
+    // Per-month plan — no cumulative for year view
+    return periods().map(pr => {
+      const mi = pr.monthIdx;
+      const p = getTotalPlanFiltered(src, mi, curYear);
+      const last = pr.days[pr.days.length - 1], past = last <= today;
+      let nf = 0, sf = 0;
+      if (past) pr.days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
+      return { label: pr.label, past, planN: p.new, planS: p.succ, cumNF: past ? nf : null, cumSF: past ? sf : null, dayNF: past ? nf : null, daySF: past ? sf : null, devN: past ? nf - p.new : null, devS: past ? sf - p.succ : null, conv: past && nf > 0 ? sf / nf : null };
+    });
+  }
+
+  const rangeDays = getRangeDays();
   const totalWD = rangeDays.filter(isWD).length;
   const p = customPlan || getTotalPlanFiltered(src);
   let cumNF = 0, cumSF = 0;
@@ -657,24 +693,25 @@ async function loadUsers() {
   try {
     const r = await fetch(`${API}/api/users`); const d = await r.json(); if (!d.ok) return;
     allUsers = d.users;
-    // Build manager multi-select
-    buildMSDropdown('tm', allUsers, selectedManagers, 'Все ТМ', null);
+    buildMSDropdown('tm');
   } catch(e) {}
 }
 
 async function loadData() {
-  if (rangeStart) curM = rangeStart.getMonth();
-  if (!rangeStart) {
+  if (curGran === 'year') {
+    rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
+  } else if (!rangeStart) {
     const now = new Date(); curM = now.getMonth();
-    rangeStart = new Date(getY(), curM, 1);
-    rangeEnd = new Date(getY(), curM + 1, 0);
-    updateRangeLabel();
+    rangeStart = new Date(curYear, curM, 1); rangeEnd = new Date(curYear, curM + 1, 0);
+    if (curGran === 'day') updateRangeLabel();
   }
+  if (rangeStart && curGran === 'day') curM = rangeStart.getMonth();
+  const from = rangeStart.toISOString().slice(0, 10);
+  const to   = rangeEnd.toISOString().slice(0, 10);
   setStatus('', 'Загружаем из Б24...');
   await loadPlansFromServer();
   try {
-    // Always fetch all TM data; filter client-side
-    const r = await fetch(`${API}/api/leads?year=${getY()}&month=${curM}&tm=all`);
+    const r = await fetch(`${API}/api/leads?year=${curYear}&month=${curM}&from=${from}&to=${to}&tm=all`);
     const d = await r.json(); if (!d.ok) throw new Error(d.error);
     raw = d;
     setStatus('ok', `Обновлено ${new Date().toLocaleTimeString('ru')} · новых: ${d.totalNew} · успешных: ${d.totalWon}`);
@@ -1033,13 +1070,13 @@ document.addEventListener('click', e => {
 
 // ── Startup ───────────────────────────────────────────────────────────────────
 initMonthSelect();
-rangeStart = new Date(getY(), curM, 1);
-rangeEnd = new Date(getY(), curM + 1, 0);
+rangeStart = new Date(curYear, curM, 1);
+rangeEnd = new Date(curYear, curM + 1, 0);
 updateRangeLabel();
 document.getElementById('fi-range').style.display = '';
 document.getElementById('fsep-range').style.display = '';
-// Init source multiselect
-buildMSDropdown('src', SRCS, selectedSources, 'Все источники', null);
+document.getElementById('year-display').textContent = curYear;
+buildMSDropdown('src');
 loadUsers().then(() => loadData());
 </script>
 </body>

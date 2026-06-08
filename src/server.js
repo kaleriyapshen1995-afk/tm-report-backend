@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const B24_WEBHOOK = process.env.B24_WEBHOOK || 'https://crm.seller24.ru/rest/5/hj8na6uahgsf4zlp/';
 
 const SOURCE_MAP = {
-  'Платформа':         ['NEW'],
+  'Платформа':         ['CALLBACK'],
   'Звонобот':          ['31'],
   'Сайт':              ['STORE'],
   'Холод':             ['28'],

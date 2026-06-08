@@ -100,7 +100,9 @@ app.get('/api/leads', async (req, res) => {
     const year  = parseInt(req.query.year  || new Date().getFullYear());
     const month = parseInt(req.query.month ?? new Date().getMonth());
     const tm    = req.query.tm || null;
-    const { from, to } = monthRange(year, month);
+    // Support explicit date range (e.g. full-year query from frontend)
+    const from = req.query.from || monthRange(year, month).from;
+    const to   = req.query.to   || monthRange(year, month).to;
 
     // Получаем список ТМ отдела для фильтрации
     let tmIds = null;

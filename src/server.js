@@ -156,9 +156,16 @@ app.get('/api/leads', async (req, res) => {
     });
 
     const result = {};
+    const resultByUser = {};
+
     function ensureDay(block, dateStr) {
       if (!result[block]) result[block] = {};
       if (!result[block][dateStr]) result[block][dateStr] = { new: 0, won: 0 };
+    }
+    function ensureDayUser(uid, block, dateStr) {
+      if (!resultByUser[uid]) resultByUser[uid] = {};
+      if (!resultByUser[uid][block]) resultByUser[uid][block] = {};
+      if (!resultByUser[uid][block][dateStr]) resultByUser[uid][block][dateStr] = { new: 0, won: 0 };
     }
 
     newLeads.forEach(l => {
@@ -166,6 +173,8 @@ app.get('/api/leads', async (req, res) => {
       const d = (l.DATE_CREATE || '').slice(0, 10);
       ensureDay(b, d);
       result[b][d].new++;
+      const uid = String(l.ASSIGNED_BY_ID || '');
+      if (uid) { ensureDayUser(uid, b, d); resultByUser[uid][b][d].new++; }
     });
 
     wonLeads.forEach(l => {
@@ -173,9 +182,11 @@ app.get('/api/leads', async (req, res) => {
       const d = (l.DATE_CLOSED || l.DATE_MODIFY || '').slice(0, 10);
       ensureDay(b, d);
       result[b][d].won++;
+      const uid = String(l.ASSIGNED_BY_ID || '');
+      if (uid) { ensureDayUser(uid, b, d); resultByUser[uid][b][d].won++; }
     });
 
-    res.json({ ok: true, year, month, from, to, totalNew: newLeads.length, totalWon: wonLeads.length, data: result });
+    res.json({ ok: true, year, month, from, to, totalNew: newLeads.length, totalWon: wonLeads.length, data: result, dataByUser: resultByUser });
   } catch (e) {
     console.error(e.message);
     res.status(500).json({ ok: false, error: e.message });

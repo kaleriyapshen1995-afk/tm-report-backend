@@ -427,6 +427,7 @@ function setView(name, el) {
   renderContent();
 }
 function renderContent() {
+  renderKPIs();
   destroyCharts();
   if (activeSection === 'sources') {
     if (activeView === 'table') renderTableSources();

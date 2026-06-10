@@ -342,9 +342,10 @@ function msToggleItem(id, val) {
   const set     = id === 'tm' ? selectedManagers : selectedSources;
   const items   = id === 'tm' ? allUsers : SRCS;
   if (allMode) {
-    // First individual click while "all" is on → switch to individual, deselect clicked item
+    // First individual click while "all" is on → switch to individual, select ONLY this item
     if (id === 'tm') mgrAllMode = false; else srcAllMode = false;
-    items.forEach(it => { const v = String(typeof it === 'object' ? it.id : it); if (v !== String(val)) set.add(v); });
+    set.clear();
+    set.add(String(val));
   } else {
     if (set.has(String(val))) set.delete(String(val)); else set.add(String(val));
     // All individually checked → restore allMode

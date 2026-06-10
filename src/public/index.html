@@ -178,18 +178,8 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
 <div class="main">
   <div class="status"><div class="dot" id="dot"></div><span id="stxt">Загружаем данные...</span></div>
 
-  <!-- Секционная навигация -->
-  <div class="snav-bar">
-    <div class="snav-item active" id="snav-managers" onclick="setSection('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
-    <div class="snav-item" id="snav-sources" onclick="setSection('sources',this)"><i class="ti ti-layout-list"></i> По источникам</div>
-    <div class="snav-item" id="snav-plans" onclick="setSection('plans',this)"><i class="ti ti-settings"></i> Планы</div>
-  </div>
-
-  <!-- KPI карточки -->
-  <div class="kpi-grid" id="kpis"></div>
-
-  <!-- Фильтры + переключатель вид -->
-  <div class="filter-row" style="margin-bottom:10px;margin-top:10px">
+  <!-- Фильтры (над табами) -->
+  <div class="filter-row" style="margin-bottom:10px">
     <div class="filter-bar">
 
       <!-- Менеджеры — multiselect -->
@@ -264,7 +254,20 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
       </div>
     </div>
 
-    <!-- Вид: Таблица / Графики -->
+  </div>
+
+  <!-- Секционная навигация -->
+  <div class="snav-bar">
+    <div class="snav-item active" id="snav-managers" onclick="setSection('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
+    <div class="snav-item" id="snav-sources" onclick="setSection('sources',this)"><i class="ti ti-layout-list"></i> По источникам</div>
+    <div class="snav-item" id="snav-plans" onclick="setSection('plans',this)"><i class="ti ti-settings"></i> Планы</div>
+  </div>
+
+  <!-- KPI карточки -->
+  <div class="kpi-grid" id="kpis"></div>
+
+  <!-- Вид: Таблица / Графики (слева) -->
+  <div style="margin-bottom:10px;margin-top:10px">
     <div class="view-toggle" id="view-toggle">
       <button class="vbtn active" id="vbtn-table" onclick="setView('table',this)"><i class="ti ti-table"></i> Таблица</button>
       <button class="vbtn" id="vbtn-charts" onclick="setView('charts',this)"><i class="ti ti-chart-line"></i> Графики</button>
@@ -747,7 +750,7 @@ function renderKPIs() {
   const tColS = trendPctS >= 0.9 ? '#1D9E75' : trendPctS >= 0.7 ? '#BA7517' : '#993C1D';
 
   document.getElementById('kpis').innerHTML = `
-    <!-- 1: Новые лиды + конверсия -->
+    <!-- 1: Новые лиды -->
     <div class="kpi">
       <div class="kpi-label"><i class="ti ti-user-plus" style="color:#185FA5"></i> Новые лиды</div>
       <div class="kpi-row">
@@ -755,12 +758,6 @@ function renderKPIs() {
           <div class="kpi-sub">Факт</div>
           <div class="kpi-val">${fmt(fN)}</div>
           <div class="kpi-meta"><span>план <b>${fmt(pN)}</b></span><span class="pill ${pillCls(pctN)}">${Math.round(pctN*100)}%</span></div>
-        </div>
-        <div class="kpi-divider"></div>
-        <div class="kpi-block">
-          <div class="kpi-sub">Конверсия</div>
-          <div class="kpi-val sm">${fPct(conv)}</div>
-          <div class="kpi-meta"><span>${fmt(fS)} из ${fmt(fN)}</span></div>
         </div>
       </div>
       <div class="pb"><div class="pb-fill" style="width:${Math.min(pctN*100,100).toFixed(0)}%;background:${colN}"></div></div>
@@ -772,7 +769,7 @@ function renderKPIs() {
       <div class="trend-rows">
         <div class="trend-row"><span class="tl">Факт сегодня</span><span class="tv">${fmt(fN)}</span></div>
         <div class="trend-row"><span class="tl">План на сегодня</span><span class="tv">${fmt(planTodayN)}</span></div>
-        <div class="trend-row"><span class="tl">Прогноз к концу</span><span class="tv" style="color:${projN>=pN?'#1D9E75':'#993C1D'}">${fmt(projN)}</span></div>
+        <div class="trend-row"><span class="tl">Прогноз к концу ${curGran==='month'||curGran==='year'?'года':'месяца'}</span><span class="tv" style="color:${projN>=pN?'#1D9E75':'#993C1D'}">${fmt(projN)}</span></div>
         <div class="trend-row"><span class="tl">Раб. дней: пройдено / всего</span><span class="tv">${passedWD} / ${totalWD}</span></div>
       </div>
     </div>
@@ -801,8 +798,8 @@ function renderKPIs() {
       <div class="trend-rows">
         <div class="trend-row"><span class="tl">Факт сегодня</span><span class="tv">${fmt(fS)}</span></div>
         <div class="trend-row"><span class="tl">План на сегодня</span><span class="tv">${fmt(planTodayS)}</span></div>
-        <div class="trend-row"><span class="tl">Прогноз к концу</span><span class="tv" style="color:${projS>=pS?'#1D9E75':'#993C1D'}">${fmt(projS)}</span></div>
-        <div class="trend-row"><span class="tl">Откл. от плана</span><span class="tv class="${dCls(fS-planTodayS)}">${fDev(fS-planTodayS)}</span></div>
+        <div class="trend-row"><span class="tl">Прогноз к концу ${curGran==='month'||curGran==='year'?'года':'месяца'}</span><span class="tv" style="color:${projS>=pS?'#1D9E75':'#993C1D'}">${fmt(projS)}</span></div>
+        <div class="trend-row"><span class="tl">Откл. от плана</span><span class="tv" style="color:${dCls(fS-planTodayS)==='pos'?'#1D9E75':dCls(fS-planTodayS)==='neg'?'#993C1D':'#6b6b68'}">${fDev(fS-planTodayS)}</span></div>
       </div>
     </div>`;
 }
@@ -865,30 +862,32 @@ function renderTableSources() {
       <div id="sb-src-${src}"><div class="tbl-wrap"><table>
         <thead><tr><th class="s">Менеджер / Показатель</th>${cols}</tr></thead>
         <tbody>
-          <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды — итого</td></tr>
-          <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
-          ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
-          <tr class="grp sep" style="cursor:pointer" onclick="togMgr('new-${sid}')">
-            <td class="s" colspan="${prs.length+1}">
-              По менеджерам — новые
+          <tr style="background:#EAF3FB;cursor:pointer" onclick="togMgr('new-${sid}')">
+            <td class="s" colspan="${prs.length+1}" style="color:#185FA5;font-weight:600;padding:6px 10px">
+              <i class="ti ti-users" style="margin-right:5px;font-size:12px"></i>По менеджерам — новые
               <i class="ti ti-chevron-right" id="mgr-ic-new-${sid}" style="float:right;margin-right:8px"></i>
             </td>
           </tr>
         </tbody>
-        <tbody id="mgr-tb-new-${sid}" style="display:none">${mgrRowsNew}</tbody>
+        <tbody id="mgr-tb-new-${sid}" style="display:none;background:#F4F9FE">${mgrRowsNew}</tbody>
         <tbody>
-          <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды — итого</td></tr>
-          <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
-          ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
-          <tr class="grp sep" style="cursor:pointer" onclick="togMgr('won-${sid}')">
-            <td class="s" colspan="${prs.length+1}">
-              По менеджерам — успешные
+          <tr class="grp"><td class="s" colspan="${prs.length+1}" style="background:#F0F0EE">Новые лиды — итого</td></tr>
+          <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
+          ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
+        </tbody>
+        <tbody>
+          <tr style="background:#EAF6F1;cursor:pointer" onclick="togMgr('won-${sid}')">
+            <td class="s" colspan="${prs.length+1}" style="color:#1D9E75;font-weight:600;padding:6px 10px">
+              <i class="ti ti-users" style="margin-right:5px;font-size:12px"></i>По менеджерам — успешные
               <i class="ti ti-chevron-right" id="mgr-ic-won-${sid}" style="float:right;margin-right:8px"></i>
             </td>
           </tr>
         </tbody>
-        <tbody id="mgr-tb-won-${sid}" style="display:none">${mgrRowsWon}</tbody>
+        <tbody id="mgr-tb-won-${sid}" style="display:none;background:#F0FAF5">${mgrRowsWon}</tbody>
         <tbody>
+          <tr class="grp"><td class="s" colspan="${prs.length+1}" style="background:#F0F0EE">Успешные лиды — итого</td></tr>
+          <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
+          ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
           <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
           <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
         </tbody>

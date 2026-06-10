@@ -283,6 +283,7 @@ const MONTHS = ['Январь','Февраль','Март','Апрель','Ма�
 const DAY_NAMES = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const SRCS = ['Платформа','Звонобот','Сайт','Холод','Реанимация+Прочее'];
 const SRC_COLORS = {'Платформа':'#185FA5','Звонобот':'#1D9E75','Сайт':'#7B4FBF','Холод':'#F5A623','Реанимация+Прочее':'#E24B4A'};
+const MGR_PALETTE = ['#185FA5','#1D9E75','#7B4FBF','#F5A623','#E24B4A','#0D7BDB','#10B981','#9333EA','#F97316','#EF4444','#6366F1','#14B8A6'];
 
 let curM = new Date().getMonth(), curYear = new Date().getFullYear(), curGran = 'day';
 let raw = null, serverPlans = {}, allUsers = [], charts = {}, chartMetric = 'both', chartType = 'cumulative';
@@ -412,7 +413,7 @@ function setSection(name, el) {
   el.classList.add('active');
   document.getElementById('view-toggle').style.visibility = name === 'plans' ? 'hidden' : '';
   // Source filter only for "по источникам"
-  document.getElementById('fi-src').style.display = name === 'sources' ? '' : 'none';
+  document.getElementById('fi-src').style.display = (name === 'sources' || name === 'managers') ? '' : 'none';
   renderContent();
 }
 function setView(name, el) {
@@ -427,8 +428,8 @@ function renderContent() {
     if (activeView === 'table') renderTable();
     else renderCharts();
   } else if (activeSection === 'managers') {
-    if (activeView === 'table') renderManagers();
-    else renderManagerCharts();
+    if (activeView === 'table') renderTable();
+    else renderCharts();
   } else if (activeSection === 'plans') {
     renderPlansTab();
   }
@@ -833,15 +834,11 @@ function renderTable() {
         <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
         <tbody>
           <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды</td></tr>
-          <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
           <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
           ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
-          <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
           <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды</td></tr>
-          <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
           <tr><td class="s">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
           ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
-          <tr class="sep"><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
           <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
           <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
         </tbody>
@@ -865,15 +862,11 @@ function renderTable() {
       <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
       <tbody>
         <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды</td></tr>
-        <tr><td class="s">ПЛАН нараст.</td>${tPlanN.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
         <tr><td class="s">ФАКТ нараст.</td>${tCumNF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
         ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDayNF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
-        <tr class="sep"><td class="s">Откл. нараст.</td>${tDevN.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
         <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды</td></tr>
-        <tr><td class="s">ПЛАН нараст.</td>${tPlanS.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
         <tr><td class="s">ФАКТ нараст.</td>${tCumSF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
         ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDaySF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
-        <tr class="sep"><td class="s">Откл. нараст.</td>${tDevS.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
         <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
         <tr><td class="s">Конверсия ФАКТ</td>${tConv.map(v=>`<td class="dim">${fPct(v)}</td>`).join('')}</tr>
       </tbody>
@@ -906,12 +899,28 @@ function renderCharts() {
         <option value="bar"${chartType==='bar'?' selected':''}>По периодам (столбцы)</option>
       </select>
     </div>
-    <div id="charts-wrap">${srcs.map(src=>`<div class="chart-card"><h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src}</h3><div class="chart-wrap"><canvas id="chart-${src.replace(/[^a-zA-Zа-яА-Я0-9]/g,'-')}"></canvas></div></div>`).join('')}</div>`;
+    <div id="charts-wrap">${srcs.map(src => {
+      const sid = src.replace(/[^a-zA-Zа-яА-Я0-9]/g,'-');
+      return `<div class="chart-card">
+        <h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src} — итого</h3>
+        <div class="chart-wrap"><canvas id="chart-${sid}"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3 style="color:#555"><i class="ti ti-users" style="font-size:13px;margin-right:5px"></i>${src} — по менеджерам</h3>
+        <div class="chart-wrap"><canvas id="chart-mgrs-${sid}"></canvas></div>
+      </div>`;
+    }).join('')}</div>`;
 
   const isBar = chartType === 'bar';
+  const baseOpts = () => ({responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:10,font:{size:10}}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y!==null?Math.round(c.parsed.y).toLocaleString('ru'):'—'}`}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:20}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},beginAtZero:true}}});
+
   srcs.forEach(src => {
+    const sid = src.replace(/[^a-zA-Zа-яА-Я0-9]/g,'-');
     const fd = factFiltered(src), totalWD = days.filter(isWD).length, p = getTotalPlanFiltered(src);
-    const color = SRC_COLORS[src], datasets = [];
+    const color = SRC_COLORS[src];
+
+    // ── Основной график источника ──────────────────────────────────────────────
+    const datasets = [];
     ['new','won'].forEach(metric => {
       if (metric==='new'&&!showNew) return;
       if (metric==='won'&&!showWon) return;
@@ -929,27 +938,38 @@ function renderCharts() {
       });
       const lbl = metric==='new'?'Новые':'Успешные';
       if (isBar) {
-        datasets.push({label:`${lbl} (факт)`,data:factData,backgroundColor:col+'CC',borderColor:col,borderWidth:0,borderRadius:3,borderSkipped:false});
-        datasets.push({label:`${lbl} (план)`,data:planData,backgroundColor:'transparent',borderColor:col,borderWidth:1.5,borderRadius:3,borderSkipped:false,type:'bar',
-          // render plan as thin line marker using custom trick: use borderDash on the background
-          borderDash:[],
-          // Use a line dataset on top for plan
-        });
-        // Replace plan dataset with a line overlay
-        datasets.pop();
+        datasets.push({label:`${lbl} (факт)`,data:factData,backgroundColor:col+'CC',borderColor:col,borderWidth:0,borderRadius:3});
         datasets.push({label:`${lbl} (план)`,data:planData,type:'line',borderColor:col,borderWidth:2,borderDash:[5,4],pointRadius:0,tension:0,fill:false,order:0});
       } else {
         datasets.push({label:`${lbl} (факт)`,data:factData,borderColor:col,backgroundColor:col+'22',borderWidth:2.5,pointRadius:3,pointBackgroundColor:col,tension:0.3,fill:metric==='new',spanGaps:false});
         datasets.push({label:`${lbl} (план)`,data:planData,borderColor:col,borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.3,fill:false});
       }
     });
-    const cid='chart-'+src.replace(/[^a-zA-Zа-яА-Я0-9]/g,'-');
-    const ctx=document.getElementById(cid).getContext('2d');
-    const baseOpts={responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?Math.round(ctx.parsed.y).toLocaleString('ru'):'—'}`}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:20}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},beginAtZero:true}}};
-    const chartCfg = isBar
-      ? {type:'bar',data:{labels,datasets},options:{...baseOpts,plugins:{...baseOpts.plugins}}}
-      : {type:'line',data:{labels,datasets},options:baseOpts};
-    charts[src]=new Chart(ctx,chartCfg);
+    charts[src] = new Chart(document.getElementById('chart-'+sid).getContext('2d'),
+      {type:isBar?'bar':'line', data:{labels,datasets}, options:baseOpts()});
+
+    // ── График по менеджерам для этого источника ────────────────────────────
+    const mgrs = getActiveManagers();
+    const mgrDatasets = [];
+    const metric = showNew ? 'new' : 'won'; // если "оба" — показываем новых
+    mgrs.forEach((u, idx) => {
+      const col = MGR_PALETTE[idx % MGR_PALETTE.length];
+      const fd2 = factUser(u.id, src);
+      let cumF2 = 0; const data2 = [];
+      prs.forEach(pr => {
+        const last=pr.days[pr.days.length-1], past=last<=today;
+        let pf=0; if(past) pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd2[k])pf+=metric==='new'?(fd2[k].new||0):(fd2[k].won||0);});
+        cumF2+=pf;
+        data2.push(past ? (cumul?cumF2:pf) : null);
+      });
+      if (isBar) {
+        mgrDatasets.push({label:u.name,data:data2,backgroundColor:col+'BB',borderColor:col,borderWidth:0,borderRadius:3});
+      } else {
+        mgrDatasets.push({label:u.name,data:data2,borderColor:col,backgroundColor:col+'18',borderWidth:2,pointRadius:2.5,pointBackgroundColor:col,tension:0.3,fill:false,spanGaps:false});
+      }
+    });
+    charts['mgrs-'+src] = new Chart(document.getElementById('chart-mgrs-'+sid).getContext('2d'),
+      {type:isBar?'bar':'line', data:{labels,datasets:mgrDatasets}, options:baseOpts()});
   });
 }
 

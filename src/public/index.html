@@ -833,10 +833,16 @@ function renderTableSources() {
       const mfd = factUser(u.id, src);
       const mRows = buildRows(src, mfd, null, u.id);
       mgrRows += `
-        <tr style="background:#fafafa"><td class="s" style="padding-left:18px;color:#555">
-          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}
-        </td>${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumNF)}</td>`).join('')}</tr>
-        ${showDay?`<tr style="background:#fafafa"><td class="s" style="padding-left:18px;color:#9b9b97;font-size:11px">└ в день</td>${mRows.map(r=>`<td class="dim" style="font-size:11px">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}`;
+        <tr style="background:#fafafa;border-left:3px solid ${col}">
+          <td class="s" style="padding-left:16px;color:#333;font-weight:500">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}
+            <span style="font-size:10px;font-weight:400;color:#9b9b97;margin-left:3px">нараст.</span>
+          </td>${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumNF)}</td>`).join('')}
+        </tr>
+        ${showDay?`<tr style="background:#f2f2f0;border-left:3px solid ${col}55">
+          <td class="s" style="padding-left:26px;color:#888;font-size:11px">в день</td>
+          ${mRows.map(r=>`<td style="font-size:11px;color:#7B8FA1;text-align:right;padding:3px 8px">${fmt(r.dayNF)}</td>`).join('')}
+        </tr>`:''}`;
     });
 
     html += `<div class="section">

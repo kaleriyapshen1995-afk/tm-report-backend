@@ -254,13 +254,13 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
       </div>
     </div>
 
-  </div>
-
   <!-- Секционная навигация -->
-  <div class="snav-bar">
+  <div class="snav-bar" style="margin-top:10px">
     <div class="snav-item active" id="snav-managers" onclick="setSection('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
     <div class="snav-item" id="snav-sources" onclick="setSection('sources',this)"><i class="ti ti-layout-list"></i> По источникам</div>
     <div class="snav-item" id="snav-plans" onclick="setSection('plans',this)"><i class="ti ti-settings"></i> Планы</div>
+  </div>
+
   </div>
 
   <!-- KPI карточки -->
@@ -375,7 +375,7 @@ function toggleMS(id) {
   const dd = document.getElementById('ms-' + id + '-dropdown');
   const isShown = dd.classList.contains('show');
   document.querySelectorAll('.ms-dropdown').forEach(d => d.classList.remove('show'));
-  if (!isShown) dd.classList.add('show');
+  if (!isShown) { buildMSDropdown(id); dd.classList.add('show'); }
 }
 
 // ── Getters for active filters ────────────────────────────────────────────────

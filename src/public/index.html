@@ -17,45 +17,83 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .btn.primary{background:#185FA5;color:#fff;border-color:#185FA5}
 .btn.primary:hover{background:#0C447C}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
-.main{max-width:1500px;margin:0 auto;padding:14px}
-.status{font-size:11px;color:#6b6b68;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.main{max-width:1600px;margin:0 auto;padding:14px}
+.status{font-size:11px;color:#6b6b68;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .dot{width:7px;height:7px;border-radius:50%;background:#BA7517;flex-shrink:0}
 .dot.ok{background:#1D9E75}.dot.err{background:#993C1D}
- 
-/* KPI */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+
+/* KPI — 4 cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
 .kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-.kpi-label{font-size:11px;color:#6b6b68;margin-bottom:4px;font-weight:500}
-.kpi-val{font-size:22px;font-weight:600}
-.kpi-meta{font-size:11px;color:#6b6b68;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kpi-label{font-size:11px;color:#6b6b68;margin-bottom:6px;font-weight:500;display:flex;align-items:center;gap:5px}
+.kpi-label i{font-size:13px}
+.kpi-row{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.kpi-block{flex:1;min-width:80px}
+.kpi-sub{font-size:10px;color:#9b9b97;margin-bottom:2px}
+.kpi-val{font-size:20px;font-weight:700;line-height:1}
+.kpi-val.sm{font-size:16px}
+.kpi-meta{font-size:10px;color:#6b6b68;margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .pill{font-size:10px;padding:1px 7px;border-radius:8px;font-weight:600}
 .pill.ok{background:#EAF3DE;color:#3B6D11}
 .pill.warn{background:#FAEEDA;color:#854F0B}
 .pill.bad{background:#FCEBEB;color:#993C1D}
-.pb{height:4px;background:#ededea;border-radius:2px;margin-top:8px;overflow:hidden}
-.pb-fill{height:100%;border-radius:2px}
- 
-/* Filter bar */
-.filter-bar{background:#fff;border:1px solid rgba(0,0,0,0.09);border-radius:8px;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-.tab-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:0;flex-wrap:wrap}
-.tab-row .filter-bar{flex:1;min-width:0;margin-bottom:0}
-.tabs-right{display:flex;align-items:center;flex-shrink:0;align-self:stretch}
+.pb{height:3px;background:#ededea;border-radius:2px;margin-top:7px;overflow:hidden}
+.pb-fill{height:100%;border-radius:2px;transition:width .4s}
+.kpi-divider{width:1px;height:36px;background:rgba(0,0,0,0.07);align-self:center}
+.trend-rows{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.trend-row{display:flex;align-items:center;justify-content:space-between;font-size:11px}
+.trend-row .tl{color:#6b6b68}
+.trend-row .tv{font-weight:600}
+
+/* Filter row */
+.filter-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;min-width:0}
 .fi{display:flex;align-items:center;gap:4px}
-.fi label{font-size:10px;font-weight:600;color:#9b9b97;white-space:nowrap}
-.fi select{font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid #d0d0cc;background:#f5f5f3;color:#1a1a18;height:26px;cursor:pointer}
-.fsep{width:1px;height:16px;background:rgba(0,0,0,0.1);flex-shrink:0}
-.gran-select{font-size:11px;padding:2px 6px;border-radius:6px;border:1px solid #d0d0cc;background:#f5f5f3;color:#1a1a18;height:26px;cursor:pointer;min-width:80px}
- 
+.fi label{font-size:10px;font-weight:600;color:#9b9b97;white-space:nowrap;text-transform:uppercase;letter-spacing:0.3px}
+.fi select{font-size:11px;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.75);color:#1a1a18;height:28px;cursor:pointer;backdrop-filter:blur(4px)}
+.fi select:hover{background:rgba(255,255,255,0.95)}
+.fsep{width:1px;height:16px;background:rgba(0,0,0,0.12);flex-shrink:0}
+.gran-select{font-size:11px;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.75);color:#1a1a18;height:28px;cursor:pointer;min-width:80px;backdrop-filter:blur(4px)}
+.gran-select:hover{background:rgba(255,255,255,0.95)}
+
+/* Multi-select dropdown */
+.ms-wrap{position:relative;display:flex;align-items:center;gap:4px}
+.ms-trigger{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11px;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,0,0,0.15);background:rgba(255,255,255,0.75);color:#1a1a18;height:28px;cursor:pointer;min-width:130px;max-width:220px;backdrop-filter:blur(4px);user-select:none}
+.ms-trigger:hover{background:rgba(255,255,255,0.95)}
+.ms-trigger span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.ms-trigger i{color:#9b9b97;flex-shrink:0;font-size:11px}
+.ms-dropdown{position:absolute;top:32px;left:0;background:#fff;border:1px solid rgba(0,0,0,0.12);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;min-width:200px;padding:4px;display:none;max-height:280px;overflow-y:auto}
+.ms-dropdown.show{display:block}
+.ms-item{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:5px;cursor:pointer;font-size:11px;color:#1a1a18}
+.ms-item:hover{background:#f0ede8}
+.ms-item input[type=checkbox]{margin:0;cursor:pointer;accent-color:#185FA5}
+.ms-sep{height:1px;background:rgba(0,0,0,0.07);margin:3px 0}
+.ms-item.all-item{font-weight:600;color:#185FA5}
+
+/* View toggle */
+.view-toggle{display:flex;gap:2px;background:rgba(0,0,0,0.07);border-radius:8px;padding:3px;flex-shrink:0}
+.vbtn{font-size:12px;padding:4px 12px;border-radius:6px;border:none;background:transparent;color:#6b6b68;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;font-weight:500}
+.vbtn.active{background:#fff;color:#185FA5;box-shadow:0 1px 4px rgba(0,0,0,0.1);font-weight:600}
+.vbtn:hover:not(.active){background:rgba(255,255,255,0.5)}
+
+/* Section nav — standalone above KPIs */
+.snav-bar{background:#fff;border-radius:10px;border:1px solid rgba(0,0,0,0.08);display:flex;box-shadow:0 1px 3px rgba(0,0,0,0.04);margin-bottom:14px}
+.snav-item{padding:10px 18px;font-size:12px;font-weight:500;cursor:pointer;color:#6b6b68;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.snav-item.active{color:#185FA5;border-bottom-color:#185FA5}
+.snav-item:hover:not(.active){color:#1a1a18}
+
+/* Tools card below snav */
+.tools-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+
 /* Date range picker */
-.date-range{display:flex;align-items:center;gap:6px}
-.date-range label{font-size:10px;font-weight:600;color:#9b9b97}
-.date-input-wrap{display:flex;align-items:center;gap:3px;background:#f5f5f3;border:1px solid #d0d0cc;border-radius:6px;padding:0 6px;height:26px;cursor:pointer}
+.date-input-wrap{display:flex;align-items:center;gap:3px;background:rgba(255,255,255,0.75);border:1px solid rgba(0,0,0,0.15);border-radius:6px;padding:0 8px;height:28px;cursor:pointer;backdrop-filter:blur(4px)}
+.date-input-wrap:hover{background:rgba(255,255,255,0.95)}
 .date-input-wrap i{color:#9b9b97;font-size:12px}
 .date-input-wrap span{font-size:11px;color:#1a1a18;white-space:nowrap}
-.date-input-wrap input[type=date]{position:absolute;opacity:0;width:1px;height:1px}
- 
+
 /* Calendar popup */
-.cal-popup{position:absolute;background:#fff;border:1px solid rgba(0,0,0,0.12);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:16px;z-index:200;min-width:560px;display:none}
+.cal-popup{position:absolute;background:#fff;border:1px solid rgba(0,0,0,0.12);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:16px;z-index:200;min-width:560px;display:none;top:32px;left:0}
 .cal-popup.show{display:flex;gap:20px}
 .cal-month{flex:1}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -67,27 +105,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .cal-d{font-size:11px;text-align:center;padding:5px 2px;border-radius:5px;cursor:pointer;border:none;background:none;width:100%}
 .cal-d:hover:not(.other):not(.disabled){background:#f0ede8}
 .cal-d.other{color:#d0d0cc;cursor:default}
-.cal-d.disabled{color:#d0d0cc;cursor:default}
 .cal-d.selected{background:#185FA5;color:#fff}
 .cal-d.in-range{background:#E6F1FB;color:#185FA5}
 .cal-d.range-start{background:#185FA5;color:#fff;border-radius:5px 0 0 5px}
 .cal-d.range-end{background:#185FA5;color:#fff;border-radius:0 5px 5px 0}
 .cal-d.today{font-weight:700}
-.cal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,0.08);gap:8px}
 .cal-presets{display:flex;gap:6px;flex-wrap:wrap}
 .cal-preset{font-size:11px;padding:3px 8px;border-radius:6px;border:1px solid #d0d0cc;cursor:pointer;background:#f5f5f3;color:#6b6b68}
 .cal-preset:hover{background:#185FA5;color:#fff;border-color:#185FA5}
- 
-/* Tabs */
-.tabs{display:flex;border-bottom:none;margin-bottom:0}
-.tab{padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;color:#6b6b68;border-bottom:2px solid transparent;display:flex;align-items:center;gap:5px}
-.tab.active{color:#185FA5;border-bottom-color:#185FA5}
-.tab-content{display:none}.tab-content.active{display:block}
-.tabs-tab-divider{border-bottom:2px solid #e8e5e0;margin-bottom:14px;margin-top:0}
- 
+
+/* Content padding */
+#content-area{padding:14px}
+
 /* Table */
 .section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-.secs-wrap{overflow-x:auto}
+.section:last-child{margin-bottom:0}
 .sec-head{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fafaf8;cursor:pointer;font-size:12px;font-weight:600;user-select:none;border-bottom:1px solid rgba(0,0,0,0.06)}
 .sec-head:hover{background:#f5f5f3}
 .badge{font-size:10px;padding:2px 8px;border-radius:10px;margin-left:auto;white-space:nowrap;font-weight:500}
@@ -95,7 +127,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-siz
 .tbl-wrap{overflow-x:auto}
 table{width:auto;min-width:100%;border-collapse:collapse;font-size:11px}
 th{background:#fafaf8;padding:4px 7px;text-align:right;font-weight:600;border:1px solid rgba(0,0,0,0.07);white-space:nowrap;color:#6b6b68;font-size:10px}
-th.s{text-align:left;min-width:185px;position:sticky;left:0;z-index:2;background:#fafaf8}
+th.s{text-align:left;min-width:160px;position:sticky;left:0;z-index:2;background:#fafaf8}
 td{padding:4px 7px;border:1px solid rgba(0,0,0,0.06);text-align:right;white-space:nowrap;background:#fff}
 td.s{text-align:left;color:#6b6b68;position:sticky;left:0;z-index:1;background:#fff}
 td.pl{color:#185FA5}td.ft{font-weight:600;color:#1a1a18}
@@ -104,9 +136,10 @@ tr.sep td{border-top:1.5px solid rgba(0,0,0,0.1)}
 tr.grp td{background:#f0ede8;font-weight:700;font-size:10px;color:#6b6b68;text-transform:uppercase;letter-spacing:0.4px}
 tr.grp td.s{background:#f0ede8}
 tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#fafaf8}
- 
+
 /* Plans */
-.plan-section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.plan-section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;background:#fff}
+.plan-section:last-child{margin-bottom:0}
 .plan-sec-head{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fafaf8;font-size:12px;font-weight:600;border-bottom:1px solid rgba(0,0,0,0.06)}
 .plan-tbl-wrap{overflow-x:auto}
 .plan-tbl{width:100%;border-collapse:collapse;font-size:11px}
@@ -120,15 +153,17 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
 .plan-tbl tr.total-row td.s{background:#fafaf8}
 .plan-footer{padding:8px 14px;background:#f0ede8;border-top:1px solid rgba(0,0,0,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
 .save-ind{font-size:10px;opacity:0;transition:opacity .3s}
- 
+
 /* Charts */
-.chart-card{background:#fff;border-radius:10px;padding:16px;border:1px solid rgba(0,0,0,0.08);box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:14px}
+.chart-card{background:#f9f9f7;border-radius:10px;padding:16px;border:1px solid rgba(0,0,0,0.07);margin-bottom:10px}
+.chart-card:last-child{margin-bottom:0}
 .chart-card h3{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .chart-wrap{position:relative;height:260px}
 .chart-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .metric-toggle{display:flex;gap:4px}
 .metric-btn{padding:4px 10px;font-size:12px;border-radius:7px;border:1px solid #d0d0cc;cursor:pointer;background:#fff;color:#6b6b68}
 .metric-btn.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.type-select{font-size:11px;padding:2px 8px;border-radius:6px;border:1px solid rgba(0,0,0,0.15);height:28px;background:#fff}
 </style>
 </head>
 <body>
@@ -139,394 +174,654 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
     <button class="btn primary" onclick="loadData()"><i class="ti ti-refresh"></i> Обновить</button>
   </div>
 </div>
- 
+
 <div class="main">
   <div class="status"><div class="dot" id="dot"></div><span id="stxt">Загружаем данные...</span></div>
+
+  <!-- Секционная навигация -->
+  <div class="snav-bar">
+    <div class="snav-item active" id="snav-managers" onclick="setSection('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
+    <div class="snav-item" id="snav-sources" onclick="setSection('sources',this)"><i class="ti ti-layout-list"></i> По источникам</div>
+    <div class="snav-item" id="snav-plans" onclick="setSection('plans',this)"><i class="ti ti-settings"></i> Планы</div>
+  </div>
+
+  <!-- KPI карточки -->
   <div class="kpi-grid" id="kpis"></div>
- 
-  <!-- Filter + Tabs row -->
-  <div class="tab-row" style="margin-bottom:8px">
-  <div class="filter-bar" id="filter-bar">
-    <div class="fi"><label>Менеджер</label><select id="tm" onchange="loadData()"><option value="all">Все ТМ</option></select></div>
-    <div class="fsep"></div>
-    <div class="fi"><label>Год</label><select id="yr" onchange="onYearChange()" style="min-width:75px"><option value="2026">2026</option><option value="2025">2025</option></select></div>
-    <div class="fsep"></div>
-    <div class="fi" id="fi-month"><label>Месяц</label><select id="mon" style="min-width:110px"></select></div>
-    <div class="fsep" id="fsep-month"></div>
-    <div class="fi">
-      <label>Грануляр</label>
-      <select class="gran-select" id="gran-select" onchange="setGranSelect(this)">
-        <option value="day" selected>День</option>
-        <option value="week">Неделя</option>
-        <option value="month">Месяц</option>
-      </select>
-    </div>
-    <!-- Date range (показывается только при грануляре "День") -->
-    <div class="fsep" id="fsep-range" style="display:none"></div>
-    <div class="fi" id="fi-range" style="display:none;position:relative">
-      <label>Диапазон дат</label>
-      <div class="date-input-wrap" onclick="toggleCal()">
-        <i class="ti ti-calendar"></i>
-        <span id="range-label">выберите период</span>
-        <i class="ti ti-chevron-down" style="margin-left:4px;font-size:12px"></i>
-      </div>
-      <!-- Calendar popup -->
-      <div class="cal-popup" id="cal-popup">
-        <div class="cal-month" id="cal-left"></div>
-        <div class="cal-month" id="cal-right"></div>
-        <div style="display:flex;flex-direction:column;justify-content:space-between">
-          <div class="cal-presets">
-            <div style="font-size:10px;font-weight:600;color:#6b6b68;margin-bottom:6px;width:100%">Быстрый выбор</div>
-            <button class="cal-preset" onclick="applyPreset(7)">7 дней</button>
-            <button class="cal-preset" onclick="applyPreset(14)">14 дней</button>
-            <button class="cal-preset" onclick="applyPreset(30)">30 дней</button>
-            <button class="cal-preset" onclick="applyPresetMonth(0)">Этот месяц</button>
-            <button class="cal-preset" onclick="applyPresetMonth(-1)">Пред. месяц</button>
+
+  <!-- Фильтры + переключатель вид -->
+  <div class="filter-row" style="margin-bottom:10px;margin-top:10px">
+    <div class="filter-bar">
+
+      <!-- Менеджеры — multiselect -->
+      <div class="fi">
+        <label>Менеджер</label>
+        <div class="ms-wrap" id="ms-tm-wrap">
+          <div class="ms-trigger" onclick="toggleMS('tm')" id="ms-tm-trigger">
+            <span id="ms-tm-label">Все ТМ</span>
+            <i class="ti ti-chevron-down"></i>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
-            <button class="btn primary" style="width:100%" onclick="applyRange()"><i class="ti ti-check"></i> Применить</button>
-            <button class="btn" style="width:100%" onclick="closeCal()">Отмена</button>
+          <div class="ms-dropdown" id="ms-tm-dropdown" onclick="event.stopPropagation()"></div>
+        </div>
+      </div>
+
+      <!-- Источники — multiselect, только для вкладки По источникам -->
+      <div class="fi" id="fi-src" style="display:none">
+        <label>Источник</label>
+        <div class="ms-wrap" id="ms-src-wrap">
+          <div class="ms-trigger" onclick="toggleMS('src')" id="ms-src-trigger">
+            <span id="ms-src-label">Все источники</span>
+            <i class="ti ti-chevron-down"></i>
+          </div>
+          <div class="ms-dropdown" id="ms-src-dropdown" onclick="event.stopPropagation()"></div>
+        </div>
+      </div>
+
+      <div class="fsep"></div>
+
+      <!-- Грануляр + навигатор года -->
+      <div class="fi">
+        <label>Грануляр</label>
+        <select class="gran-select" id="gran-select" onchange="setGranSelect(this)">
+          <option value="day" selected>День</option>
+          <option value="week">Неделя</option>
+          <option value="month">Месяц</option>
+          <option value="year">Год</option>
+        </select>
+      </div>
+      <div class="fi" id="fi-year-nav" style="display:none;align-items:center;gap:4px">
+        <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeYear(-1)">&#8249;</button>
+        <span id="year-display" style="font-size:12px;font-weight:600;min-width:38px;text-align:center;color:#1a1a18"></span>
+        <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeYear(1)">&#8250;</button>
+      </div>
+
+      <!-- Диапазон дат -->
+      <div class="fsep" id="fsep-range" style="display:none"></div>
+      <div class="fi" id="fi-range" style="display:none;position:relative">
+        <label>Диапазон дат</label>
+        <div class="date-input-wrap" onclick="toggleCal()">
+          <i class="ti ti-calendar"></i>
+          <span id="range-label">выберите период</span>
+          <i class="ti ti-chevron-down" style="margin-left:4px;font-size:12px"></i>
+        </div>
+        <div class="cal-popup" id="cal-popup" onclick="event.stopPropagation()">
+          <div class="cal-month" id="cal-left"></div>
+          <div class="cal-month" id="cal-right"></div>
+          <div style="display:flex;flex-direction:column;justify-content:space-between">
+            <div class="cal-presets">
+              <div style="font-size:10px;font-weight:600;color:#6b6b68;margin-bottom:6px;width:100%">Быстрый выбор</div>
+              <button class="cal-preset" onclick="applyPreset(7)">7 дней</button>
+              <button class="cal-preset" onclick="applyPreset(14)">14 дней</button>
+              <button class="cal-preset" onclick="applyPreset(30)">30 дней</button>
+              <button class="cal-preset" onclick="applyPresetMonth(0)">Этот месяц</button>
+              <button class="cal-preset" onclick="applyPresetMonth(-1)">Пред. месяц</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+              <button class="btn primary" style="width:100%" onclick="applyRange()"><i class="ti ti-check"></i> Применить</button>
+              <button class="btn" style="width:100%" onclick="closeCal()">Отмена</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div><!-- end filter-bar -->
- 
-  <div class="tabs-right">
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('table',this)"><i class="ti ti-table"></i> Таблица</div>
-    <div class="tab" onclick="switchTab('charts',this)"><i class="ti ti-chart-line"></i> Графики</div>
-    <div class="tab" onclick="switchTab('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
-    <div class="tab" onclick="switchTab('plans',this)"><i class="ti ti-settings"></i> Планы</div>
-  </div>
-  </div>
-  </div><!-- end tab-row -->
-  <div class="tabs-tab-divider"></div>
-  <div id="tab-table" class="tab-content active"><div class="secs-wrap"><div id="secs"></div></div></div>
-  <div id="tab-managers" class="tab-content"><div id="mgr-wrap"></div></div>
-  <div id="tab-charts" class="tab-content">
-    <div class="chart-filters">
-      <div class="metric-toggle">
-        <button class="metric-btn active" onclick="setMetric('both',this)">Оба</button>
-        <button class="metric-btn" onclick="setMetric('new',this)">Новые</button>
-        <button class="metric-btn" onclick="setMetric('won',this)">Успешные</button>
-      </div>
-      <select id="chart-type" onchange="renderCharts()">
-        <option value="cumulative">Нарастающим итогом</option>
-        <option value="daily">По периодам</option>
-      </select>
+
+    <!-- Вид: Таблица / Графики -->
+    <div class="view-toggle" id="view-toggle">
+      <button class="vbtn active" id="vbtn-table" onclick="setView('table',this)"><i class="ti ti-table"></i> Таблица</button>
+      <button class="vbtn" id="vbtn-charts" onclick="setView('charts',this)"><i class="ti ti-chart-line"></i> Графики</button>
     </div>
-    <div id="charts-wrap"></div>
   </div>
-  <div id="tab-plans" class="tab-content"><div id="plans-wrap"></div></div>
+
+  <!-- Контент -->
+  <div class="tools-card">
+    <div id="content-area"></div>
+  </div>
 </div>
- 
+
 <script>
-const API='';
-const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const DAY_NAMES=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-const SRCS=['Платформа','Звонобот','Сайт','Холод','Реанимация+Прочее'];
-const SRC_COLORS={'Платформа':'#185FA5','Звонобот':'#1D9E75','Сайт':'#7B4FBF','Холод':'#F5A623','Реанимация+Прочее':'#E24B4A'};
- 
-let curM=new Date().getMonth(), curGran='day', raw=null, serverPlans={}, allUsers=[], charts={}, chartMetric='both';
-let rangeStart=null, rangeEnd=null, picking=null; // 'start' or 'end'
-let calLeftYear=new Date().getFullYear(), calLeftMonth=new Date().getMonth();
-let pendingStart=null, pendingEnd=null;
- 
-// ── Init ─────────────────────────────────────────────────────────────────────
-function initMonthSelect(){
-  const sel=document.getElementById('mon');
-  sel.innerHTML=MONTHS.map((m,i)=>`<option value="${i}"${i===curM?' selected':''}>${m}</option>`).join('');
-  sel.onchange=()=>{
-    curM=parseInt(sel.value);
-    // Сбрасываем диапазон на весь месяц
-    const y=getY();
-    rangeStart=new Date(y,curM,1);
-    rangeEnd=new Date(y,curM+1,0);
-    updateRangeLabel();
-    loadData();
-  };
-}
- 
-function onYearChange(){
-  const y=getY();
-  rangeStart=new Date(y,curM,1);
-  rangeEnd=new Date(y,curM+1,0);
-  updateRangeLabel();
-  loadData();
-}
- 
-function setGranSelect(sel){setGran(sel.value);}
-function setGran(g){
-  curGran=g;
-  const sel=document.getElementById('gran-select');
-  if(sel)sel.value=g;
-  const showRange=g==='day';
-  document.getElementById('fi-range').style.display=showRange?'':'none';
-  document.getElementById('fsep-range').style.display=showRange?'':'none';
-  render();
-}
- 
-function getY(){return parseInt(document.getElementById('yr').value);}
-function getG(){return curGran;}
-function getTM(){return document.getElementById('tm').value;}
- 
-// ── Calendar ──────────────────────────────────────────────────────────────────
-function toggleCal(){
-  const p=document.getElementById('cal-popup');
-  if(p.classList.contains('show')){closeCal();return;}
-  pendingStart=rangeStart?new Date(rangeStart):null;
-  pendingEnd=rangeEnd?new Date(rangeEnd):null;
-  picking='start';
-  // Показываем месяц начала диапазона
-  if(rangeStart){calLeftYear=rangeStart.getFullYear();calLeftMonth=rangeStart.getMonth();}
-  else{calLeftYear=getY();calLeftMonth=curM;}
-  renderCals();
-  p.classList.add('show');
-  setTimeout(()=>document.addEventListener('click',outsideClick),10);
-}
-function closeCal(){
-  document.getElementById('cal-popup').classList.remove('show');
-  document.removeEventListener('click',outsideClick);
-  picking=null;
-}
-function outsideClick(e){
-  if(!document.getElementById('fi-range').contains(e.target))closeCal();
-}
- 
-function renderCals(){
-  renderOneCal('cal-left',calLeftYear,calLeftMonth);
-  let rm=calLeftMonth+1,ry=calLeftYear;
-  if(rm>11){rm=0;ry++;}
-  renderOneCal('cal-right',ry,rm);
-}
- 
-function renderOneCal(id,year,month){
-  const el=document.getElementById(id);
-  const first=new Date(year,month,1);
-  const last=new Date(year,month+1,0);
-  const startDow=(first.getDay()+6)%7; // пн=0
-  const today=new Date();today.setHours(0,0,0,0);
- 
-  let html=`<div class="cal-nav">`;
-  if(id==='cal-left'){
-    html+=`<button onclick="calNav(-1)">&#8249;</button>`;
-  }else{html+=`<span></span>`;}
-  html+=`<span>${MONTHS[month]} ${year}</span>`;
-  if(id==='cal-right'){
-    html+=`<button onclick="calNav(1)">&#8250;</button>`;
-  }else{html+=`<span></span>`;}
-  html+=`</div><div class="cal-grid">`;
-  DAY_NAMES.forEach(d=>html+=`<div class="cal-dh">${d}</div>`);
- 
-  // Пустые ячейки до первого дня
-  for(let i=0;i<startDow;i++)html+=`<button class="cal-d other"></button>`;
- 
-  for(let d=1;d<=last.getDate();d++){
-    const date=new Date(year,month,d);
-    date.setHours(0,0,0,0);
-    let cls='cal-d';
-    if(date.getTime()===today.getTime())cls+=' today';
-    const isStart=pendingStart&&date.getTime()===pendingStart.getTime();
-    const isEnd=pendingEnd&&date.getTime()===pendingEnd.getTime();
-    const inRange=pendingStart&&pendingEnd&&date>pendingStart&&date<pendingEnd;
-    if(isStart&&isEnd)cls+=' selected';
-    else if(isStart)cls+=' range-start';
-    else if(isEnd)cls+=' range-end';
-    else if(inRange)cls+=' in-range';
-    html+=`<button class="${cls}" onclick="calClick(${year},${month},${d})">${d}</button>`;
-  }
-  html+=`</div>`;
-  el.innerHTML=html;
-}
- 
-function calNav(dir){
-  calLeftMonth+=dir;
-  if(calLeftMonth>11){calLeftMonth=0;calLeftYear++;}
-  if(calLeftMonth<0){calLeftMonth=11;calLeftYear--;}
-  renderCals();
-}
- 
-function calClick(y,m,d){
-  const date=new Date(y,m,d);date.setHours(0,0,0,0);
-  if(!pendingStart||picking==='start'||(pendingStart&&pendingEnd)){
-    pendingStart=date;pendingEnd=null;picking='end';
+const API = '';
+const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DAY_NAMES = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const SRCS = ['Платформа','Звонобот','Сайт','Холод','Реанимация+Прочее'];
+const SRC_COLORS = {'Платформа':'#185FA5','Звонобот':'#1D9E75','Сайт':'#7B4FBF','Холод':'#F5A623','Реанимация+Прочее':'#E24B4A'};
+
+let curM = new Date().getMonth(), curYear = new Date().getFullYear(), curGran = 'day';
+let raw = null, serverPlans = {}, allUsers = [], charts = {}, chartMetric = 'both', chartType = 'cumulative';
+let rangeStart = null, rangeEnd = null, picking = null;
+let calLeftYear = new Date().getFullYear(), calLeftMonth = new Date().getMonth();
+let pendingStart = null, pendingEnd = null;
+let activeSection = 'managers', activeView = 'table';
+// Multi-select state: allMode=true means "all selected"
+let mgrAllMode = true, selectedManagers = new Set();
+let srcAllMode = true, selectedSources = new Set();
+
+function getY() { return curYear; }
+
+function changeYear(dir) {
+  curYear += dir;
+  document.getElementById('year-display').textContent = curYear;
+  if (curGran === 'year') {
+    rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
   } else {
-    if(date<pendingStart){pendingEnd=pendingStart;pendingStart=date;}
-    else pendingEnd=date;
-    picking='start';
+    rangeStart = new Date(curYear, curM, 1); rangeEnd = new Date(curYear, curM + 1, 0);
+    if (curGran === 'day') updateRangeLabel();
   }
-  renderCals();
-}
- 
-function applyPreset(days){
-  const end=new Date();end.setHours(0,0,0,0);
-  const start=new Date(end);start.setDate(start.getDate()-days+1);
-  pendingStart=start;pendingEnd=end;picking='start';
-  renderCals();
-}
- 
-function applyPresetMonth(offset){
-  const now=new Date();
-  const y=now.getFullYear(),m=now.getMonth()+offset;
-  const d=new Date(y,m,1);
-  pendingStart=new Date(d.getFullYear(),d.getMonth(),1);
-  pendingEnd=new Date(d.getFullYear(),d.getMonth()+1,0);
-  picking='start';
-  calLeftYear=pendingStart.getFullYear();calLeftMonth=pendingStart.getMonth();
-  renderCals();
-}
- 
-function applyRange(){
-  if(!pendingStart)return;
-  rangeStart=pendingStart;
-  rangeEnd=pendingEnd||pendingStart;
-  // Подстраиваем curM под диапазон
-  curM=rangeStart.getMonth();
-  document.getElementById('mon').value=curM;
-  updateRangeLabel();
-  closeCal();
   loadData();
 }
- 
-function updateRangeLabel(){
-  if(!rangeStart){document.getElementById('range-label').textContent='выберите период';return;}
-  const fmt=d=>d.getDate().toString().padStart(2,'0')+'.'+(d.getMonth()+1).toString().padStart(2,'0')+'.'+d.getFullYear();
-  const end=rangeEnd||rangeStart;
-  document.getElementById('range-label').textContent=fmt(rangeStart)+' – '+fmt(end);
+
+// ── Multi-select ──────────────────────────────────────────────────────────────
+function buildMSDropdown(id) {
+  const dd = document.getElementById('ms-' + id + '-dropdown');
+  const items = id === 'tm' ? allUsers : SRCS;
+  const set = id === 'tm' ? selectedManagers : selectedSources;
+  const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
+  const allLabel = id === 'tm' ? 'Все ТМ' : 'Все источники';
+  let html = `<div class="ms-item all-item" onclick="msToggleAll('${id}')"><input type="checkbox" ${allMode?'checked':''} onclick="event.stopPropagation()"> ${allLabel}</div><div class="ms-sep"></div>`;
+  items.forEach(item => {
+    const val = typeof item === 'object' ? item.id : item;
+    const lbl = typeof item === 'object' ? item.name : item;
+    const checked = allMode || set.has(String(val));
+    const dot = SRC_COLORS[lbl] ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SRC_COLORS[lbl]};flex-shrink:0"></span>` : '';
+    html += `<div class="ms-item" onclick="msToggleItem('${id}','${val}')"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation()"> ${dot}${lbl}</div>`;
+  });
+  dd.innerHTML = html;
 }
- 
-// ── Plans ─────────────────────────────────────────────────────────────────────
-function pKey(src,m,y,tmId){return src+'_'+y+'_'+m+'_'+(tmId||'all');}
-function getPlanForUser(src,tmId,m,y){m=m===undefined?curM:m;y=y===undefined?getY():y;return serverPlans[pKey(src,m,y,tmId)]||{new:0,succ:0};}
-function getTotalPlan(src,m,y){
-  m=m===undefined?curM:m;y=y===undefined?getY():y;
-  if(allUsers.length===0)return serverPlans[pKey(src,m,y,'all')]||{new:0,succ:0};
-  let n=0,s=0;allUsers.forEach(u=>{const p=getPlanForUser(src,u.id,m,y);n+=p.new;s+=p.succ;});
-  return{new:n,succ:s};
+
+function msToggleAll(id) {
+  // Flip allMode; when going to false — clear individual set (uncheck all)
+  if (id === 'tm') { mgrAllMode = !mgrAllMode; if (!mgrAllMode) selectedManagers.clear(); }
+  else             { srcAllMode = !srcAllMode;  if (!srcAllMode)  selectedSources.clear(); }
+  updateMSLabel(id); buildMSDropdown(id); renderContent();
 }
-function updatePlanLocal(src,tmId,field,val,m,y){
-  m=m===undefined?curM:m;y=y===undefined?getY():y;
-  const k=pKey(src,m,y,tmId);
-  if(!serverPlans[k])serverPlans[k]={new:0,succ:0};
-  serverPlans[k][field]=parseInt(val)||0;
-}
-async function saveSrcPlans(src){
-  const y=getY();
-  const btn=document.getElementById(`savebtn-${src}`),ind=document.getElementById(`si-${src}`);
-  if(btn)btn.disabled=true;
-  let ok=true;
-  for(const u of allUsers){
-    for(let mi=0;mi<12;mi++){
-      const k=pKey(src,mi,y,u.id);
-      if(!serverPlans[k])continue;
-      try{await fetch(`${API}/api/plans`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,...serverPlans[k]})});}
-      catch(e){ok=false;}
+
+function msToggleItem(id, val) {
+  const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
+  const set     = id === 'tm' ? selectedManagers : selectedSources;
+  const items   = id === 'tm' ? allUsers : SRCS;
+  if (allMode) {
+    // First individual click while "all" is on → switch to individual, deselect clicked item
+    if (id === 'tm') mgrAllMode = false; else srcAllMode = false;
+    items.forEach(it => { const v = String(typeof it === 'object' ? it.id : it); if (v !== String(val)) set.add(v); });
+  } else {
+    if (set.has(String(val))) set.delete(String(val)); else set.add(String(val));
+    // All individually checked → restore allMode
+    if (set.size === items.length) {
+      if (id === 'tm') { mgrAllMode = true; selectedManagers.clear(); }
+      else             { srcAllMode = true; selectedSources.clear(); }
     }
   }
-  if(btn)btn.disabled=false;
-  if(ind){ind.textContent=ok?'✓ Сохранено':'Ошибка';ind.style.color=ok?'#1D9E75':'#993C1D';ind.style.opacity='1';setTimeout(()=>ind.style.opacity='0',2000);}
-  render();
+  // dropdown stays open — no close here
+  updateMSLabel(id); buildMSDropdown(id); renderContent();
 }
-async function loadPlansFromServer(){try{const r=await fetch(`${API}/api/plans`);const d=await r.json();if(d.ok)serverPlans=d.plans||{};}catch(e){}}
- 
-function setStatus(t,txt){document.getElementById('dot').className='dot '+(t==='ok'?'ok':t==='err'?'err':'');document.getElementById('stxt').textContent=txt;}
- 
-async function loadUsers(){
-  try{const r=await fetch(`${API}/api/users`);const d=await r.json();if(!d.ok)return;allUsers=d.users;const sel=document.getElementById('tm');d.users.forEach(u=>{const o=document.createElement('option');o.value=u.id;o.textContent=u.name;sel.appendChild(o);});}catch(e){}
+
+function updateMSLabel(id) {
+  const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
+  const set     = id === 'tm' ? selectedManagers : selectedSources;
+  const items   = id === 'tm' ? allUsers : SRCS;
+  const allLabel = id === 'tm' ? 'Все ТМ' : 'Все источники';
+  const lbl = document.getElementById('ms-' + id + '-label');
+  if (allMode || set.size === 0) { lbl.textContent = allLabel; return; }
+  if (set.size === 1) {
+    const v = [...set][0];
+    const item = items.find(it => String(typeof it === 'object' ? it.id : it) === v);
+    lbl.textContent = typeof item === 'object' ? item.name : item;
+  } else lbl.textContent = `Выбрано: ${set.size}`;
 }
- 
-async function loadData(){
-  curM=parseInt(document.getElementById('mon').value);
-  // Если нет диапазона — берём весь месяц
-  if(!rangeStart){rangeStart=new Date(getY(),curM,1);rangeEnd=new Date(getY(),curM+1,0);updateRangeLabel();}
-  setStatus('','Загружаем из Б24...');
-  await loadPlansFromServer();
-  try{
-    const r=await fetch(`${API}/api/leads?year=${getY()}&month=${curM}&tm=${getTM()}`);
-    const d=await r.json();if(!d.ok)throw new Error(d.error);
-    raw=d;
-    setStatus('ok',`Обновлено ${new Date().toLocaleTimeString('ru')} · новых: ${d.totalNew} · успешных: ${d.totalWon}`);
-    render();
-  }catch(e){setStatus('err','Ошибка: '+e.message);}
+
+function toggleMS(id) {
+  const dd = document.getElementById('ms-' + id + '-dropdown');
+  const isShown = dd.classList.contains('show');
+  document.querySelectorAll('.ms-dropdown').forEach(d => d.classList.remove('show'));
+  if (!isShown) dd.classList.add('show');
 }
- 
-// ── Data ──────────────────────────────────────────────────────────────────────
-function fact(src){return raw&&raw.data&&raw.data[src]?raw.data[src]:{};}
- 
-function getRangeDays(){
-  if(curGran==='day'&&rangeStart&&rangeEnd){
-    const days=[],d=new Date(rangeStart);d.setHours(0,0,0,0);
-    const end=new Date(rangeEnd);end.setHours(0,0,0,0);
-    while(d<=end){days.push(new Date(d));d.setDate(d.getDate()+1);}
+
+// ── Getters for active filters ────────────────────────────────────────────────
+function getActiveSources() {
+  return (srcAllMode || selectedSources.size === 0) ? SRCS : SRCS.filter(s => selectedSources.has(s));
+}
+function getActiveManagers() {
+  if (mgrAllMode || selectedManagers.size === 0) return allUsers;
+  return allUsers.filter(u => selectedManagers.has(String(u.id)));
+}
+function factFiltered(src) {
+  const mgrs = getActiveManagers();
+  if (mgrAllMode) return fact(src);
+  const merged = {};
+  mgrs.forEach(u => {
+    const ud = factUser(u.id, src);
+    Object.entries(ud).forEach(([date, v]) => {
+      if (!merged[date]) merged[date] = { new: 0, won: 0 };
+      merged[date].new += v.new || 0;
+      merged[date].won += v.won || 0;
+    });
+  });
+  return merged;
+}
+function getTotalPlanFiltered(src, m, y) {
+  m = m === undefined ? curM : m; y = y === undefined ? getY() : y;
+  const mgrs = getActiveManagers();
+  if (mgrAllMode) return getTotalPlan(src, m, y);
+  let n = 0, s = 0;
+  mgrs.forEach(u => { const p = getPlanForUser(src, u.id, m, y); n += p.new; s += p.succ; });
+  return { new: n, succ: s };
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+function setSection(name, el) {
+  activeSection = name;
+  document.querySelectorAll('.snav-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('view-toggle').style.visibility = name === 'plans' ? 'hidden' : '';
+  // Source filter only for "по источникам"
+  document.getElementById('fi-src').style.display = name === 'sources' ? '' : 'none';
+  renderContent();
+}
+function setView(name, el) {
+  activeView = name;
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderContent();
+}
+function renderContent() {
+  destroyCharts();
+  if (activeSection === 'sources') {
+    if (activeView === 'table') renderTable();
+    else renderCharts();
+  } else if (activeSection === 'managers') {
+    if (activeView === 'table') renderManagers();
+    else renderManagerCharts();
+  } else if (activeSection === 'plans') {
+    renderPlansTab();
+  }
+}
+function destroyCharts() {
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e) {} });
+  charts = {};
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+function initMonthSelect() { curM = new Date().getMonth(); }
+function setGranSelect(sel) { setGran(sel.value); }
+function setGran(g) {
+  curGran = g;
+  const sel = document.getElementById('gran-select');
+  if (sel) sel.value = g;
+  const showRange = g === 'day';
+  const showYearNav = g !== 'day';
+  document.getElementById('fi-range').style.display = showRange ? '' : 'none';
+  document.getElementById('fsep-range').style.display = showRange ? '' : 'none';
+  document.getElementById('fi-year-nav').style.display = showYearNav ? '' : 'none';
+  document.getElementById('year-display').textContent = curYear;
+  if (g === 'year') {
+    rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
+  } else if (g !== 'day') {
+    rangeStart = new Date(curYear, curM, 1); rangeEnd = new Date(curYear, curM + 1, 0);
+  }
+  if (g !== 'day') loadData(); else renderContent();
+}
+function getG() { return curGran; }
+
+// ── Calendar ──────────────────────────────────────────────────────────────────
+function toggleCal() {
+  const p = document.getElementById('cal-popup');
+  if (p.classList.contains('show')) { closeCal(); return; }
+  pendingStart = rangeStart ? new Date(rangeStart) : null;
+  pendingEnd = rangeEnd ? new Date(rangeEnd) : null;
+  picking = 'start';
+  if (rangeStart) { calLeftYear = rangeStart.getFullYear(); calLeftMonth = rangeStart.getMonth(); }
+  else { calLeftYear = getY(); calLeftMonth = curM; }
+  renderCals();
+  p.classList.add('show');
+  setTimeout(() => document.addEventListener('click', outsideCalClick), 10);
+}
+function closeCal() {
+  document.getElementById('cal-popup').classList.remove('show');
+  document.removeEventListener('click', outsideCalClick);
+  picking = null;
+}
+function outsideCalClick(e) {
+  if (!document.getElementById('fi-range').contains(e.target)) closeCal();
+}
+function renderCals() {
+  renderOneCal('cal-left', calLeftYear, calLeftMonth);
+  let rm = calLeftMonth + 1, ry = calLeftYear;
+  if (rm > 11) { rm = 0; ry++; }
+  renderOneCal('cal-right', ry, rm);
+}
+function renderOneCal(id, year, month) {
+  const el = document.getElementById(id);
+  const first = new Date(year, month, 1), last = new Date(year, month + 1, 0);
+  const startDow = (first.getDay() + 6) % 7;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  let html = `<div class="cal-nav">`;
+  if (id === 'cal-left') html += `<button onclick="calNav(-1)">&#8249;</button>`;
+  else html += `<span></span>`;
+  html += `<span>${MONTHS[month]} ${year}</span>`;
+  if (id === 'cal-right') html += `<button onclick="calNav(1)">&#8250;</button>`;
+  else html += `<span></span>`;
+  html += `</div><div class="cal-grid">`;
+  DAY_NAMES.forEach(d => html += `<div class="cal-dh">${d}</div>`);
+  for (let i = 0; i < startDow; i++) html += `<button class="cal-d other"></button>`;
+  for (let d = 1; d <= last.getDate(); d++) {
+    const date = new Date(year, month, d); date.setHours(0, 0, 0, 0);
+    let cls = 'cal-d';
+    if (date.getTime() === today.getTime()) cls += ' today';
+    const isStart = pendingStart && date.getTime() === pendingStart.getTime();
+    const isEnd = pendingEnd && date.getTime() === pendingEnd.getTime();
+    const inRange = pendingStart && pendingEnd && date > pendingStart && date < pendingEnd;
+    if (isStart && isEnd) cls += ' selected';
+    else if (isStart) cls += ' range-start';
+    else if (isEnd) cls += ' range-end';
+    else if (inRange) cls += ' in-range';
+    html += `<button class="${cls}" onclick="calClick(${year},${month},${d})">${d}</button>`;
+  }
+  html += `</div>`;
+  el.innerHTML = html;
+}
+function calNav(dir) {
+  calLeftMonth += dir;
+  if (calLeftMonth > 11) { calLeftMonth = 0; calLeftYear++; }
+  if (calLeftMonth < 0) { calLeftMonth = 11; calLeftYear--; }
+  renderCals();
+}
+function calClick(y, m, d) {
+  const date = new Date(y, m, d); date.setHours(0, 0, 0, 0);
+  if (!pendingStart || picking === 'start' || (pendingStart && pendingEnd)) {
+    pendingStart = date; pendingEnd = null; picking = 'end';
+  } else {
+    if (date < pendingStart) { pendingEnd = pendingStart; pendingStart = date; }
+    else pendingEnd = date;
+    picking = 'start';
+  }
+  renderCals();
+}
+function applyPreset(days) {
+  const end = new Date(); end.setHours(0, 0, 0, 0);
+  const start = new Date(end); start.setDate(start.getDate() - days + 1);
+  pendingStart = start; pendingEnd = end; picking = 'start'; renderCals();
+}
+function applyPresetMonth(offset) {
+  const now = new Date(), y = now.getFullYear(), m = now.getMonth() + offset;
+  const d = new Date(y, m, 1);
+  pendingStart = new Date(d.getFullYear(), d.getMonth(), 1);
+  pendingEnd = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+  picking = 'start';
+  calLeftYear = pendingStart.getFullYear(); calLeftMonth = pendingStart.getMonth();
+  renderCals();
+}
+function applyRange() {
+  if (!pendingStart) return;
+  rangeStart = pendingStart; rangeEnd = pendingEnd || pendingStart;
+  curM = rangeStart.getMonth();
+  updateRangeLabel(); closeCal(); loadData();
+}
+function updateRangeLabel() {
+  if (!rangeStart) { document.getElementById('range-label').textContent = 'выберите период'; return; }
+  const fmt = d => d.getDate().toString().padStart(2,'0') + '.' + (d.getMonth()+1).toString().padStart(2,'0') + '.' + d.getFullYear();
+  document.getElementById('range-label').textContent = fmt(rangeStart) + ' – ' + fmt(rangeEnd || rangeStart);
+}
+
+// ── Plans ─────────────────────────────────────────────────────────────────────
+function pKey(src, m, y, tmId) { return src + '_' + y + '_' + m + '_' + (tmId || 'all'); }
+function getPlanForUser(src, tmId, m, y) {
+  m = m === undefined ? curM : m; y = y === undefined ? getY() : y;
+  return serverPlans[pKey(src, m, y, tmId)] || { new: 0, succ: 0 };
+}
+function getTotalPlan(src, m, y) {
+  m = m === undefined ? curM : m; y = y === undefined ? getY() : y;
+  if (allUsers.length === 0) return serverPlans[pKey(src, m, y, 'all')] || { new: 0, succ: 0 };
+  let n = 0, s = 0;
+  allUsers.forEach(u => { const p = getPlanForUser(src, u.id, m, y); n += p.new; s += p.succ; });
+  return { new: n, succ: s };
+}
+function updatePlanLocal(src, tmId, field, val, m, y) {
+  m = m === undefined ? curM : m; y = y === undefined ? getY() : y;
+  const k = pKey(src, m, y, tmId);
+  if (!serverPlans[k]) serverPlans[k] = { new: 0, succ: 0 };
+  serverPlans[k][field] = parseInt(val) || 0;
+}
+async function saveSrcPlans(src) {
+  const y = getY();
+  const btn = document.getElementById(`savebtn-${src}`), ind = document.getElementById(`si-${src}`);
+  if (btn) btn.disabled = true;
+  let ok = true;
+  for (const u of allUsers) {
+    for (let mi = 0; mi < 12; mi++) {
+      const k = pKey(src, mi, y, u.id);
+      if (!serverPlans[k]) continue;
+      try { await fetch(`${API}/api/plans`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: k, ...serverPlans[k] }) }); }
+      catch (e) { ok = false; }
+    }
+  }
+  if (btn) btn.disabled = false;
+  if (ind) { ind.textContent = ok ? '✓ Сохранено' : 'Ошибка'; ind.style.color = ok ? '#1D9E75' : '#993C1D'; ind.style.opacity = '1'; setTimeout(() => ind.style.opacity = '0', 2000); }
+  renderContent();
+}
+async function loadPlansFromServer() {
+  try { const r = await fetch(`${API}/api/plans`); const d = await r.json(); if (d.ok) serverPlans = d.plans || {}; } catch(e) {}
+}
+
+// ── Data helpers ──────────────────────────────────────────────────────────────
+function fact(src) { return raw && raw.data && raw.data[src] ? raw.data[src] : {}; }
+function factUser(uid, src) { return (raw?.dataByUser?.[String(uid)]?.[src]) || {}; }
+function isWD(d) { return d.getDay() > 0 && d.getDay() < 6; }
+
+function getRangeDays() {
+  if (rangeStart && rangeEnd) {
+    const days = [], d = new Date(rangeStart); d.setHours(0, 0, 0, 0);
+    const end = new Date(rangeEnd); end.setHours(0, 0, 0, 0);
+    while (d <= end) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
     return days;
   }
-  // Для week/month — весь месяц
-  const y=getY(),d=new Date(y,curM,1),days=[];
-  while(d.getMonth()===curM){days.push(new Date(d));d.setDate(d.getDate()+1);}
+  const y = getY(), d = new Date(y, curM, 1), days = [];
+  while (d.getMonth() === curM) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
   return days;
 }
- 
-function isWD(d){return d.getDay()>0&&d.getDay()<6;}
- 
-function periods(){
-  const g=getG(),days=getRangeDays();
-  if(g==='month')return[{label:MONTHS[curM],days}];
-  if(g==='week'){const ws={};days.forEach(d=>{const w=Math.ceil((d.getDate())/7);if(!ws[w])ws[w]=[];ws[w].push(d);});return Object.values(ws).map((wd,i)=>({label:'Нед '+(i+1),days:wd}));}
-  return days.map(d=>({label:d.getDate()+'.'+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1),days:[d]}));
+
+function periods() {
+  const g = getG();
+  if (g === 'year') {
+    return MONTHS.map((lbl, mi) => {
+      const days = [], d = new Date(curYear, mi, 1);
+      while (d.getMonth() === mi) { days.push(new Date(d)); d.setDate(d.getDate() + 1); }
+      return { label: lbl.slice(0, 3), days, monthIdx: mi };
+    });
+  }
+  const days = getRangeDays();
+  if (g === 'month') return [{ label: MONTHS[curM], days }];
+  if (g === 'week') {
+    const ws = {};
+    days.forEach(d => { const w = Math.ceil(d.getDate() / 7); if (!ws[w]) ws[w] = []; ws[w].push(d); });
+    return Object.values(ws).map((wd, i) => ({ label: 'Нед ' + (i + 1), days: wd }));
+  }
+  return days.map(d => ({ label: d.getDate() + '.' + String(d.getMonth() + 1).padStart(2,'0'), days: [d] }));
 }
- 
-function buildRows(src){
-  const fd=fact(src),rangeDays=getRangeDays(),today=new Date();today.setHours(23,59,59);
-  const totalWD=rangeDays.filter(isWD).length,p=getTotalPlan(src);
-  let cumNF=0,cumSF=0;
-  return periods().map(pr=>{
-    const last=pr.days[pr.days.length-1],past=last<=today;
-    const cumWD=rangeDays.filter(d=>d<=last&&isWD(d)).length;
-    const planN=totalWD?Math.round(p.new/totalWD*cumWD):0,planS=totalWD?Math.round(p.succ/totalWD*cumWD):0;
-    let nf=0,sf=0;
-    if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]){nf+=fd[k].new||0;sf+=fd[k].won||0;}});
-    cumNF+=nf;cumSF+=sf;
-    return{label:pr.label,past,planN,planS,cumNF:past?cumNF:null,cumSF:past?cumSF:null,dayNF:past?nf:null,daySF:past?sf:null,devN:past?cumNF-planN:null,devS:past?cumSF-planS:null,conv:past&&cumNF>0?cumSF/cumNF:null};
+
+function buildRows(src, customFact, customPlan, tmId) {
+  const fd = customFact || factFiltered(src);
+  const today = new Date(); today.setHours(23, 59, 59);
+
+  if (curGran === 'year') {
+    // Per-month plan — no cumulative for year view
+    return periods().map(pr => {
+      const mi = pr.monthIdx;
+      const p = tmId ? getPlanForUser(src, tmId, mi, curYear) : getTotalPlanFiltered(src, mi, curYear);
+      const last = pr.days[pr.days.length - 1], past = last <= today;
+      let nf = 0, sf = 0;
+      if (past) pr.days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
+      return { label: pr.label, past, planN: p.new, planS: p.succ, cumNF: past ? nf : null, cumSF: past ? sf : null, dayNF: past ? nf : null, daySF: past ? sf : null, devN: past ? nf - p.new : null, devS: past ? sf - p.succ : null, conv: past && nf > 0 ? sf / nf : null };
+    });
+  }
+
+  const rangeDays = getRangeDays();
+  const totalWD = rangeDays.filter(isWD).length;
+  const p = customPlan || getTotalPlanFiltered(src);
+  let cumNF = 0, cumSF = 0;
+  return periods().map(pr => {
+    const last = pr.days[pr.days.length - 1], past = last <= today;
+    const cumWD = rangeDays.filter(d => d <= last && isWD(d)).length;
+    const planN = totalWD ? Math.round(p.new / totalWD * cumWD) : 0;
+    const planS = totalWD ? Math.round(p.succ / totalWD * cumWD) : 0;
+    let nf = 0, sf = 0;
+    if (past) pr.days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
+    cumNF += nf; cumSF += sf;
+    return { label: pr.label, past, planN, planS, cumNF: past ? cumNF : null, cumSF: past ? cumSF : null, dayNF: past ? nf : null, daySF: past ? sf : null, devN: past ? cumNF - planN : null, devS: past ? cumSF - planS : null, conv: past && cumNF > 0 ? cumSF / cumNF : null };
   });
 }
- 
-function fmt(n){if(n===null||n===undefined)return'—';return Math.round(n).toLocaleString('ru');}
-function fPct(n){if(n===null||n===undefined)return'—';return(n*100).toFixed(1)+'%';}
-function fDev(n){if(n===null)return'—';return(n>=0?'+':'')+Math.round(n);}
-function dCls(n){return n===null?'dim':n>=0?'pos':'neg';}
-function pillCls(pct){return pct>=0.9?'ok':pct>=0.7?'warn':'bad';}
- 
-function renderKPIs(){
-  const days=getRangeDays(),today=new Date();today.setHours(23,59,59);
-  const totalWD=days.filter(isWD).length,passedWD=days.filter(d=>d<=today&&isWD(d)).length;
-  let pN=0,pS=0,fN=0,fS=0;
-  SRCS.forEach(s=>{const p=getTotalPlan(s);pN+=p.new;pS+=p.succ;Object.values(fact(s)).forEach(d=>{fN+=d.new||0;fS+=d.won||0;});});
-  const pctN=pN>0?fN/pN:0,pctS=pS>0?fS/pS:0;
-  const colN=pctN>=0.9?'#1D9E75':pctN>=0.7?'#BA7517':'#993C1D';
-  const colS=pctS>=0.9?'#1D9E75':pctS>=0.7?'#BA7517':'#993C1D';
-  const conv=fN>0?fS/fN:0;
-  const planToday=totalWD>0?Math.round(pS/totalWD*passedWD):0;
-  const trendPct=planToday>0?fS/planToday:0;
-  const trendCol=trendPct>=0.9?'#1D9E75':trendPct>=0.7?'#BA7517':'#993C1D';
-  document.getElementById('kpis').innerHTML=`
-    <div class="kpi"><div class="kpi-label">Новых лидов</div><div class="kpi-val">${fmt(fN)}</div><div class="kpi-meta"><span>план <b>${fmt(pN)}</b></span><span class="pill ${pillCls(pctN)}">${Math.round(pctN*100)}%</span></div><div class="pb"><div class="pb-fill" style="width:${Math.min(pctN*100,100).toFixed(0)}%;background:${colN}"></div></div></div>
-    <div class="kpi"><div class="kpi-label">Успешных лидов</div><div class="kpi-val">${fmt(fS)}</div><div class="kpi-meta"><span>план <b>${fmt(pS)}</b></span><span class="pill ${pillCls(pctS)}">${Math.round(pctS*100)}%</span></div><div class="pb"><div class="pb-fill" style="width:${Math.min(pctS*100,100).toFixed(0)}%;background:${colS}"></div></div></div>
-    <div class="kpi"><div class="kpi-label">Конверсия</div><div class="kpi-val">${fPct(conv)}</div><div class="kpi-meta"><span>${MONTHS[curM]} ${getY()}</span></div></div>
-    <div class="kpi"><div class="kpi-label">Тренд выполнения плана</div><div class="kpi-val" style="color:${trendCol}">${Math.round(trendPct*100)}%</div><div class="kpi-meta"><span>факт <b>${fmt(fS)}</b> / план на сегодня <b>${fmt(planToday)}</b></span></div><div class="pb"><div class="pb-fill" style="width:${Math.min(trendPct*100,100).toFixed(0)}%;background:${trendCol}"></div></div></div>`;
+
+function getUserFactTotal(uid, src) {
+  const fd = factUser(uid, src);
+  const days = getRangeDays(); const today = new Date(); today.setHours(23, 59, 59);
+  let fN = 0, fS = 0;
+  days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k] && d <= today) { fN += fd[k].new || 0; fS += fd[k].won || 0; } });
+  return { new: fN, won: fS };
 }
- 
-function renderTable(){
-  const showDay=getG()==='day',prs=periods(),cols=prs.map(r=>`<th>${r.label}</th>`).join('');
-  const allRows={};SRCS.forEach(src=>{allRows[src]=buildRows(src);});
-  function totalRow(field){return prs.map((_,i)=>{let v=0,has=false;SRCS.forEach(src=>{const x=allRows[src][i][field];if(x!==null&&x!==undefined){v+=x;has=true;}});return has?v:null;});}
-  let html='';
-  SRCS.forEach(src=>{
-    const rows=allRows[src],p=getTotalPlan(src),lastF=rows.filter(r=>r.past).pop();
-    const pctD=p.new>0&&lastF?lastF.cumNF/p.new:null;
-    const bCls=pctD===null?'neutral':pctD>=0.9?'ok':pctD>=0.7?'warn':'bad';
-    const bTxt=pctD===null?'нет данных':Math.round(pctD*100)+'% от плана';
-    html+=`<div class="section">
+
+function fmt(n) { if (n === null || n === undefined) return '—'; return Math.round(n).toLocaleString('ru'); }
+function fPct(n) { if (n === null || n === undefined) return '—'; return (n * 100).toFixed(1) + '%'; }
+function fDev(n) { if (n === null) return '—'; return (n >= 0 ? '+' : '') + Math.round(n); }
+function dCls(n) { return n === null ? 'dim' : n >= 0 ? 'pos' : 'neg'; }
+function pillCls(pct) { return pct >= 0.9 ? 'ok' : pct >= 0.7 ? 'warn' : 'bad'; }
+function factCls(f, p) { return p > 0 && f >= p ? 'pos' : f > 0 ? '' : 'dim'; }
+
+// ── Load ──────────────────────────────────────────────────────────────────────
+function setStatus(t, txt) {
+  document.getElementById('dot').className = 'dot ' + (t === 'ok' ? 'ok' : t === 'err' ? 'err' : '');
+  document.getElementById('stxt').textContent = txt;
+}
+
+async function loadUsers() {
+  try {
+    const r = await fetch(`${API}/api/users`); const d = await r.json(); if (!d.ok) return;
+    allUsers = d.users;
+    buildMSDropdown('tm');
+  } catch(e) {}
+}
+
+async function loadData() {
+  if (curGran === 'year') {
+    rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
+  } else if (!rangeStart) {
+    const now = new Date(); curM = now.getMonth();
+    rangeStart = new Date(curYear, curM, 1); rangeEnd = new Date(curYear, curM + 1, 0);
+    if (curGran === 'day') updateRangeLabel();
+  }
+  if (rangeStart && curGran === 'day') curM = rangeStart.getMonth();
+  const from = rangeStart.toISOString().slice(0, 10);
+  const to   = rangeEnd.toISOString().slice(0, 10);
+  setStatus('', 'Загружаем из Б24...');
+  await loadPlansFromServer();
+  try {
+    const r = await fetch(`${API}/api/leads?year=${curYear}&month=${curM}&from=${from}&to=${to}&tm=all`);
+    const d = await r.json(); if (!d.ok) throw new Error(d.error);
+    raw = d;
+    setStatus('ok', `Обновлено ${new Date().toLocaleTimeString('ru')} · новых: ${d.totalNew} · успешных: ${d.totalWon}`);
+    render();
+  } catch(e) { setStatus('err', 'Ошибка: ' + e.message); }
+}
+
+// ── KPI ───────────────────────────────────────────────────────────────────────
+function renderKPIs() {
+  const days = getRangeDays(), today = new Date(); today.setHours(23, 59, 59);
+  const totalWD = days.filter(isWD).length, passedWD = days.filter(d => d <= today && isWD(d)).length;
+  const srcs = getActiveSources();
+  let pN=0, pS=0, fN=0, fS=0;
+  srcs.forEach(s => {
+    const p = getTotalPlanFiltered(s); pN += p.new; pS += p.succ;
+    const fd = factFiltered(s);
+    days.forEach(d => { const k = d.toISOString().slice(0,10); if (fd[k] && d <= today) { fN += fd[k].new||0; fS += fd[k].won||0; } });
+  });
+  const pctN = pN > 0 ? fN / pN : 0, pctS = pS > 0 ? fS / pS : 0;
+  const conv = fN > 0 ? fS / fN : 0;
+  // Тренды — темп в рабочих днях
+  const planTodayN = totalWD > 0 ? Math.round(pN / totalWD * passedWD) : 0;
+  const planTodayS = totalWD > 0 ? Math.round(pS / totalWD * passedWD) : 0;
+  const trendPctN = planTodayN > 0 ? fN / planTodayN : 0;
+  const trendPctS = planTodayS > 0 ? fS / planTodayS : 0;
+  // Прогноз на конец периода
+  const projN = passedWD > 0 ? Math.round(fN / passedWD * totalWD) : 0;
+  const projS = passedWD > 0 ? Math.round(fS / passedWD * totalWD) : 0;
+  const colN = pctN >= 0.9 ? '#1D9E75' : pctN >= 0.7 ? '#BA7517' : '#993C1D';
+  const colS = pctS >= 0.9 ? '#1D9E75' : pctS >= 0.7 ? '#BA7517' : '#993C1D';
+  const tColN = trendPctN >= 0.9 ? '#1D9E75' : trendPctN >= 0.7 ? '#BA7517' : '#993C1D';
+  const tColS = trendPctS >= 0.9 ? '#1D9E75' : trendPctS >= 0.7 ? '#BA7517' : '#993C1D';
+
+  document.getElementById('kpis').innerHTML = `
+    <!-- 1: Новые лиды + конверсия -->
+    <div class="kpi">
+      <div class="kpi-label"><i class="ti ti-user-plus" style="color:#185FA5"></i> Новые лиды</div>
+      <div class="kpi-row">
+        <div class="kpi-block">
+          <div class="kpi-sub">Факт</div>
+          <div class="kpi-val">${fmt(fN)}</div>
+          <div class="kpi-meta"><span>план <b>${fmt(pN)}</b></span><span class="pill ${pillCls(pctN)}">${Math.round(pctN*100)}%</span></div>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-block">
+          <div class="kpi-sub">Конверсия</div>
+          <div class="kpi-val sm">${fPct(conv)}</div>
+          <div class="kpi-meta"><span>${fmt(fS)} из ${fmt(fN)}</span></div>
+        </div>
+      </div>
+      <div class="pb"><div class="pb-fill" style="width:${Math.min(pctN*100,100).toFixed(0)}%;background:${colN}"></div></div>
+    </div>
+    <!-- 2: Тренды по новым лидам -->
+    <div class="kpi">
+      <div class="kpi-label"><i class="ti ti-trending-up" style="color:${tColN}"></i> Тренды по новым лидам</div>
+      <div class="kpi-val sm" style="color:${tColN}">${Math.round(trendPctN*100)}% от плана на сегодня</div>
+      <div class="trend-rows">
+        <div class="trend-row"><span class="tl">Факт сегодня</span><span class="tv">${fmt(fN)}</span></div>
+        <div class="trend-row"><span class="tl">План на сегодня</span><span class="tv">${fmt(planTodayN)}</span></div>
+        <div class="trend-row"><span class="tl">Прогноз к концу</span><span class="tv" style="color:${projN>=pN?'#1D9E75':'#993C1D'}">${fmt(projN)}</span></div>
+        <div class="trend-row"><span class="tl">Раб. дней: пройдено / всего</span><span class="tv">${passedWD} / ${totalWD}</span></div>
+      </div>
+    </div>
+    <!-- 3: Успешные лиды + конверсия -->
+    <div class="kpi">
+      <div class="kpi-label"><i class="ti ti-star" style="color:#1D9E75"></i> Успешные лиды</div>
+      <div class="kpi-row">
+        <div class="kpi-block">
+          <div class="kpi-sub">Факт</div>
+          <div class="kpi-val">${fmt(fS)}</div>
+          <div class="kpi-meta"><span>план <b>${fmt(pS)}</b></span><span class="pill ${pillCls(pctS)}">${Math.round(pctS*100)}%</span></div>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-block">
+          <div class="kpi-sub">Конверсия</div>
+          <div class="kpi-val sm">${fPct(conv)}</div>
+          <div class="kpi-meta"><span>${fmt(fS)} из ${fmt(fN)}</span></div>
+        </div>
+      </div>
+      <div class="pb"><div class="pb-fill" style="width:${Math.min(pctS*100,100).toFixed(0)}%;background:${colS}"></div></div>
+    </div>
+    <!-- 4: Тренды по успешным лидам -->
+    <div class="kpi">
+      <div class="kpi-label"><i class="ti ti-trending-up" style="color:${tColS}"></i> Тренды по успешным лидам</div>
+      <div class="kpi-val sm" style="color:${tColS}">${Math.round(trendPctS*100)}% от плана на сегодня</div>
+      <div class="trend-rows">
+        <div class="trend-row"><span class="tl">Факт сегодня</span><span class="tv">${fmt(fS)}</span></div>
+        <div class="trend-row"><span class="tl">План на сегодня</span><span class="tv">${fmt(planTodayS)}</span></div>
+        <div class="trend-row"><span class="tl">Прогноз к концу</span><span class="tv" style="color:${projS>=pS?'#1D9E75':'#993C1D'}">${fmt(projS)}</span></div>
+        <div class="trend-row"><span class="tl">Откл. от плана</span><span class="tv class="${dCls(fS-planTodayS)}">${fDev(fS-planTodayS)}</span></div>
+      </div>
+    </div>`;
+}
+
+// ── По источникам — Таблица ───────────────────────────────────────────────────
+function renderTable() {
+  const showDay = getG() === 'day', prs = periods(), cols = prs.map(r => `<th>${r.label}</th>`).join('');
+  const srcs = getActiveSources();
+  const allRows = {}; srcs.forEach(src => { allRows[src] = buildRows(src); });
+
+  function totalRow(field) {
+    return prs.map((_, i) => { let v=0, has=false; srcs.forEach(src => { const x=allRows[src][i][field]; if(x!==null&&x!==undefined){v+=x;has=true;} }); return has?v:null; });
+  }
+  let html = '';
+  srcs.forEach(src => {
+    const rows = allRows[src], p = getTotalPlanFiltered(src), lastF = rows.filter(r => r.past).pop();
+    const pctD = p.new > 0 && lastF ? lastF.cumNF / p.new : null;
+    const bCls = pctD === null ? 'neutral' : pctD >= 0.9 ? 'ok' : pctD >= 0.7 ? 'warn' : 'bad';
+    const bTxt = pctD === null ? 'нет данных' : Math.round(pctD*100) + '% от плана';
+    html += `<div class="section">
       <div class="sec-head" onclick="tog('${src}')">
         <span style="width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};display:inline-block;flex-shrink:0"></span>
         <span>${src}</span>
@@ -553,16 +848,17 @@ function renderTable(){
       </table></div></div>
     </div>`;
   });
+
   // ИТОГО
-  const tCumNF=totalRow('cumNF'),tCumSF=totalRow('cumSF'),tPlanN=totalRow('planN'),tPlanS=totalRow('planS');
+  const tCumNF=totalRow('cumNF'), tCumSF=totalRow('cumSF'), tPlanN=totalRow('planN'), tPlanS=totalRow('planS');
   const tDevN=prs.map((_,i)=>tCumNF[i]!==null&&tPlanN[i]!==null?tCumNF[i]-tPlanN[i]:null);
   const tDevS=prs.map((_,i)=>tCumSF[i]!==null&&tPlanS[i]!==null?tCumSF[i]-tPlanS[i]:null);
   const tConv=prs.map((_,i)=>tCumNF[i]>0?tCumSF[i]/tCumNF[i]:null);
-  const tDayNF=showDay?totalRow('dayNF'):[],tDaySF=showDay?totalRow('daySF'):[];
-  html+=`<div class="section">
+  const tDayNF=showDay?totalRow('dayNF'):[], tDaySF=showDay?totalRow('daySF'):[];
+  html += `<div class="section">
     <div class="sec-head" onclick="tog('__total__')" style="background:#E6F1FB">
       <span style="font-size:14px;font-weight:700;color:#185FA5">∑</span>
-      <span style="color:#185FA5">ИТОГО по всем источникам</span>
+      <span style="color:#185FA5">ИТОГО по источникам</span>
       <i class="ti ti-chevron-down" id="ic-__total__" style="margin-left:auto"></i>
     </div>
     <div id="sb-__total__"><div class="tbl-wrap"><table>
@@ -583,173 +879,245 @@ function renderTable(){
       </tbody>
     </table></div></div>
   </div>`;
-  document.getElementById('secs').innerHTML=html;
+  document.getElementById('content-area').innerHTML = html;
 }
- 
-function renderPlansTab(){
-  const y=getY();
-  document.getElementById('plans-wrap').innerHTML=SRCS.map(src=>{
-    const monthHeaderPairs=MONTHS.map(m=>`<th colspan="2">${m.slice(0,3)}</th>`).join('');
-    const monthSubHeaders=MONTHS.map(()=>`<th class="sub">Нов</th><th class="sub">Усп</th>`).join('');
-    const userRows=allUsers.map(u=>{
-      const cells=MONTHS.map((m,mi)=>{const p=getPlanForUser(src,u.id,mi,y);return `<td><input type="number" min="0" value="${p.new}" oninput="updatePlanLocal('${src}','${u.id}','new',this.value,${mi},${y})"></td><td><input type="number" min="0" value="${p.succ}" oninput="updatePlanLocal('${src}','${u.id}','succ',this.value,${mi},${y})"></td>`;}).join('');
-      return `<tr><td class="s">${u.name}</td>${cells}</tr>`;
-    }).join('');
-    const totalCells=MONTHS.map((_,mi)=>{const p=getTotalPlan(src,mi,y);return `<td style="font-weight:700;color:#185FA5">${fmt(p.new)}</td><td style="font-weight:700;color:#1D9E75">${fmt(p.succ)}</td>`;}).join('');
-    return `<div class="plan-section">
-      <div class="plan-sec-head"><span style="width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};display:inline-block"></span>${src}</div>
-      <div class="plan-tbl-wrap"><table class="plan-tbl">
-        <thead><tr><th class="s" rowspan="2">Менеджер</th>${monthHeaderPairs}</tr><tr>${monthSubHeaders}</tr></thead>
-        <tbody>${userRows}<tr class="total-row"><td class="s">Итого</td>${totalCells}</tr></tbody>
-      </table></div>
-      <div class="plan-footer">
-        <span>Текущий месяц (${MONTHS[curM]}): <strong>новых ${fmt(getTotalPlan(src).new)}</strong> · <strong>успешных ${fmt(getTotalPlan(src).succ)}</strong></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span id="si-${src}" class="save-ind"></span>
-          <button id="savebtn-${src}" class="btn primary" style="height:28px" onclick="saveSrcPlans('${src}')"><i class="ti ti-device-floppy"></i> Сохранить</button>
-        </div>
+
+// ── По источникам — Графики ───────────────────────────────────────────────────
+function renderCharts() {
+  destroyCharts();
+  const area = document.getElementById('content-area');
+  const days = getRangeDays(), today = new Date(); today.setHours(23, 59, 59);
+  const prs = periods(), labels = prs.map(p => p.label);
+  const showNew = chartMetric === 'both' || chartMetric === 'new';
+  const showWon = chartMetric === 'both' || chartMetric === 'won';
+  const cumul = chartType === 'cumulative';
+  const srcs = getActiveSources();
+
+  area.innerHTML = `
+    <div class="chart-filters">
+      <div class="metric-toggle">
+        <button class="metric-btn ${chartMetric==='both'?'active':''}" onclick="setMetric('both',this)">Оба</button>
+        <button class="metric-btn ${chartMetric==='new'?'active':''}" onclick="setMetric('new',this)">Новые</button>
+        <button class="metric-btn ${chartMetric==='won'?'active':''}" onclick="setMetric('won',this)">Успешные</button>
       </div>
-    </div>`;
-  }).join('');
-}
- 
-function setMetric(m,el){chartMetric=m;document.querySelectorAll('.metric-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderCharts();}
-function renderCharts(){
-  const cumul=document.getElementById('chart-type').value==='cumulative';
-  const days=getRangeDays(),today=new Date();today.setHours(23,59,59);
-  const prs=periods(),labels=prs.map(p=>p.label);
-  Object.values(charts).forEach(c=>c.destroy());charts={};
-  const showNew=chartMetric==='both'||chartMetric==='new',showWon=chartMetric==='both'||chartMetric==='won';
-  document.getElementById('charts-wrap').innerHTML=SRCS.map(src=>`<div class="chart-card"><h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src}</h3><div class="chart-wrap"><canvas id="chart-${src}"></canvas></div></div>`).join('');
-  SRCS.forEach(src=>{
-    const fd=fact(src),totalWD=days.filter(isWD).length,p=getTotalPlan(src),color=SRC_COLORS[src],datasets=[];
-    ['new','won'].forEach(metric=>{
-      if(metric==='new'&&!showNew)return;if(metric==='won'&&!showWon)return;
-      const planVal=metric==='new'?p.new:p.succ,label=metric==='new'?'Новые':'Успешные',col=metric==='new'?color:'#9b9b97';
-      let cumF=0;const factData=[],planData=[];
-      prs.forEach(pr=>{
-        const last=pr.days[pr.days.length-1],past=last<=today;
-        const cumWD=days.filter(d=>d<=last&&isWD(d)).length,planP=totalWD?Math.round(planVal/totalWD*cumWD):0;
-        let pf=0;if(past)pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
+      <select class="type-select" onchange="setChartType(this.value)">
+        <option value="cumulative"${chartType==='cumulative'?' selected':''}>Нарастающим итогом</option>
+        <option value="daily"${chartType==='daily'?' selected':''}>По периодам</option>
+      </select>
+    </div>
+    <div id="charts-wrap">${srcs.map(src=>`<div class="chart-card"><h3><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:6px"></span>${src}</h3><div class="chart-wrap"><canvas id="chart-${src.replace(/[^a-zA-Zа-яА-Я0-9]/g,'-')}"></canvas></div></div>`).join('')}</div>`;
+
+  srcs.forEach(src => {
+    const fd = factFiltered(src), totalWD = days.filter(isWD).length, p = getTotalPlanFiltered(src);
+    const color = SRC_COLORS[src], datasets = [];
+    ['new','won'].forEach(metric => {
+      if (metric==='new'&&!showNew) return;
+      if (metric==='won'&&!showWon) return;
+      const planVal = metric==='new'?p.new:p.succ;
+      const col = metric==='new'?color:'#9b9b97';
+      let cumF=0; const factData=[], planData=[];
+      prs.forEach(pr => {
+        const last=pr.days[pr.days.length-1], past=last<=today;
+        const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
+        const planP=totalWD?Math.round(planVal/totalWD*cumWD):0;
+        let pf=0; if(past) pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
         cumF+=pf;
         if(cumul){factData.push(past?cumF:null);planData.push(planP);}
         else{factData.push(past?pf:null);planData.push(totalWD?Math.round(planVal/totalWD*(pr.days.filter(isWD).length)):0);}
       });
-      datasets.push({label:`${label} (факт)`,data:factData,borderColor:col,backgroundColor:col+'22',borderWidth:2.5,pointRadius:3,pointBackgroundColor:col,tension:0.3,fill:metric==='new',spanGaps:false});
-      datasets.push({label:`${label} (план)`,data:planData,borderColor:col,borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.3,fill:false});
+      const lbl = metric==='new'?'Новые':'Успешные';
+      datasets.push({label:`${lbl} (факт)`,data:factData,borderColor:col,backgroundColor:col+'22',borderWidth:2.5,pointRadius:3,pointBackgroundColor:col,tension:0.3,fill:metric==='new',spanGaps:false});
+      datasets.push({label:`${lbl} (план)`,data:planData,borderColor:col,borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:0.3,fill:false});
     });
-    const ctx=document.getElementById('chart-'+src).getContext('2d');
+    const cid='chart-'+src.replace(/[^a-zA-Zа-яА-Я0-9]/g,'-');
+    const ctx=document.getElementById(cid).getContext('2d');
     charts[src]=new Chart(ctx,{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y!==null?Math.round(ctx.parsed.y).toLocaleString('ru'):'—'}`}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:20}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},beginAtZero:true}}}});
   });
 }
- 
-function tog(src){const el=document.getElementById('sb-'+src),ic=document.getElementById('ic-'+src);if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}else{el.style.display='none';ic.className='ti ti-chevron-right';}}
-function renderManagers(){
-  const prs=periods(), today=new Date(); today.setHours(23,59,59);
-  const days=getRangeDays(), totalWD=days.filter(isWD).length;
- 
-  // Считаем факт по каждому менеджеру
-  // Для этого нам нужны данные по ТМ отдельно — пока берём из общего raw
-  // и разбиваем план по менеджерам
-  const html_rows = allUsers.map(u => {
-    // План этого менеджера по всем источникам
-    let planN=0, planS=0;
-    SRCS.forEach(src => { const p=getPlanForUser(src,u.id); planN+=p.new; planS+=p.succ; });
- 
-    // Факт — пока показываем план (реальный факт по менеджеру требует отдельного API запроса)
-    const srcCells = SRCS.map(src => {
-      const p = getPlanForUser(src, u.id);
-      const totalSrcPlan = getTotalPlan(src);
-      const sharePct = totalSrcPlan.new > 0 ? p.new / totalSrcPlan.new : 0;
-      // Примерный факт = доля плана * общий факт источника
-      let srcFactN=0, srcFactS=0;
-      const fd = fact(src);
-      days.forEach(d => {
-        const k=d.toISOString().slice(0,10);
-        if(fd[k] && d<=today){ srcFactN+=fd[k].new||0; srcFactS+=fd[k].won||0; }
-      });
-      // Факт по менеджеру недоступен без отдельного запроса — показываем план
-      return `<td class="pl" title="план">${fmt(p.new)}</td><td class="pl" title="план">${fmt(p.succ)}</td>`;
-    }).join('');
- 
-    const pctN = planN>0 ? '—' : '—';
-    return `<tr><td class="s">${u.name}</td>${srcCells}<td class="ft">${fmt(planN)}</td><td class="ft">${fmt(planS)}</td></tr>`;
-  }).join('');
- 
-  // Итого строка
-  const totalCells = SRCS.map(src => {
-    const p=getTotalPlan(src);
-    let fN=0,fS=0;
-    const fd=fact(src);
-    days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]&&d<=today){fN+=fd[k].new||0;fS+=fd[k].won||0;}});
-    return `<td class="ft">${fmt(fN)}</td><td class="ft">${fmt(fS)}</td>`;
-  }).join('');
- 
-  let totalPN=0,totalPS=0;
-  SRCS.forEach(src=>{const p=getTotalPlan(src);totalPN+=p.new;totalPS+=p.succ;});
- 
-  const srcHeaders = SRCS.map(src=>`<th colspan="2" style="background:${SRC_COLORS[src]}22;color:${SRC_COLORS[src]}">${src}</th>`).join('');
-  const srcSubHeaders = SRCS.map(()=>`<th class="sub" style="font-size:9px">План нов</th><th class="sub" style="font-size:9px">План усп</th>`).join('');
- 
-  // Факт по источникам для итого
-  const factRow = SRCS.map(src=>{
-    let fN=0,fS=0;
-    const fd=fact(src);
-    days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]&&d<=today){fN+=fd[k].new||0;fS+=fd[k].won||0;}});
-    return `<td style="color:#1D9E75;font-weight:600">${fmt(fN)}</td><td style="color:#1D9E75;font-weight:600">${fmt(fS)}</td>`;
-  }).join('');
-  let allFactN=0,allFactS=0;
-  SRCS.forEach(src=>{const fd=fact(src);days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k]&&d<=today){allFactN+=fd[k].new||0;allFactS+=fd[k].won||0;}});});
- 
-  const note = `<div style="font-size:11px;color:#9b9b97;padding:8px 14px;background:#fafaf8;border-top:1px solid rgba(0,0,0,0.06)">
-    ℹ️ В колонках источников показан <b>план</b> по менеджеру. Строка «Факт итого» — реальные данные из Б24 по всем ТМ.
-    Для точного факта по каждому менеджеру нужен отдельный API-запрос на каждого ТМ.
-  </div>`;
- 
-  document.getElementById('mgr-wrap').innerHTML = `
-    <div class="section">
-      <div class="sec-head" style="cursor:default">
-        <i class="ti ti-users" style="color:#9b9b97"></i>
-        <span>Сравнение по менеджерам — ${MONTHS[curM]} ${getY()}</span>
+
+function setMetric(m, el) {
+  chartMetric = m;
+  document.querySelectorAll('.metric-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if (activeSection==='sources') renderCharts(); else renderManagerCharts();
+}
+function setChartType(val) { chartType=val; renderCharts(); }
+
+// ── По менеджерам — Таблица (отдельная секция на каждого, внутри — источники × периоды) ────
+function renderManagers() {
+  const showDay = getG() === 'day', prs = periods(), cols = prs.map(r => `<th>${r.label}</th>`).join('');
+  const mgrs = getActiveManagers();
+  let html = '';
+
+  mgrs.forEach(u => {
+    // Строим данные по каждому источнику для этого менеджера
+    const srcRowsMap = {};
+    let totalPN = 0, totalFN = 0, totalPS = 0, totalFS = 0;
+    SRCS.forEach(src => {
+      const fd = factUser(u.id, src);
+      const p  = getPlanForUser(src, u.id);
+      srcRowsMap[src] = buildRows(src, fd, p, u.id);
+    });
+
+    // Считаем итог для бейджа
+    SRCS.forEach(src => {
+      const rows = srcRowsMap[src];
+      rows.forEach(r => { totalPN += r.planN || 0; totalPS += r.planS || 0; });
+      const lastFact = rows.filter(r => r.past).pop();
+      if (lastFact) { totalFN += lastFact.cumNF || 0; totalFS += lastFact.cumSF || 0; }
+    });
+    const pctN = totalPN > 0 ? totalFN / totalPN : null;
+    const bCls = pctN === null ? 'neutral' : pctN >= 0.9 ? 'ok' : pctN >= 0.7 ? 'warn' : 'bad';
+    const bTxt = pctN === null ? 'нет данных' : Math.round(pctN * 100) + '% от плана';
+
+    // Строки таблицы — по источникам (как в renderTable)
+    let tbody = '';
+    SRCS.forEach(src => {
+      const rows = srcRowsMap[src];
+      const srcTotPN = rows.reduce((a,r)=>a+(r.planN||0),0), srcTotPS = rows.reduce((a,r)=>a+(r.planS||0),0);
+      tbody += `
+        <tr class="grp">
+          <td class="s" colspan="${prs.length + 1}">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SRC_COLORS[src]};margin-right:5px;vertical-align:middle"></span>${src}
+            <span style="font-weight:400;font-size:10px;color:#9b9b97;margin-left:8px">план: ${fmt(srcTotPN)} нов · ${fmt(srcTotPS)} усп</span>
+          </td>
+        </tr>
+        <tr><td class="s" style="padding-left:18px">Нов ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
+        <tr><td class="s" style="padding-left:18px">Нов ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
+        ${showDay?`<tr><td class="s" style="padding-left:18px">Нов ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
+        <tr class="sep"><td class="s" style="padding-left:18px">Нов Откл.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
+        <tr><td class="s" style="padding-left:18px">Усп ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
+        <tr><td class="s" style="padding-left:18px">Усп ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
+        ${showDay?`<tr><td class="s" style="padding-left:18px">Усп ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
+        <tr class="sep"><td class="s" style="padding-left:18px">Усп Откл.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
+        <tr><td class="s" style="padding-left:18px">Конверсия</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>`;
+    });
+
+    // ИТОГО по менеджеру
+    const totCumNF = prs.map((_,i) => { let v=0; const has=SRCS.some(s=>srcRowsMap[s][i].past); if(!has)return null; SRCS.forEach(s=>{ const x=srcRowsMap[s][i].cumNF; if(x!==null)v+=x; }); return v; });
+    const totCumSF = prs.map((_,i) => { let v=0; const has=SRCS.some(s=>srcRowsMap[s][i].past); if(!has)return null; SRCS.forEach(s=>{ const x=srcRowsMap[s][i].cumSF; if(x!==null)v+=x; }); return v; });
+    const totPlanN = prs.map((_,i) => SRCS.reduce((a,s)=>a+(srcRowsMap[s][i].planN||0),0));
+    const totPlanS = prs.map((_,i) => SRCS.reduce((a,s)=>a+(srcRowsMap[s][i].planS||0),0));
+    const totDevN  = prs.map((_,i) => totCumNF[i]!==null ? totCumNF[i] - totPlanN[i] : null);
+    const totDevS  = prs.map((_,i) => totCumSF[i]!==null ? totCumSF[i] - totPlanS[i] : null);
+    tbody += `
+      <tr class="sep grp" style="background:#E6F1FB">
+        <td class="s" style="color:#185FA5;font-weight:700" colspan="${prs.length + 1}">∑ Итого по всем источникам</td>
+      </tr>
+      <tr><td class="s" style="padding-left:18px;font-weight:600">Нов ПЛАН нараст.</td>${totPlanN.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
+      <tr><td class="s" style="padding-left:18px;font-weight:600">Нов ФАКТ нараст.</td>${totCumNF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
+      <tr class="sep"><td class="s" style="padding-left:18px;font-weight:600">Нов Откл.</td>${totDevN.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
+      <tr><td class="s" style="padding-left:18px;font-weight:600">Усп ПЛАН нараст.</td>${totPlanS.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
+      <tr><td class="s" style="padding-left:18px;font-weight:600">Усп ФАКТ нараст.</td>${totCumSF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
+      <tr class="sep"><td class="s" style="padding-left:18px;font-weight:600">Усп Откл.</td>${totDevS.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>`;
+
+    html += `
+      <div class="section">
+        <div class="sec-head" onclick="tog('mgr-${u.id}')">
+          <i class="ti ti-user" style="color:#6b6b68;font-size:14px"></i>
+          <span>${u.name}</span>
+          <span style="font-size:10px;color:#9b9b97;font-weight:400">нов план: ${fmt(totalPN)} · усп план: ${fmt(totalPS)}</span>
+          <span class="badge ${bCls}">${bTxt}</span>
+          <i class="ti ti-chevron-down" id="ic-mgr-${u.id}"></i>
+        </div>
+        <div id="sb-mgr-${u.id}"><div class="tbl-wrap"><table>
+          <thead><tr><th class="s">Источник / Показатель</th>${cols}</tr></thead>
+          <tbody>${tbody}</tbody>
+        </table></div></div>
+      </div>`;
+  });
+
+  document.getElementById('content-area').innerHTML = html || '<div style="padding:20px;color:#9b9b97;text-align:center">Нет данных</div>';
+}
+
+// ── По менеджерам — Графики ───────────────────────────────────────────────────
+function renderManagerCharts() {
+  destroyCharts();
+  const area = document.getElementById('content-area');
+  const mgrs = getActiveManagers();
+  const showNew = chartMetric==='both'||chartMetric==='new';
+  const showWon = chartMetric==='both'||chartMetric==='won';
+
+  const mgrData = mgrs.map(u => {
+    let pN=0,fN=0,pS=0,fS=0;
+    SRCS.forEach(src => { const p=getPlanForUser(src,u.id),f=getUserFactTotal(u.id,src); pN+=p.new;fN+=f.new;pS+=p.succ;fS+=f.won; });
+    return { name: u.name.split(' ')[0], fullName: u.name, pN, fN, pS, fS };
+  });
+  const labels = mgrData.map(m=>m.name);
+
+  area.innerHTML = `
+    <div class="chart-filters">
+      <div class="metric-toggle">
+        <button class="metric-btn ${chartMetric==='both'?'active':''}" onclick="setMetric('both',this)">Оба</button>
+        <button class="metric-btn ${chartMetric==='new'?'active':''}" onclick="setMetric('new',this)">Новые</button>
+        <button class="metric-btn ${chartMetric==='won'?'active':''}" onclick="setMetric('won',this)">Успешные</button>
       </div>
-      <div class="tbl-wrap"><table>
-        <thead>
-          <tr><th class="s" rowspan="2">Менеджер</th>${srcHeaders}<th colspan="2">Итого план</th></tr>
-          <tr>${srcSubHeaders}<th class="sub" style="font-size:9px">Новых</th><th class="sub" style="font-size:9px">Успешных</th></tr>
-        </thead>
-        <tbody>
-          ${html_rows}
-          <tr style="background:#fafaf8;font-weight:700;border-top:2px solid rgba(0,0,0,0.12)">
-            <td class="s">ПЛАН итого</td>${SRCS.map(src=>{const p=getTotalPlan(src);return `<td class="pl">${fmt(p.new)}</td><td class="pl">${fmt(p.succ)}</td>`;}).join('')}<td class="pl">${fmt(totalPN)}</td><td class="pl">${fmt(totalPS)}</td>
-          </tr>
-          <tr style="background:#EAF3DE;font-weight:700">
-            <td class="s" style="color:#3B6D11">ФАКТ итого</td>${factRow}<td style="color:#3B6D11;font-weight:700">${fmt(allFactN)}</td><td style="color:#3B6D11;font-weight:700">${fmt(allFactS)}</td>
-          </tr>
-        </tbody>
+    </div>
+    ${showNew?`<div class="chart-card"><h3><i class="ti ti-users" style="color:#185FA5"></i> Новые лиды — план vs факт</h3><div class="chart-wrap"><canvas id="chart-mgr-new"></canvas></div></div>`:''}
+    ${showWon?`<div class="chart-card"><h3><i class="ti ti-star" style="color:#1D9E75"></i> Успешные лиды — план vs факт</h3><div class="chart-wrap"><canvas id="chart-mgr-won"></canvas></div></div>`:''}`;
+
+  const barOpts = () => ({responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}}},scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:11}}},y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}}}});
+  if(showNew){const ctx=document.getElementById('chart-mgr-new').getContext('2d');charts['mgr-new']=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'План',data:mgrData.map(m=>m.pN),backgroundColor:'#185FA544',borderColor:'#185FA5',borderWidth:1.5,borderRadius:4},{label:'Факт',data:mgrData.map(m=>m.fN),backgroundColor:'#185FA5',borderColor:'#185FA5',borderWidth:0,borderRadius:4}]},options:barOpts()});}
+  if(showWon){const ctx=document.getElementById('chart-mgr-won').getContext('2d');charts['mgr-won']=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'План',data:mgrData.map(m=>m.pS),backgroundColor:'#1D9E7544',borderColor:'#1D9E75',borderWidth:1.5,borderRadius:4},{label:'Факт',data:mgrData.map(m=>m.fS),backgroundColor:'#1D9E75',borderColor:'#1D9E75',borderWidth:0,borderRadius:4}]},options:barOpts()});}
+}
+
+// ── Планы ─────────────────────────────────────────────────────────────────────
+function renderPlansTab() {
+  const y = getY();
+  document.getElementById('content-area').innerHTML = SRCS.map(src => {
+    const monthPairs = MONTHS.map(m=>`<th colspan="2">${m.slice(0,3)}</th>`).join('');
+    const monthSubs = MONTHS.map(()=>`<th class="sub">Нов</th><th class="sub">Усп</th>`).join('');
+    const userRows = allUsers.map(u => {
+      const cells = MONTHS.map((m,mi) => { const p=getPlanForUser(src,u.id,mi,y); return `<td><input type="number" min="0" value="${p.new}" oninput="updatePlanLocal('${src}','${u.id}','new',this.value,${mi},${y})"></td><td><input type="number" min="0" value="${p.succ}" oninput="updatePlanLocal('${src}','${u.id}','succ',this.value,${mi},${y})"></td>`; }).join('');
+      return `<tr><td class="s">${u.name}</td>${cells}</tr>`;
+    }).join('');
+    const totalCells = MONTHS.map((_,mi) => { const p=getTotalPlan(src,mi,y); return `<td style="font-weight:700;color:#185FA5">${fmt(p.new)}</td><td style="font-weight:700;color:#1D9E75">${fmt(p.succ)}</td>`; }).join('');
+    return `<div class="plan-section">
+      <div class="plan-sec-head"><span style="width:10px;height:10px;border-radius:50%;background:${SRC_COLORS[src]};display:inline-block"></span>&nbsp;${src}</div>
+      <div class="plan-tbl-wrap"><table class="plan-tbl">
+        <thead><tr><th class="s" rowspan="2">Менеджер</th>${monthPairs}</tr><tr>${monthSubs}</tr></thead>
+        <tbody>${userRows}<tr class="total-row"><td class="s">Итого</td>${totalCells}</tr></tbody>
       </table></div>
-      ${note}
+      <div class="plan-footer">
+        <span>Текущий месяц (${MONTHS[curM]}): <strong>${fmt(getTotalPlan(src).new)} нов</strong> · <strong>${fmt(getTotalPlan(src).succ)} усп</strong></span>
+        <div style="display:flex;align-items:center;gap:8px"><span id="si-${src}" class="save-ind"></span><button id="savebtn-${src}" class="btn primary" style="height:28px" onclick="saveSrcPlans('${src}')"><i class="ti ti-device-floppy"></i> Сохранить</button></div>
+      </div>
     </div>`;
+  }).join('');
 }
- 
-function switchTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+name).classList.add('active');if(name==='charts')renderCharts();if(name==='plans')renderPlansTab();if(name==='managers')renderManagers();}
-function render(){renderKPIs();renderTable();if(document.getElementById('tab-plans').classList.contains('active'))renderPlansTab();}
-function exportCSV(){
+
+function tog(src) {
+  const el=document.getElementById('sb-'+src), ic=document.getElementById('ic-'+src);
+  if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}
+  else{el.style.display='none';ic.className='ti ti-chevron-right';}
+}
+
+function render() { renderKPIs(); renderContent(); }
+
+function exportCSV() {
+  const srcs = getActiveSources();
   const rows=[['Источник','Период','ПЛАН новые','ФАКТ новые','ПЛАН успешные','ФАКТ успешные','Конверсия','Откл новые','Откл успешные']];
-  SRCS.forEach(s=>buildRows(s).forEach(r=>rows.push([s,r.label,r.planN,r.past?r.cumNF:'',r.planS,r.past?r.cumSF:'',r.past?fPct(r.conv):'',r.past?r.devN:'',r.past?r.devS:''])));
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(';')).join('\n'));a.download=`decomp_${MONTHS[curM]}_${getY()}.csv`;a.click();
+  srcs.forEach(s=>buildRows(s).forEach(r=>rows.push([s,r.label,r.planN,r.past?r.cumNF:'',r.planS,r.past?r.cumSF:'',r.past?fPct(r.conv):'',r.past?r.devN:'',r.past?r.devS:''])));
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(rows.map(r=>r.join(';')).join('\n'));
+  a.download=`decomp_${MONTHS[curM]}_${getY()}.csv`; a.click();
 }
- 
-// Init
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ms-wrap')) document.querySelectorAll('.ms-dropdown').forEach(d=>d.classList.remove('show'));
+});
+
+// ── Startup ───────────────────────────────────────────────────────────────────
 initMonthSelect();
-// Default range = current month
-rangeStart=new Date(getY(),curM,1);
-rangeEnd=new Date(getY(),curM+1,0);
+rangeStart = new Date(curYear, curM, 1);
+rangeEnd = new Date(curYear, curM + 1, 0);
 updateRangeLabel();
-// Show date range since default gran = day
-document.getElementById('fi-range').style.display='';
-document.getElementById('fsep-range').style.display='';
-loadUsers().then(()=>loadData());
+document.getElementById('fi-range').style.display = '';
+document.getElementById('fsep-range').style.display = '';
+document.getElementById('year-display').textContent = curYear;
+buildMSDropdown('src');
+loadUsers().then(() => loadData());
 </script>
 </body>
 </html>
- 

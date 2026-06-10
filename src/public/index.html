@@ -826,24 +826,33 @@ function renderTableSources() {
     const bCls = pctD === null ? 'neutral' : pctD >= 0.9 ? 'ok' : pctD >= 0.7 ? 'warn' : 'bad';
     const bTxt = pctD === null ? 'нет данных' : Math.round(pctD*100) + '% от плана';
 
-    // Строки по каждому менеджеру для этого источника
-    let mgrRows = '';
+    // Строки менеджеров для этого источника (новые и успешные отдельно)
+    let mgrRowsNew = '', mgrRowsWon = '';
     mgrs.forEach((u, idx) => {
       const col = MGR_PALETTE[idx % MGR_PALETTE.length];
       const mfd = factUser(u.id, src);
       const mRows = buildRows(src, mfd, null, u.id);
-      mgrRows += `
+      const nameCell = (col) => `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}<span style="font-size:10px;font-weight:400;color:#9b9b97;margin-left:3px">нараст.</span>`;
+      mgrRowsNew += `
         <tr style="background:#fafafa;border-left:3px solid ${col}">
-          <td class="s" style="padding-left:16px;color:#333;font-weight:500">
-            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}
-            <span style="font-size:10px;font-weight:400;color:#9b9b97;margin-left:3px">нараст.</span>
-          </td>${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumNF)}</td>`).join('')}
+          <td class="s" style="padding-left:16px;color:#333;font-weight:500">${nameCell(col)}</td>
+          ${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumNF)}</td>`).join('')}
         </tr>
         ${showDay?`<tr style="background:#f2f2f0;border-left:3px solid ${col}55">
           <td class="s" style="padding-left:26px;color:#888;font-size:11px">в день</td>
           ${mRows.map(r=>`<td style="font-size:11px;color:#7B8FA1;text-align:right;padding:3px 8px">${fmt(r.dayNF)}</td>`).join('')}
         </tr>`:''}`;
+      mgrRowsWon += `
+        <tr style="background:#fafafa;border-left:3px solid ${col}">
+          <td class="s" style="padding-left:16px;color:#333;font-weight:500">${nameCell(col)}</td>
+          ${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumSF)}</td>`).join('')}
+        </tr>
+        ${showDay?`<tr style="background:#f2f2f0;border-left:3px solid ${col}55">
+          <td class="s" style="padding-left:26px;color:#888;font-size:11px">в день</td>
+          ${mRows.map(r=>`<td style="font-size:11px;color:#7B8FA1;text-align:right;padding:3px 8px">${fmt(r.daySF)}</td>`).join('')}
+        </tr>`:''}`;
     });
+    const sid = src.replace(/\s+/g,'_');
 
     html += `<div class="section">
       <div class="sec-head" onclick="tog('src-${src}')">
@@ -859,11 +868,27 @@ function renderTableSources() {
           <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды — итого</td></tr>
           <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
           ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
-          <tr class="grp sep"><td class="s" colspan="${prs.length+1}">По менеджерам (новые нараст.)</td></tr>
-          ${mgrRows}
+          <tr class="grp sep" style="cursor:pointer" onclick="togMgr('new-${sid}')">
+            <td class="s" colspan="${prs.length+1}">
+              По менеджерам — новые
+              <i class="ti ti-chevron-right" id="mgr-ic-new-${sid}" style="float:right;margin-right:8px"></i>
+            </td>
+          </tr>
+        </tbody>
+        <tbody id="mgr-tb-new-${sid}" style="display:none">${mgrRowsNew}</tbody>
+        <tbody>
           <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды — итого</td></tr>
           <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
           ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
+          <tr class="grp sep" style="cursor:pointer" onclick="togMgr('won-${sid}')">
+            <td class="s" colspan="${prs.length+1}">
+              По менеджерам — успешные
+              <i class="ti ti-chevron-right" id="mgr-ic-won-${sid}" style="float:right;margin-right:8px"></i>
+            </td>
+          </tr>
+        </tbody>
+        <tbody id="mgr-tb-won-${sid}" style="display:none">${mgrRowsWon}</tbody>
+        <tbody>
           <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
           <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
         </tbody>
@@ -1227,6 +1252,12 @@ function tog(src) {
   const el=document.getElementById('sb-'+src), ic=document.getElementById('ic-'+src);
   if(el.style.display==='none'){el.style.display='';ic.className='ti ti-chevron-down';}
   else{el.style.display='none';ic.className='ti ti-chevron-right';}
+}
+function togMgr(id) {
+  const el=document.getElementById('mgr-tb-'+id), ic=document.getElementById('mgr-ic-'+id);
+  if(!el) return;
+  if(el.style.display==='none'){el.style.display='';if(ic)ic.className='ti ti-chevron-down';}
+  else{el.style.display='none';if(ic)ic.className='ti ti-chevron-right';}
 }
 
 function render() { renderKPIs(); renderContent(); }

@@ -29,13 +29,16 @@ const EXCLUDE_USER = '13';
 const TM_DEPARTMENT = 148;
 
 // ─── Хранилище планов ────────────────────────────────────────────────────────
-const PLANS_FILE = path.join(__dirname, 'plans.json');
+// PLANS_DIR можно задать env-переменной (например, путь к Railway Volume),
+// чтобы файл с планами не терялся при новых деплоях.
+const PLANS_FILE = path.join(process.env.PLANS_DIR || __dirname, 'plans.json');
 function loadPlans() {
   try { if (fs.existsSync(PLANS_FILE)) return JSON.parse(fs.readFileSync(PLANS_FILE, 'utf8')); } catch(e) {}
   return {};
 }
 function savePlansToFile(data) {
-  try { fs.writeFileSync(PLANS_FILE, JSON.stringify(data, null, 2)); } catch(e) {}
+  try { fs.writeFileSync(PLANS_FILE, JSON.stringify(data, null, 2)); }
+  catch(e) { console.error('❌ Ошибка записи планов в файл:', e.message, '\n   Путь:', PLANS_FILE, '\n   Совет: задайте env-переменную PLANS_DIR с путём к Railway Volume'); }
 }
 
 // ─── Б24 хелперы ─────────────────────────────────────────────────────────────
@@ -258,6 +261,62 @@ app.get('/api/debug-leads', async (req, res) => {
       totalTM: tmLeads.length,
       sourcesAll: countSources(allLeads),
       sourcesTM: countSources(tmLeads),
+    });
+  } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+});
+
+// ─── Диагностика: разбивка по конкретному источнику — кто/почему отсеялся ────
+app.get('/api/debug-source', async (req, res) => {
+  try {
+    const block = req.query.source;
+    const from = req.query.from;
+    const to = req.query.to;
+    if (!block || !Object.prototype.hasOwnProperty.call(SOURCE_MAP, block)) {
+      return res.status(400).json({ ok: false, error: 'unknown source, use one of: ' + Object.keys(SOURCE_MAP).join(', ') });
+    }
+    if (!from || !to) return res.status(400).json({ ok: false, error: 'from/to required (YYYY-MM-DD)' });
+
+    const select = ['ID', 'SOURCE_ID', 'STATUS_ID', 'ASSIGNED_BY_ID', 'DATE_CREATE'];
+    const dateFilter = { '>=DATE_CREATE': from, '<=DATE_CREATE': to + 'T23:59:59' };
+
+    const ids = SOURCE_MAP[block];
+    let leads;
+    if (ids) {
+      leads = await fetchAllLeads({ ...dateFilter, SOURCE_ID: ids }, select);
+    } else {
+      // "Реанимация+Прочее" — всё, что не попало в другие источники
+      const otherIds = Object.values(SOURCE_MAP).filter(Boolean).flat();
+      const all = await fetchAllLeads(dateFilter, select);
+      leads = all.filter(l => !otherIds.includes(l.SOURCE_ID));
+    }
+
+    let tmIds = [];
+    try {
+      const users = await b24('user.get', { filter: { ACTIVE: true, UF_DEPARTMENT: [TM_DEPARTMENT] } });
+      tmIds = users.filter(u => u.ID.toString() !== EXCLUDE_USER).map(u => u.ID.toString());
+    } catch (e) {}
+
+    const groups = { included: [], excludedStatus: [], excludedTM: [], excludedBoth: [] };
+    leads.forEach(l => {
+      const badStatus = EXCLUDE_STATUSES.includes(l.STATUS_ID);
+      const badTM = !tmIds.includes(String(l.ASSIGNED_BY_ID));
+      const item = { id: l.ID, status: l.STATUS_ID, assigned: l.ASSIGNED_BY_ID, sourceId: l.SOURCE_ID, dateCreate: l.DATE_CREATE };
+      if (badStatus && badTM) groups.excludedBoth.push(item);
+      else if (badStatus) groups.excludedStatus.push(item);
+      else if (badTM) groups.excludedTM.push(item);
+      else groups.included.push(item);
+    });
+
+    res.json({
+      ok: true,
+      block,
+      period: `${from} – ${to}`,
+      total: leads.length,
+      includedCount: groups.included.length,
+      excludedStatusCount: groups.excludedStatus.length,
+      excludedTMCount: groups.excludedTM.length,
+      excludedBothCount: groups.excludedBoth.length,
+      ...groups,
     });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });

@@ -319,13 +319,13 @@ function buildMSDropdown(id) {
   const set = id === 'tm' ? selectedManagers : selectedSources;
   const allMode = id === 'tm' ? mgrAllMode : srcAllMode;
   const allLabel = id === 'tm' ? 'Все ТМ' : 'Все источники';
-  let html = `<div class="ms-item all-item" onclick="msToggleAll('${id}')"><input type="checkbox" ${allMode?'checked':''} onclick="event.stopPropagation()"> ${allLabel}</div><div class="ms-sep"></div>`;
+  let html = `<div class="ms-item all-item" onclick="msToggleAll('${id}')"><input type="checkbox" ${allMode?'checked':''} style="pointer-events:none"> ${allLabel}</div><div class="ms-sep"></div>`;
   items.forEach(item => {
     const val = typeof item === 'object' ? item.id : item;
     const lbl = typeof item === 'object' ? item.name : item;
     const checked = allMode || set.has(String(val));
     const dot = SRC_COLORS[lbl] ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SRC_COLORS[lbl]};flex-shrink:0"></span>` : '';
-    html += `<div class="ms-item" onclick="msToggleItem('${id}','${val}')"><input type="checkbox" ${checked?'checked':''} onclick="event.stopPropagation()"> ${dot}${lbl}</div>`;
+    html += `<div class="ms-item" onclick="msToggleItem('${id}','${val}')"><input type="checkbox" ${checked?'checked':''} style="pointer-events:none"> ${dot}${lbl}</div>`;
   });
   dd.innerHTML = html;
 }

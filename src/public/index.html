@@ -433,8 +433,8 @@ function renderContent() {
     if (activeView === 'table') renderTableSources();
     else renderCharts();
   } else if (activeSection === 'managers') {
-    if (activeView === 'table') renderTableManagers();
-    else renderCharts();
+    if (activeView === 'table') renderManagers();
+    else renderManagerCharts();
   } else if (activeSection === 'plans') {
     renderPlansTab();
   }
@@ -594,8 +594,11 @@ async function saveSrcPlans(src) {
     for (let mi = 0; mi < 12; mi++) {
       const k = pKey(src, mi, y, u.id);
       if (!serverPlans[k]) continue;
-      try { await fetch(`${API}/api/plans`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: k, ...serverPlans[k] }) }); }
-      catch (e) { ok = false; }
+      try {
+        const resp = await fetch(`${API}/api/plans`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: k, ...serverPlans[k] }) });
+        const json = await resp.json();
+        if (!json.ok) ok = false;
+      } catch (e) { ok = false; }
     }
   }
   if (btn) btn.disabled = false;

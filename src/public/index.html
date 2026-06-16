@@ -808,11 +808,10 @@ function renderKPIs() {
     </div>`;
 }
 
-// ── По источникам — Таблица ───────────────────────────────────────────────────
-// ── По источникам — Таблица (факт + разбивка по менеджерам) ──────────────────
+// ── По источникам — Таблица (план + факт + откл, без разбивки по менеджерам) ──
 function renderTableSources() {
   const showDay = getG() === 'day', prs = periods(), cols = prs.map(r => `<th>${r.label}</th>`).join('');
-  const srcs = getActiveSources(), mgrs = getActiveManagers();
+  const srcs = getActiveSources();
   const allRows = {}; srcs.forEach(src => { allRows[src] = buildRows(src); });
 
   function totalRowField(field) {
@@ -821,39 +820,10 @@ function renderTableSources() {
 
   let html = '';
   srcs.forEach(src => {
-    const rows = allRows[src], lastF = rows.filter(r => r.past).pop();
-    const p = getTotalPlanFiltered(src);
+    const rows = allRows[src], p = getTotalPlanFiltered(src), lastF = rows.filter(r => r.past).pop();
     const pctD = p.new > 0 && lastF ? lastF.cumNF / p.new : null;
     const bCls = pctD === null ? 'neutral' : pctD >= 0.9 ? 'ok' : pctD >= 0.7 ? 'warn' : 'bad';
     const bTxt = pctD === null ? 'нет данных' : Math.round(pctD*100) + '% от плана';
-
-    // Строки менеджеров для этого источника (новые и успешные отдельно)
-    let mgrRowsNew = '', mgrRowsWon = '';
-    mgrs.forEach((u, idx) => {
-      const col = MGR_PALETTE[idx % MGR_PALETTE.length];
-      const mfd = factUser(u.id, src);
-      const mRows = buildRows(src, mfd, null, u.id);
-      const nameCell = (col) => `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}<span style="font-size:10px;font-weight:400;color:#9b9b97;margin-left:3px">нараст.</span>`;
-      mgrRowsNew += `
-        <tr style="background:#fafafa;border-left:3px solid ${col}">
-          <td class="s" style="padding-left:16px;color:#333;font-weight:500">${nameCell(col)}</td>
-          ${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumNF)}</td>`).join('')}
-        </tr>
-        ${showDay?`<tr style="background:#f2f2f0;border-left:3px solid ${col}55">
-          <td class="s" style="padding-left:26px;color:#888;font-size:11px">в день</td>
-          ${mRows.map(r=>`<td style="font-size:11px;color:#7B8FA1;text-align:right;padding:3px 8px">${fmt(r.dayNF)}</td>`).join('')}
-        </tr>`:''}`;
-      mgrRowsWon += `
-        <tr style="background:#fafafa;border-left:3px solid ${col}">
-          <td class="s" style="padding-left:16px;color:#333;font-weight:500">${nameCell(col)}</td>
-          ${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumSF)}</td>`).join('')}
-        </tr>
-        ${showDay?`<tr style="background:#f2f2f0;border-left:3px solid ${col}55">
-          <td class="s" style="padding-left:26px;color:#888;font-size:11px">в день</td>
-          ${mRows.map(r=>`<td style="font-size:11px;color:#7B8FA1;text-align:right;padding:3px 8px">${fmt(r.daySF)}</td>`).join('')}
-        </tr>`:''}`;
-    });
-    const sid = src.replace(/\s+/g,'_');
 
     html += `<div class="section">
       <div class="sec-head" onclick="tog('src-${src}')">
@@ -864,35 +834,23 @@ function renderTableSources() {
         <i class="ti ti-chevron-down" id="ic-src-${src}"></i>
       </div>
       <div id="sb-src-${src}"><div class="tbl-wrap"><table>
-        <thead><tr><th class="s">Менеджер / Показатель</th>${cols}</tr></thead>
+        <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
         <tbody>
-          <tr style="background:#EAF3FB;cursor:pointer" onclick="togMgr('new-${sid}')">
-            <td class="s" colspan="${prs.length+1}" style="color:#185FA5;font-weight:600;padding:6px 10px">
-              <i class="ti ti-users" style="margin-right:5px;font-size:12px"></i>По менеджерам — новые
-              <i class="ti ti-chevron-right" id="mgr-ic-new-${sid}" style="float:right;margin-right:8px"></i>
-            </td>
-          </tr>
-        </tbody>
-        <tbody id="mgr-tb-new-${sid}" style="display:none;background:#F4F9FE">${mgrRowsNew}</tbody>
-        <tbody>
-          <tr class="grp"><td class="s" colspan="${prs.length+1}" style="background:#F0F0EE">Новые лиды — итого</td></tr>
+          <tr class="grp"><td class="s" colspan="${prs.length+1}">НОВЫЕ ЛИДЫ</td></tr>
+          <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planN)}</td>`).join('')}</tr>
           <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumNF)}</td>`).join('')}</tr>
-          ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
+          ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.dayNF)}</td>`).join('')}</tr>`:''}
+          <tr><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devN)}">${fDev(r.devN)}</td>`).join('')}</tr>
         </tbody>
         <tbody>
-          <tr style="background:#EAF6F1;cursor:pointer" onclick="togMgr('won-${sid}')">
-            <td class="s" colspan="${prs.length+1}" style="color:#1D9E75;font-weight:600;padding:6px 10px">
-              <i class="ti ti-users" style="margin-right:5px;font-size:12px"></i>По менеджерам — успешные
-              <i class="ti ti-chevron-right" id="mgr-ic-won-${sid}" style="float:right;margin-right:8px"></i>
-            </td>
-          </tr>
-        </tbody>
-        <tbody id="mgr-tb-won-${sid}" style="display:none;background:#F0FAF5">${mgrRowsWon}</tbody>
-        <tbody>
-          <tr class="grp"><td class="s" colspan="${prs.length+1}" style="background:#F0F0EE">Успешные лиды — итого</td></tr>
+          <tr class="grp"><td class="s" colspan="${prs.length+1}">УСПЕШНЫЕ ЛИДЫ</td></tr>
+          <tr><td class="s">ПЛАН нараст.</td>${rows.map(r=>`<td class="pl">${fmt(r.planS)}</td>`).join('')}</tr>
           <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${rows.map(r=>`<td class="ft">${fmt(r.cumSF)}</td>`).join('')}</tr>
-          ${showDay?`<tr><td class="s" style="font-weight:600">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
-          <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
+          ${showDay?`<tr><td class="s">ФАКТ в день</td>${rows.map(r=>`<td class="dim">${fmt(r.daySF)}</td>`).join('')}</tr>`:''}
+          <tr><td class="s">Откл. нараст.</td>${rows.map(r=>`<td class="${dCls(r.devS)}">${fDev(r.devS)}</td>`).join('')}</tr>
+        </tbody>
+        <tbody>
+          <tr class="grp sep"><td class="s" colspan="${prs.length+1}">КОНВЕРСИЯ</td></tr>
           <tr><td class="s">Конверсия ФАКТ</td>${rows.map(r=>`<td class="dim">${fPct(r.conv)}</td>`).join('')}</tr>
         </tbody>
       </table></div></div>
@@ -900,7 +858,9 @@ function renderTableSources() {
   });
 
   // ИТОГО
-  const tCumNF=totalRowField('cumNF'), tCumSF=totalRowField('cumSF');
+  const tCumNF=totalRowField('cumNF'), tCumSF=totalRowField('cumSF'), tPlanN=totalRowField('planN'), tPlanS=totalRowField('planS');
+  const tDevN=prs.map((_,i)=>tCumNF[i]!==null&&tPlanN[i]!==null?tCumNF[i]-tPlanN[i]:null);
+  const tDevS=prs.map((_,i)=>tCumSF[i]!==null&&tPlanS[i]!==null?tCumSF[i]-tPlanS[i]:null);
   const tConv=prs.map((_,i)=>tCumNF[i]>0?tCumSF[i]/tCumNF[i]:null);
   const tDayNF=showDay?totalRowField('dayNF'):[], tDaySF=showDay?totalRowField('daySF'):[];
   html += `<div class="section">
@@ -913,11 +873,15 @@ function renderTableSources() {
       <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
       <tbody>
         <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды</td></tr>
+        <tr><td class="s">ПЛАН нараст.</td>${tPlanN.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
         <tr><td class="s">ФАКТ нараст.</td>${tCumNF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
         ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDayNF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
+        <tr><td class="s">Откл. нараст.</td>${tDevN.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
         <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды</td></tr>
+        <tr><td class="s">ПЛАН нараст.</td>${tPlanS.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
         <tr><td class="s">ФАКТ нараст.</td>${tCumSF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
         ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDaySF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
+        <tr><td class="s">Откл. нараст.</td>${tDevS.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
         <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
         <tr><td class="s">Конверсия ФАКТ</td>${tConv.map(v=>`<td class="dim">${fPct(v)}</td>`).join('')}</tr>
       </tbody>

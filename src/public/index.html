@@ -433,8 +433,8 @@ function renderContent() {
     if (activeView === 'table') renderTableSources();
     else renderCharts();
   } else if (activeSection === 'managers') {
-    if (activeView === 'table') renderManagers();
-    else renderManagerCharts();
+    if (activeView === 'table') renderTableSources();
+    else renderCharts();
   } else if (activeSection === 'plans') {
     renderPlansTab();
   }
@@ -577,6 +577,8 @@ function getTotalPlan(src, m, y) {
   if (allUsers.length === 0) return serverPlans[pKey(src, m, y, 'all')] || { new: 0, succ: 0 };
   let n = 0, s = 0;
   allUsers.forEach(u => { const p = getPlanForUser(src, u.id, m, y); n += p.new; s += p.succ; });
+  // Фолбэк на старый агрегатный формат ключа ('all'), если per-user планы ещё не заданы
+  if (n === 0 && s === 0) return serverPlans[pKey(src, m, y, 'all')] || { new: 0, succ: 0 };
   return { new: n, succ: s };
 }
 function updatePlanLocal(src, tmId, field, val, m, y) {
@@ -594,11 +596,8 @@ async function saveSrcPlans(src) {
     for (let mi = 0; mi < 12; mi++) {
       const k = pKey(src, mi, y, u.id);
       if (!serverPlans[k]) continue;
-      try {
-        const resp = await fetch(`${API}/api/plans`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: k, ...serverPlans[k] }) });
-        const json = await resp.json();
-        if (!json.ok) ok = false;
-      } catch (e) { ok = false; }
+      try { await fetch(`${API}/api/plans`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: k, ...serverPlans[k] }) }); }
+      catch (e) { ok = false; }
     }
   }
   if (btn) btn.disabled = false;
@@ -1107,7 +1106,7 @@ function setMetric(m, el) {
   el.classList.add('active');
   if (activeSection==='sources') renderCharts(); else renderManagerCharts();
 }
-function setChartType(val) { chartType=val; if(activeSection==='sources') renderCharts(); else renderManagerCharts(); }
+function setChartType(val) { chartType=val; renderCharts(); }
 
 // ── По менеджерам — Таблица (отдельная секция на каждого, внутри — источники × периоды) ────
 function renderManagers() {

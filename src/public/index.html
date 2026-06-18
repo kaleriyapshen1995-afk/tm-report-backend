@@ -223,6 +223,11 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
         <span id="year-display" style="font-size:12px;font-weight:600;min-width:38px;text-align:center;color:#1a1a18"></span>
         <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeYear(1)">&#8250;</button>
       </div>
+      <div class="fi" id="fi-month-nav" style="display:none;align-items:center;gap:4px">
+        <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeMonth(-1)">&#8249;</button>
+        <span id="month-display" style="font-size:12px;font-weight:600;min-width:110px;text-align:center;color:#1a1a18"></span>
+        <button class="btn" style="height:28px;padding:0 8px;min-width:0" onclick="changeMonth(1)">&#8250;</button>
+      </div>
 
       <!-- Диапазон дат -->
       <div class="fsep" id="fsep-range" style="display:none"></div>
@@ -256,8 +261,8 @@ tr:not(.grp):hover td{background:#fafaf8}tr:not(.grp):hover td.s{background:#faf
 
   <!-- Секционная навигация -->
   <div class="snav-bar" style="margin-top:10px">
-    <div class="snav-item active" id="snav-managers" onclick="setSection('managers',this)"><i class="ti ti-users"></i> По менеджерам</div>
-    <div class="snav-item" id="snav-sources" onclick="setSection('sources',this)"><i class="ti ti-layout-list"></i> По источникам</div>
+    <div class="snav-item active" id="snav-managers" onclick="setSection('managers',this)"><i class="ti ti-layout-list"></i> По источникам</div>
+    <div class="snav-item" id="snav-sources" onclick="setSection('sources',this)"><i class="ti ti-users"></i> По менеджерам</div>
     <div class="snav-item" id="snav-plans" onclick="setSection('plans',this)"><i class="ti ti-settings"></i> Планы</div>
   </div>
 
@@ -300,6 +305,19 @@ let srcAllMode = true, selectedSources = new Set();
 
 function getY() { return curYear; }
 
+function changeMonth(dir) {
+  curM += dir;
+  if (curM > 11) { curM = 0; curYear++; }
+  if (curM < 0) { curM = 11; curYear--; }
+  updateMonthDisplay();
+  rangeStart = new Date(curYear, curM, 1);
+  rangeEnd = new Date(curYear, curM + 1, 0);
+  loadData();
+}
+function updateMonthDisplay() {
+  const el = document.getElementById('month-display');
+  if (el) el.textContent = MONTHS[curM] + ' ' + curYear;
+}
 function changeYear(dir) {
   curYear += dir;
   document.getElementById('year-display').textContent = curYear;
@@ -452,11 +470,14 @@ function setGran(g) {
   const sel = document.getElementById('gran-select');
   if (sel) sel.value = g;
   const showRange = g === 'day';
-  const showYearNav = g !== 'day';
+  const showYearNav = g === 'year';
+  const showMonthNav = g === 'month' || g === 'week';
   document.getElementById('fi-range').style.display = showRange ? '' : 'none';
   document.getElementById('fsep-range').style.display = showRange ? '' : 'none';
   document.getElementById('fi-year-nav').style.display = showYearNav ? '' : 'none';
+  document.getElementById('fi-month-nav').style.display = showMonthNav ? '' : 'none';
   document.getElementById('year-display').textContent = curYear;
+  if (showMonthNav) updateMonthDisplay();
   if (g === 'year') {
     rangeStart = new Date(curYear, 0, 1); rangeEnd = new Date(curYear, 11, 31);
   } else if (g !== 'day') {
@@ -913,6 +934,39 @@ function renderTableSources() {
   const tDevS=prs.map((_,i)=>tCumSF[i]!==null&&tPlanS[i]!==null?tCumSF[i]-tPlanS[i]:null);
   const tConv=prs.map((_,i)=>tCumNF[i]>0?tCumSF[i]/tCumNF[i]:null);
   const tDayNF=showDay?totalRowField('dayNF'):[], tDaySF=showDay?totalRowField('daySF'):[];
+
+  // Строки менеджеров для блока ИТОГО (агрегат по всем источникам)
+  let totalMgrRowsNew = '', totalMgrRowsWon = '';
+  mgrs.forEach((u, idx) => {
+    const col = MGR_PALETTE[idx % MGR_PALETTE.length];
+    const aggFact = {};
+    srcs.forEach(s => {
+      const fd = factUser(u.id, s);
+      Object.entries(fd).forEach(([date, v]) => {
+        if (!aggFact[date]) aggFact[date] = { new: 0, won: 0 };
+        aggFact[date].new += v.new || 0;
+        aggFact[date].won += v.won || 0;
+      });
+    });
+    const planN = srcs.reduce((a, s) => a + getPlanForUser(s, u.id).new, 0);
+    const planS = srcs.reduce((a, s) => a + getPlanForUser(s, u.id).succ, 0);
+    const mRows = buildRows(srcs[0], aggFact, { new: planN, succ: planS });
+    totalMgrRowsNew += `<tr style="background:#fafafa;border-left:3px solid ${col}">
+      <td class="s" style="padding-left:16px;font-weight:500">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}
+        <span style="font-size:10px;font-weight:400;color:#9b9b97;margin-left:3px">нараст.</span>
+      </td>
+      ${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumNF)}</td>`).join('')}
+    </tr>`;
+    totalMgrRowsWon += `<tr style="background:#fafafa;border-left:3px solid ${col}">
+      <td class="s" style="padding-left:16px;font-weight:500">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col};margin-right:5px;vertical-align:middle"></span>${u.name}
+        <span style="font-size:10px;font-weight:400;color:#9b9b97;margin-left:3px">нараст.</span>
+      </td>
+      ${mRows.map(r=>`<td class="ft" style="font-size:11px">${fmt(r.cumSF)}</td>`).join('')}
+    </tr>`;
+  });
+
   html += `<div class="section">
     <div class="sec-head" onclick="tog('__total__')" style="background:#E6F1FB">
       <span style="font-size:14px;font-weight:700;color:#185FA5">∑</span>
@@ -920,19 +974,41 @@ function renderTableSources() {
       <i class="ti ti-chevron-down" id="ic-__total__" style="margin-left:auto"></i>
     </div>
     <div id="sb-__total__"><div class="tbl-wrap"><table>
-      <thead><tr><th class="s">Показатель</th>${cols}</tr></thead>
+      <thead><tr><th class="s">Показатель / Менеджер</th>${cols}</tr></thead>
       <tbody>
-        <tr class="grp"><td class="s" colspan="${prs.length+1}">Новые лиды</td></tr>
+        <tr class="grp"><td class="s" colspan="${prs.length+1}">НОВЫЕ ЛИДЫ</td></tr>
         <tr><td class="s">ПЛАН нараст.</td>${tPlanN.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
-        <tr><td class="s">ФАКТ нараст.</td>${tCumNF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
+        <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${tCumNF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
         ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDayNF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
         <tr><td class="s">Откл. нараст.</td>${tDevN.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
-        <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Успешные лиды</td></tr>
+      </tbody>
+      <tbody>
+        <tr style="background:#EAF3FB;cursor:pointer" onclick="togMgr('total-new')">
+          <td class="s" colspan="${prs.length+1}" style="color:#185FA5;font-weight:600;padding:6px 10px">
+            <i class="ti ti-users" style="margin-right:5px;font-size:12px"></i>По менеджерам (новые нараст.)
+            <i class="ti ti-chevron-right" id="mgr-ic-total-new" style="float:right;margin-right:8px"></i>
+          </td>
+        </tr>
+      </tbody>
+      <tbody id="mgr-tb-total-new" style="display:none;background:#F4F9FE">${totalMgrRowsNew}</tbody>
+      <tbody>
+        <tr class="grp sep"><td class="s" colspan="${prs.length+1}">УСПЕШНЫЕ ЛИДЫ</td></tr>
         <tr><td class="s">ПЛАН нараст.</td>${tPlanS.map(v=>`<td class="pl">${fmt(v)}</td>`).join('')}</tr>
-        <tr><td class="s">ФАКТ нараст.</td>${tCumSF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
+        <tr><td class="s" style="font-weight:600">ФАКТ нараст.</td>${tCumSF.map(v=>`<td class="ft">${fmt(v)}</td>`).join('')}</tr>
         ${showDay?`<tr><td class="s">ФАКТ в день</td>${tDaySF.map(v=>`<td class="dim">${fmt(v)}</td>`).join('')}</tr>`:''}
         <tr><td class="s">Откл. нараст.</td>${tDevS.map(v=>`<td class="${dCls(v)}">${fDev(v)}</td>`).join('')}</tr>
-        <tr class="grp sep"><td class="s" colspan="${prs.length+1}">Конверсия</td></tr>
+      </tbody>
+      <tbody>
+        <tr style="background:#EAF6F1;cursor:pointer" onclick="togMgr('total-won')">
+          <td class="s" colspan="${prs.length+1}" style="color:#1D9E75;font-weight:600;padding:6px 10px">
+            <i class="ti ti-users" style="margin-right:5px;font-size:12px"></i>По менеджерам (успешные нараст.)
+            <i class="ti ti-chevron-right" id="mgr-ic-total-won" style="float:right;margin-right:8px"></i>
+          </td>
+        </tr>
+      </tbody>
+      <tbody id="mgr-tb-total-won" style="display:none;background:#F0FAF5">${totalMgrRowsWon}</tbody>
+      <tbody>
+        <tr class="grp sep"><td class="s" colspan="${prs.length+1}">КОНВЕРСИЯ</td></tr>
         <tr><td class="s">Конверсия ФАКТ</td>${tConv.map(v=>`<td class="dim">${fPct(v)}</td>`).join('')}</tr>
       </tbody>
     </table></div></div>

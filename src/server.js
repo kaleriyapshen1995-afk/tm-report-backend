@@ -16,7 +16,9 @@ const SOURCE_MAP = {
   'Звонобот':          ['31'],
   'Сайт':              ['STORE'],
   'Холод':             ['28'],
-  'Реанимация+Прочее': null,
+  // Реанимация = источник 44. Раньше здесь стоял null (корзина «всё остальное»),
+  // из-за чего в блок попадал ещё и источник 15 и завышал цифру.
+  'Реанимация+Прочее': ['44'],
 };
 
 // НЕ считаем: Фейк=1, Дубль=9, Тест=10
@@ -72,7 +74,7 @@ function getBlock(sourceId) {
     if (ids === null) continue;
     if (ids.includes(sourceId)) return block;
   }
-  return 'Реанимация+Прочее';
+  return null; // источник не относится ни к одному блоку — такой лид не считаем
 }
 
 // ─── API роуты ───────────────────────────────────────────────────────────────
@@ -182,6 +184,7 @@ app.get('/api/leads', async (req, res) => {
 
     newLeads.forEach(l => {
       const b = getBlock(l.SOURCE_ID);
+      if (!b) return; // источник вне наших блоков — пропускаем
       const d = (l.DATE_CREATE || '').slice(0, 10);
       ensureDay(b, d);
       result[b][d].new++;
@@ -191,6 +194,7 @@ app.get('/api/leads', async (req, res) => {
 
     wonLeads.forEach(l => {
       const b = getBlock(l.SOURCE_ID);
+      if (!b) return; // источник вне наших блоков — пропускаем
       const d = (l.DATE_CLOSED || l.DATE_MODIFY || '').slice(0, 10);
       ensureDay(b, d);
       result[b][d].won++;

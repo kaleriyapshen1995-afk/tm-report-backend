@@ -676,7 +676,7 @@ function buildRows(src, customFact, customPlan, tmId) {
       const p = tmId ? getPlanForUser(src, tmId, mi, curYear) : getTotalPlanFiltered(src, mi, curYear);
       const last = pr.days[pr.days.length - 1], past = last <= today;
       let nf = 0, sf = 0;
-      if (past) pr.days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
+      if (past) pr.days.forEach(d => { const k = localISO(d); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
       return { label: pr.label, past, planN: p.new, planS: p.succ, cumNF: past ? nf : null, cumSF: past ? sf : null, dayNF: past ? nf : null, daySF: past ? sf : null, devN: past ? nf - p.new : null, devS: past ? sf - p.succ : null, conv: past && nf > 0 ? sf / nf : null };
     });
   }
@@ -691,7 +691,7 @@ function buildRows(src, customFact, customPlan, tmId) {
     const planN = totalWD ? Math.round(p.new / totalWD * cumWD) : 0;
     const planS = totalWD ? Math.round(p.succ / totalWD * cumWD) : 0;
     let nf = 0, sf = 0;
-    if (past) pr.days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
+    if (past) pr.days.forEach(d => { const k = localISO(d); if (fd[k]) { nf += fd[k].new || 0; sf += fd[k].won || 0; } });
     cumNF += nf; cumSF += sf;
     return { label: pr.label, past, planN, planS, cumNF: past ? cumNF : null, cumSF: past ? cumSF : null, dayNF: past ? nf : null, daySF: past ? sf : null, devN: past ? cumNF - planN : null, devS: past ? cumSF - planS : null, conv: past && cumNF > 0 ? cumSF / cumNF : null };
   });
@@ -701,8 +701,19 @@ function getUserFactTotal(uid, src) {
   const fd = factUser(uid, src);
   const days = getRangeDays(); const today = new Date(); today.setHours(23, 59, 59);
   let fN = 0, fS = 0;
-  days.forEach(d => { const k = d.toISOString().slice(0, 10); if (fd[k] && d <= today) { fN += fd[k].new || 0; fS += fd[k].won || 0; } });
+  days.forEach(d => { const k = localISO(d); if (fd[k] && d <= today) { fN += fd[k].new || 0; fS += fd[k].won || 0; } });
   return { new: fN, won: fS };
+}
+
+// toISOString() переводит дату в UTC — при местном времени МСК/Рига (UTC+3)
+// полночь местного дня превращается в 21:00 ПРЕДЫДУЩЕГО дня по UTC, и весь день
+// "съезжает" на сутки назад. Из-за этого таблица показывала данные не под тем
+// днём. localISO() берёт год/месяц/день как они есть в браузере, без конвертации.
+function localISO(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 function fmt(n) { if (n === null || n === undefined) return '—'; return Math.round(n).toLocaleString('ru'); }
@@ -735,8 +746,8 @@ async function loadData() {
     if (curGran === 'day') updateRangeLabel();
   }
   if (rangeStart && curGran === 'day') curM = rangeStart.getMonth();
-  const from = rangeStart.toISOString().slice(0, 10);
-  const to   = rangeEnd.toISOString().slice(0, 10);
+  const from = localISO(rangeStart);
+  const to   = localISO(rangeEnd);
   setStatus('', 'Загружаем из Б24...');
   await loadPlansFromServer();
   try {
@@ -757,7 +768,7 @@ function renderKPIs() {
   srcs.forEach(s => {
     const p = getTotalPlanFiltered(s); pN += p.new; pS += p.succ;
     const fd = factFiltered(s);
-    days.forEach(d => { const k = d.toISOString().slice(0,10); if (fd[k] && d <= today) { fN += fd[k].new||0; fS += fd[k].won||0; } });
+    days.forEach(d => { const k = localISO(d); if (fd[k] && d <= today) { fN += fd[k].new||0; fS += fd[k].won||0; } });
   });
   const pctN = pN > 0 ? fN / pN : 0, pctS = pS > 0 ? fS / pS : 0;
   const conv = fN > 0 ? fS / fN : 0;
@@ -1228,7 +1239,7 @@ function renderCharts() {
         const last=pr.days[pr.days.length-1], past=last<=today;
         const cumWD=days.filter(d=>d<=last&&isWD(d)).length;
         const planP=totalWD?Math.round(planVal/totalWD*cumWD):0;
-        let pf=0; if(past) pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
+        let pf=0; if(past) pr.days.forEach(d=>{const k=localISO(d);if(fd[k])pf+=metric==='new'?(fd[k].new||0):(fd[k].won||0);});
         cumF+=pf;
         if(cumul){factData.push(past?cumF:null);planData.push(planP);}
         else{factData.push(past?pf:null);planData.push(totalWD?Math.round(planVal/totalWD*(pr.days.filter(isWD).length)):0);}
@@ -1255,7 +1266,7 @@ function renderCharts() {
       let cumF2 = 0; const data2 = [];
       prs.forEach(pr => {
         const last=pr.days[pr.days.length-1], past=last<=today;
-        let pf=0; if(past) pr.days.forEach(d=>{const k=d.toISOString().slice(0,10);if(fd2[k])pf+=metric==='new'?(fd2[k].new||0):(fd2[k].won||0);});
+        let pf=0; if(past) pr.days.forEach(d=>{const k=localISO(d);if(fd2[k])pf+=metric==='new'?(fd2[k].new||0):(fd2[k].won||0);});
         cumF2+=pf;
         data2.push(past ? (cumul?cumF2:pf) : null);
       });

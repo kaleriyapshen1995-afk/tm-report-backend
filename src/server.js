@@ -101,6 +101,7 @@ app.post('/api/plans', (req, res) => {
 });
 
 app.get('/api/leads', async (req, res) => {
+  res.set('Cache-Control', 'no-store'); // не даём браузеру/прокси кешировать ответ
   try {
     const year  = parseInt(req.query.year  || new Date().getFullYear());
     const month = parseInt(req.query.month ?? new Date().getMonth());

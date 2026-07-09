@@ -217,9 +217,11 @@ app.get('/api/users', async (req, res) => {
 
 app.get('/api/sources', async (req, res) => {
   try {
-    const fields = await b24('crm.lead.fields');
-    const items = fields['SOURCE_ID']?.items || [];
-    res.json({ ok: true, sources: items });
+    // Источники лидов — это справочник статусов с ENTITY_ID = 'SOURCE'.
+    // Раньше брали из crm.lead.fields.SOURCE_ID.items — там обычно пусто.
+    const items = await b24('crm.status.list', { filter: { ENTITY_ID: 'SOURCE' } });
+    const sources = (items || []).map(s => ({ id: s.STATUS_ID, name: s.NAME }));
+    res.json({ ok: true, sources });
   } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
 });
 

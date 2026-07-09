@@ -121,18 +121,22 @@ app.get('/api/leads', async (req, res) => {
       } catch(e) { tmIds = null; }
     }
 
-    // Фильтр новых лидов — исключаем Фейк, Дубль, Тест
+    // Фильтр новых лидов.
+    // ВАЖНО: оператор '!STATUS_ID' с массивом в Б24 REST работает нестабильно
+    // (часто НЕ исключает все статусы сразу), из-за чего Фейк/Дубль/Тест
+    // продолжали считаться и отчёт завышал число новых лидов.
+    // Поэтому здесь по статусам НЕ фильтруем — отсекаем их ниже, на своей стороне.
     const baseFilter = {
       '>=DATE_CREATE': from,
       '<=DATE_CREATE': to + 'T23:59:59',
-      '!STATUS_ID': EXCLUDE_STATUSES,
     };
 
-    // Фильтр успешных — Б24 не всегда корректно фильтрует по DATE_CLOSED,
-    // поэтому фильтруем по DATE_MODIFY и дополнительно проверяем дату на нашей стороне
+    // Фильтр успешных — считаем строго по ДАТЕ ЗАКРЫТИЯ (DATE_CLOSED),
+    // как это видит человек в Битриксе. Раньше фильтровали по DATE_MODIFY:
+    // лиды, изменённые ПОСЛЕ закрытия, выпадали из окна и терялись (недосчёт).
     const wonFilter = {
-      '>=DATE_MODIFY': from,
-      '<=DATE_MODIFY': to + 'T23:59:59',
+      '>=DATE_CLOSED': from,
+      '<=DATE_CLOSED': to + 'T23:59:59',
       'STATUS_ID': 'CONVERTED',
     };
 
@@ -144,20 +148,23 @@ app.get('/api/leads', async (req, res) => {
 
     const select = ['ID', 'SOURCE_ID', 'DATE_CREATE', 'STATUS_ID', 'DATE_CLOSED', 'DATE_MODIFY', 'ASSIGNED_BY_ID'];
 
-    const [newLeads, wonLeadsRaw] = await Promise.all([
+    const [newLeadsRaw, wonLeadsRaw] = await Promise.all([
       fetchAllLeads(baseFilter, select),
       fetchAllLeads(wonFilter, select),
     ]);
 
-    // Дополнительно фильтруем успешные по DATE_CLOSED на нашей стороне
-    // Если DATE_CLOSED не заполнен — используем DATE_MODIFY как fallback
-    const fromDate = new Date(from);
-    const toDate = new Date(to + 'T23:59:59');
+    // Исключаем Фейк(1)/Дубль(9)/Тест(10) на своей стороне — надёжно,
+    // независимо от капризов серверного фильтра Б24.
+    const newLeads = newLeadsRaw.filter(l => !EXCLUDE_STATUSES.includes(String(l.STATUS_ID)));
+
+    // Перепроверяем успешные строго по DATE_CLOSED на своей стороне.
+    // Сравниваем по дате (YYYY-MM-DD) в таймзоне портала — как в Битриксе,
+    // без пересчёта в UTC (иначе на границах суток лиды съезжают на день).
+    // Fallback на DATE_MODIFY убран — он давал лишние лиды (перебор).
     const wonLeads = wonLeadsRaw.filter(l => {
-      const checkDate = l.DATE_CLOSED
-        ? new Date(l.DATE_CLOSED)
-        : new Date(l.DATE_MODIFY);
-      return checkDate >= fromDate && checkDate <= toDate;
+      if (!l.DATE_CLOSED) return false;
+      const day = l.DATE_CLOSED.slice(0, 10);
+      return day >= from && day <= to;
     });
 
     const result = {};
